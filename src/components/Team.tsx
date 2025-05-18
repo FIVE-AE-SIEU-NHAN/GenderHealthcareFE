@@ -2,148 +2,112 @@ import React, { useState } from 'react';
 
 const teamMembers = [
   {
-    name: 'Nhân Kiệt',
-    position: 'General Principal',
+    name: 'Dr. Julia Jany',
+    position: 'Gynecology Specialist',
     phone: '010-020-0120',
     email: 'general@company.com',
     image: '/images/bacsi1.jpg',
-    socials: ['linkedin-square'],
   },
   {
-    name: 'Đức Phương',
-    position: 'Pregnancy',
+    name: 'Dr. Michel Liu',
+    position: 'Heart Specialist',
     phone: '010-070-0170',
     email: 'pregnancy@company.com',
     image: '/images/bacsi1.jpg',
-    socials: ['facebook-square', 'flickr'],
   },
   {
-    name: 'Nhân Kiệt',
-    position: 'Cardiology',
+    name: 'Dr. Jesmine Ruby',
+    position: 'Neurology Specialist',
     phone: '010-040-0140',
     email: 'cardio@company.com',
     image: '/images/bacsi1.jpg',
-    socials: ['twitter'],
   },
   {
-    name: 'Bác sĩ A',
-    position: 'Neurology',
+    name: 'Dr. Alex Smith',
+    position: 'Cardiology Specialist',
     phone: '010-111-1111',
     email: 'neuro@company.com',
     image: '/images/bacsi1.jpg',
-    socials: ['twitter'],
   },
   {
-    name: 'Bác sĩ B',
-    position: 'Dermatology',
+    name: 'Dr. Emily Tran',
+    position: 'Dermatology Specialist',
     phone: '010-222-2222',
     email: 'derma@company.com',
     image: '/images/bacsi1.jpg',
-    socials: ['facebook-square'],
   },
   {
-    name: 'Bác sĩ C',
-    position: 'Pediatrics',
+    name: 'Dr. Kevin Dao',
+    position: 'Pediatrics Specialist',
     phone: '010-333-3333',
     email: 'pediatrics@company.com',
     image: '/images/bacsi1.jpg',
-    socials: ['linkedin-square'],
   },
 ];
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 4;
 
 const Team: React.FC = () => {
   const [page, setPage] = useState(0);
 
   const maxPage = Math.ceil(teamMembers.length / ITEMS_PER_PAGE) - 1;
-
   const handlePrev = () => setPage((p) => (p === 0 ? maxPage : p - 1));
   const handleNext = () => setPage((p) => (p === maxPage ? 0 : p + 1));
 
-  const currentMembers = teamMembers.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+  const currentMembers = teamMembers.slice(
+    page * ITEMS_PER_PAGE,
+    (page + 1) * ITEMS_PER_PAGE
+  );
 
   return (
-    <section id="team" className="py-16 bg-gray-100">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <h2 className="text-3xl font-bold text-teal-600 mb-8 text-center">Our Doctors</h2>
+    <section className="relative py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <p className="text-sky-700 uppercase text-sm tracking-widest font-semibold">
+            Medical Experts
+          </p>
+          <h2 className="text-4xl font-bold text-gray-800">
+            Skilled Professionals at <span className="text-blue-700">Care4Gender</span>
+          </h2>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <button
+          onClick={handlePrev}
+          className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10 bg-sky-700 text-white p-3 rounded-full hover:bg-white hover:text-black transition"
+        >
+          &#8592;
+        </button>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {currentMembers.map((member, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg overflow-hidden shadow-sm group transition-all duration-300 min-h-[550px]"
-            >
-              {/* Hình ảnh và nút hover */}
-              <div className="relative h-[380px]">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                />
-
-                <div
-                  className="absolute inset-x-0 bottom-0 flex justify-center space-x-4 pb-4
-                    transform translate-y-full opacity-0 pointer-events-none
-                    group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto
-                    transition-all duration-500"
-                >
-                  <a
-                    href={`mailto:${member.email}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-700 hover:text-teal-600 hover:bg-transparent border border-white transition"
-                  >
+            <div key={index} className="flex flex-col items-center">
+              <img
+                src={member.image}
+                alt={member.name}
+                className="w-full h-[280px] object-cover"
+              />
+              <div className="mt-3 text-center">
+                <h3 className="text-lg font-semibold text-gray-800">{member.name}</h3>
+                <p className="text-sm text-gray-500">{member.position}</p>
+                <div className="flex justify-center space-x-3 mt-2 text-gray-600">
+                  <a href={`mailto:${member.email}`} className="hover:text-teal-600">
                     <i className="fa fa-envelope"></i>
                   </a>
-                  <a
-                    href={`tel:${member.phone}`}
-                    className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-700 hover:text-teal-600 hover:bg-transparent border border-white transition"
-                  >
+                  <a href={`tel:${member.phone}`} className="hover:text-teal-600">
                     <i className="fa fa-phone"></i>
                   </a>
-                </div>
-              </div>
-
-              {/* Thông tin */}
-              <div className="p-5 flex flex-col h-full">
-                <h3 className="text-xl font-bold text-teal-600">{member.name}</h3>
-                <p className="text-gray-600">{member.position}</p>
-
-                <div className="border-b border-gray-300 my-4"></div>
-
-                <div className="text-sm text-gray-700">
-                  <p className="mb-1">
-                    <i className="fa fa-phone mr-2"></i>
-                    {member.phone}
-                  </p>
-                  <p>
-                    <i className="fa fa-envelope-o mr-2"></i>
-                    <a href={`mailto:${member.email}`} className="hover:underline">
-                      {member.email}
-                    </a>
-                  </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Nút phân trang */}
-        <div className="flex justify-center mt-10 space-x-6">
-          <button
-            onClick={handlePrev}
-            className="px-6 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors"
-          >
-            &larr; Prev
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-6 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors"
-          >
-            Next &rarr;
-          </button>
-        </div>
+       
+        <button
+          onClick={handleNext}
+          className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10 bg-sky-700 text-white p-3 rounded-full hover:bg-white hover:text-black transition" >
+          &#8594;
+        </button>
       </div>
     </section>
   );

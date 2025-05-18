@@ -10,29 +10,53 @@ const Home: React.FC = () => {
     {
       heading: "Let's make your life happier",
       title: 'Healthy Living',
-      button: {
-        text: 'Meet Our Doctors',
-        link: '#team',
-        color: 'bg-teal-500 hover:bg-blue-800',
-      },
+      description: 'Improve your health with our expert team.', // đoạn giới thiệu 10-15 chữ
+      buttons: [
+        {
+          text: 'Meet Our Doctors',
+          link: '#team',
+          color: 'bg-sky-700 hover:bg-white hover:text-sky-600',
+        },
+        {
+          text: 'Find a Consultant',
+          link: '#consultant',
+          color: 'bg-sky-700 hover:bg-white hover:text-sky-600',
+        },
+      ],
     },
     {
       heading: 'Aenean luctus lobortis tellus',
       title: 'New Lifestyle',
-      button: {
-        text: 'More About Us',
-        link: '#about',
-        color: 'bg-teal-500 hover:bg-blue-800 ',
-      },
+      description: 'Discover new ways to live healthier and happier.',
+      buttons: [
+        {
+          text: 'Meet Our Doctors',
+          link: '#team',
+          color: 'bg-sky-700 hover:bg-white hover:text-sky-600',
+        },
+        {
+          text: 'Find a Consultant',
+          link: '#consultant',
+          color: 'bg-sky-700 hover:bg-white hover:text-sky-600',
+        },
+      ],
     },
     {
       heading: 'Pellentesque nec libero nisi',
       title: 'Your Health Benefits',
-      button: {
-        text: 'Read Stories',
-        link: '#news',
-        color: 'bg-teal-500 hover:bg-blue-800',
-      },
+      description: 'Learn how to maximize your wellness and benefits.',
+      buttons: [
+        {
+          text: 'Meet Our Doctors',
+          link: '#team',
+          color: 'bg-sky-700 hover:bg-white hover:text-sky-600',
+        },
+        {
+          text: 'Find a Consultant',
+          link: '#consultant',
+          color: 'bg-sky-700 hover:bg-white hover:text-sky-600',
+        },
+      ],
     },
   ];
 
@@ -49,7 +73,7 @@ const Home: React.FC = () => {
         {slides.map((slide, index) => (
           <SwiperSlide
             key={index}
-            className="relative w-full h-full" // quan trọng để chứa overlay và content
+            className="relative w-full h-full"
           >
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -62,12 +86,18 @@ const Home: React.FC = () => {
             <div className="relative z-20 flex flex-col items-center justify-center h-full text-center text-white px-4 space-y-4 max-w-2xl mx-auto">
               <h3 className="text-xl md:text-2xl">{slide.heading}</h3>
               <h1 className="text-4xl md:text-5xl font-bold">{slide.title}</h1>
-              <a
-                href={slide.button.link}
-                className={`inline-block px-6 py-3 mt-4 rounded transition ${slide.button.color}`}
-              >
-                {slide.button.text}
-              </a>
+              <p className="text-md md:text-lg max-w-md mx-auto">{slide.description}</p> {/* Đoạn giới thiệu */}
+              <div className="flex gap-4 mt-4">
+                {slide.buttons.map((button, btnIndex) => (
+                  <a
+                    key={btnIndex}
+                    href={button.link}
+                    className={`inline-block px-6 py-3 rounded transition ${button.color}`}
+                  >
+                    {button.text}
+                  </a>
+                ))}
+              </div>
             </div>
           </SwiperSlide>
         ))}
