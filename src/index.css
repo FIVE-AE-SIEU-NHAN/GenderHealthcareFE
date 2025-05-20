@@ -1,1 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 @import "tailwindcss";
+
+@theme {
+  --color-dark-blue: #1c2359;
+  --color-navText: #4a4a4a;
+  --font-sans: 'Inter', sans-serif;
+
+  --radius-button: 14px;
+}
+
+@layer components {
+  .nav-text {
+    @apply font-semibold text-2xl hover:text-sky-600 text-navText text-shadow-lg;
+  }
+}
