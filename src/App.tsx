@@ -1,35 +1,33 @@
-import './App.css'
-import { useState } from 'react'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-function App() {
-  const [showMessage, setShowMessage] = useState(false)
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
-  const handleClick = () => {
-    setShowMessage(!showMessage)
-  }
+import HomePage from './Application/Homepage';
+import Logout from './Application/Logout';
+import Signup from './Application/Signup';
+import LoginPage from './Application/Signin';
+
+const App: React.FC = () => {
+  const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300 p-4">
-      <div className="text-center bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-8 max-w-md animate-fade-in">
-        <h1 className="text-3xl font-bold text-blue-700 mb-4">Care4Gender</h1>
-        <p className="text-gray-700 text-base mb-6">
-          Click the button below to see the magic happen!
-        </p>
-        <button
-          onClick={handleClick}
-          className="bg-blue-600 hover:bg-blue-700 transition-all text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:scale-105 active:scale-95 duration-200"
-        >
-          {showMessage ? 'Hide Message' : 'Click me'}
-        </button>
+    <Router>
+      {/* <Header /> */}
+      <Navbar />
 
-        {showMessage && (
-          <p className="mt-6 text-blue-800 font-medium animate-slide-up">
-            💡 Simple. Clean. Effective.
-          </p>
-        )}
-      </div>
-    </div>
-  )
-}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
 
-export default App
+      {!hideFooter && <Footer />}
+
+    </Router>
+  );
+};
+
+export default App;
