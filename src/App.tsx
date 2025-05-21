@@ -9,6 +9,8 @@ import HomePage from './Application/Homepage';
 import Login from './Application/Login';
 import Logout from './Application/Logout';
 import Register from './Application/Register';
+import Blog from './Application/Blog';
+import BlogDetail from './Application/BlogDetail';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +23,9 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/blog" element={<Blog />} />
+        {/* Add more routes as needed */} 
+        <Route path="/blog/:id" element={<BlogDetail/>} />
       </Routes>
 
       <Footer />

@@ -10,7 +10,7 @@ const Navbar:  React.FC  = () => {
         <ul className="flex gap-6 text-sm font-medium items-center">
           <li><a href="#top" className="hover:text-sky-600"> Trang chủ</a></li>
           <li><a href="#about" className="hover:text-sky-600"> Giới thiệu</a></li>
-          <li><a href="#team" className="hover:text-sky-600">Blog</a></li>
+          <li><a href="/blog" className="hover:text-sky-600">Blog</a></li>
           <li><a href="#news" className="hover:text-sky-600">Dịch vụ xét nghiệm STIs</a></li>
           <li><a href="#google-map" className="hover:text-sky-600">Theo dõi chu kỳ</a></li>
           <li><a href="#google-map" className="hover:text-sky-600">Đặt lịch tư vấn</a></li>

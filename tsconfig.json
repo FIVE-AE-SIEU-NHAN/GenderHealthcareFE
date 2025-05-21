@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["dom", "es2015", "esnext"],
     "moduleResolution": "node",
     "jsx": "react-jsx",  // nếu dùng React 17+
     "esModuleInterop": true,
