@@ -60,7 +60,7 @@ const Team: React.FC = () => {
   );
 
   return (
-    <section className="relative py-16 bg-white">
+    <section className="relative py-16">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
           <p className="text-sky-700 uppercase text-sm tracking-widest font-semibold">

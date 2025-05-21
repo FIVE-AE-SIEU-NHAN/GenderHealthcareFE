@@ -1,16 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 import HomePage from './Application/Homepage';
-import Login from './Application/Login';
 import Logout from './Application/Logout';
-import Register from './Application/Register';
+import Signup from './Application/Signup';
+import LoginPage from './Application/Signin';
 
 const App: React.FC = () => {
+  const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
+
   return (
     <Router>
       {/* <Header /> */}
@@ -18,12 +19,13 @@ const App: React.FC = () => {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
 
-      <Footer />
+      {!hideFooter && <Footer />}
+
     </Router>
   );
 };

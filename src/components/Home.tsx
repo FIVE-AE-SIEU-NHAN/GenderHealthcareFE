@@ -3,21 +3,18 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
 
 import { FaArrowRightLong } from "react-icons/fa6";
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/effect-fade';
 
 const Home: React.FC = () => {
   const sharedButtons = [
   {
     text: 'Find a Consultant',
     link: '#consultant',
-    color: 'bg-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-900 transition duration-200 font-semibold',
+    color: 'text-xl bg-semi-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-900 transition duration-200 font-semibold',
   },
   {
     text: 'Meet Our Doctors',
     link: '#doctors',
-    color: 'border-2 border-white text-white px-4 py-2 rounded-button font-semibold',
+    color: 'text-xl border-2 border-white text-white px-4 py-2 rounded-button font-semibold',
   },
 ];
   
@@ -47,11 +44,10 @@ const Home: React.FC = () => {
       <Swiper
         modules={[Autoplay, Pagination, EffectFade]}
         effect="fade"
-        // autoplay={{ delay: 5000 }}
-        autoplay={false}
+        autoplay={{ delay: 3000 }}
         loop
         pagination={{ clickable: true }}
-        className="w-full h-[861px]"
+        className="w-full h-[calc(100dvh-96px)]"
       >
         {slides.map((slide, index) => (
           <SwiperSlide
@@ -65,7 +61,7 @@ const Home: React.FC = () => {
                 zIndex: 0,
               }}
             />
-            <div className="absolute inset-0 bg-black/55 z-10" /> {/* Màu nền tối */}
+            <div className="absolute inset-0 bg-black/45 z-10" /> {/* Màu nền tối */}
             <div className="relative z-20 flex flex-col items-center justify-center h-full text-white px-4 space-y-4 max-w-2xl ml-25">
               <h3 className="text-7xl text-center font-black">{slide.heading}</h3>
               <h1 className="text-5xl text-center font-medium w-[105%]">{slide.title}</h1>

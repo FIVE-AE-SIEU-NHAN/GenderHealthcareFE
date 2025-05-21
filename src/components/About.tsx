@@ -1,37 +1,29 @@
 import React from "react";
-import { FaCheckCircle, FaPhoneAlt, FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaHeartbeat } from "react-icons/fa";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import VideoPopup from "./VidModal";
 
 const About = () => {
   return (
-    <section className="bg-white py-12 px-6 md:px-8">
-
-      <div className="max-w-7xl mx-auto">
-
-        <div className="flex flex-col lg:flex-row gap-10">
-
-          <div className="lg:w-1/2 space-y-6">
-            <p className="text-pink-500 font-semibold uppercase tracking-wide">
-              About Us
+    <section className="py-12 px-4 md:px-12">
+      <div>
+        <div className="flex flex-col lg:flex-row gap-10 mx-4 md:mx-12 lg:mx-28">
+          <div className="lg:w-1/1 space-y-3">
+            <p className="section-text flex gap-4 items-center">
+              <FaHeartbeat /> ABOUT US
             </p>
-
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-snug">
-              Expert Doctors, <span className="text-blue-700">Seamless</span>
+            <h2 className="text-shadow-md font-outfit text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-dark-blue leading-snug">
+              Expert Doctors,
+              <span className="font-semibold"> Seamless, Appointments, Quality Care</span>
               <br />
-              Appointments, Quality Care
             </h2>
-
-            <div className="flex flex-col md:flex-row gap-6 items-stretch">
-
-              <div className="md:w-4/12 rounded-lg overflow-hidden shadow-md">
-                <img
-                  src="/images/bacsi1.jpg"
-                  alt="Hospital hallway"
-                  className="w-full h-full object-cover"
-                />
+            <div className="flex flex-col md:flex-row gap-12 items-stretch">
+              <div className="w-full md:w-4/12 rounded-lg overflow-hidden shadow-md">
+                <VideoPopup />
               </div>
 
-              <div className="md:w-9/12 flex flex-col justify-between">
-                <p className="text-gray-600 text-justify">
+              <div className="w-full md:w-9/12 flex flex-col justify-between text-shadow-md">
+                <p className="text-gray-600 text-justify sm:text-2xl md:text-xl">
                   We believe that knowledge is power. We connect our patients
                   directly with their results so they have valuable health
                   information when they need it most. We care about our people
@@ -48,40 +40,36 @@ const About = () => {
                   ].map((item, index) => (
                     <li
                       key={index}
-                      className="flex items-start gap-2 text-gray-700"
+                      className="ml-16 flex items-start gap-2 text-dark-blue font-medium sm:text-lg md:text-xl lg:text-2xl max-w-[calc(100vw-80px)]"
                     >
-                      <FaCheckCircle className="text-blue-600 mt-1" />
-                      <span>{item}</span>
+                      <IoMdCheckmarkCircleOutline className="mt-2 text-blue-700" />
+                      <span className="line-clamp-1">{item}</span>
                     </li>
                   ))}
                 </ul>
 
-                <div className="flex items-center gap-6 pt-6">
-                  <button className="bg-blue-900 text-white px-6 py-3 rounded-md flex items-center gap-2 hover:bg-blue-800 transition">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-6 font-medium">
+                  <button className="bg-semi-dark-blue text-white px-6 py-3 rounded-md flex items-center gap-2 hover:bg-blue-800 transition">
                     More About Us <FaArrowRight />
                   </button>
-                  <div className="flex items-center text-pink-600 font-semibold">
-                    <FaPhoneAlt className="mr-2" />
-                    +00 (123) 456789 00
-                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="lg:w-1/2 flex flex-col items-center gap-6">
-            <div className="w-4/5 h-72 rounded-lg overflow-hidden shadow-md">
+          <div className="lg:w-1/3 flex flex-col items-center gap-6">
+            <div className="w-full h-72 rounded-lg overflow-hidden shadow-md">
               <img
-                src="/images/bacsi3.jpg"
+                src="/images/ab1.webp"
                 alt="Doctor consulting"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="w-4/5 h-72 rounded-lg overflow-hidden shadow-md">
+            <div className="w-full h-72 rounded-lg overflow-hidden shadow-md">
               <img
-                src="/images/bacsi3.jpg"
+                src="/images/ab2.webp"
                 alt="Nurse with patient"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover shadow-2xl"
               />
             </div>
           </div>

@@ -26,7 +26,7 @@ const Navbar:  React.FC  = () => {
             Log In
           </a>
           <a
-            href="/register"
+            href="/signup"
             className="border-2 border-dark-blue text-dark-blue px-4 py-2 rounded-button hover:bg-blue-50 transition duration-200 font-semibold"
           >
             Sign Up
