@@ -14,7 +14,7 @@ const Navbar:  React.FC  = () => {
         <ul className="flex gap-6 text-sm font-medium items-center">
           <li><a href="#top" className="nav-text">Home</a></li>
           <li><a href="#menu" className="nav-text">Menu</a></li>
-          <li><a href="#blog" className="nav-text">Blog</a></li>
+          <li><a href="/blog" className="nav-text">Blog</a></li>
           <li><a href="#about us" className="nav-text">About Us</a></li>
           <li><a href="#appointment" className="nav-text">Book an appointment</a></li>
         </ul>
