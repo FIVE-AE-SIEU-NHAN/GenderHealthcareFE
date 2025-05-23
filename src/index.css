@@ -23,6 +23,9 @@ body {
   --radius-button: 14px;
 
   --animate-fade-in-up: fade-in-up .6s ease-in-out;
+  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+  --animate-jello: jello-horizontal 0.9s both;
+
   @keyframes fade-in-up {
     0% {
       opacity: 0;
@@ -34,13 +37,23 @@ body {
     }
   }
 
-  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
   @keyframes caret-blink {
     0%,70%,100% {
       opacity: 1;
     }
     20%,50% {
       opacity: 0;
+    }
+  }
+
+  @keyframes sliceLeftToRight {
+    0% {
+      clip-path: inset(0 100% 0 0);
+      opacity: 0;
+    }
+    100% {
+      clip-path: inset(0 0 0 0);
+      opacity: 1;
     }
   }
 }
@@ -59,6 +72,9 @@ body {
   }
 }
 
+
+/* Normal CSS */
+
 .swiper-pagination-bullet {
   width: 0.75rem;
   height: 0.75rem;
@@ -71,6 +87,9 @@ body {
   background-color: #1a3973 !important; 
   opacity: 1;
 }
+
+/* External animation */
+@-webkit-keyframes jello-horizontal{0%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}30%{-webkit-transform:scale3d(1.25,.75,1);transform:scale3d(1.25,.75,1)}40%{-webkit-transform:scale3d(.75,1.25,1);transform:scale3d(.75,1.25,1)}50%{-webkit-transform:scale3d(1.15,.85,1);transform:scale3d(1.15,.85,1)}65%{-webkit-transform:scale3d(.95,1.05,1);transform:scale3d(.95,1.05,1)}75%{-webkit-transform:scale3d(1.05,.95,1);transform:scale3d(1.05,.95,1)}100%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}}@keyframes jello-horizontal{0%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}30%{-webkit-transform:scale3d(1.25,.75,1);transform:scale3d(1.25,.75,1)}40%{-webkit-transform:scale3d(.75,1.25,1);transform:scale3d(.75,1.25,1)}50%{-webkit-transform:scale3d(1.15,.85,1);transform:scale3d(1.15,.85,1)}65%{-webkit-transform:scale3d(.95,1.05,1);transform:scale3d(.95,1.05,1)}75%{-webkit-transform:scale3d(1.05,.95,1);transform:scale3d(1.05,.95,1)}100%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}}
 
 
 /* === SCROLL === */

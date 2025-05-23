@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Lock, User, Eye, EyeOff, KeyRound, AtSign } from "lucide-react";
-import { DatePickerWithPresets } from "@/lib/DatePicker";
-// import { InputOTPControlled } from "@/lib/OTP";
-// import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp"
+import { DatePicker } from "@/lib/DatePicker";
+import { format } from "date-fns"
+
 import {
   InputOTP,
   InputOTPGroup,
@@ -40,7 +40,13 @@ export default function SignupForm() {
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
-    console.log("Signup data:", data);
+    const formatted = {
+    ...data,
+    dob: data.dob
+      ? format(new Date(data.dob), "dd/MM/yyyy")
+      : "",
+  };
+    console.log("Signup data:", formatted);
   };
 
   const [otpCountdown, setOtpCountdown] = useState(0);
@@ -72,7 +78,7 @@ export default function SignupForm() {
   };
 
   return (
-    <Card className="w-full max-w-xl shadow-2xl animate-fade-in-up z-10">
+    <Card className="w-full max-w-xl shadow-2xl animate-fade-in-up z-10 mt-8 mb-8">
       <CardHeader className="text-center">
         <img src="/images/logo.webp" alt="logo" className="mx-auto" />
         <CardTitle className="text-2xl font-bold text-dark-blue text-shadow-lg">
@@ -106,10 +112,9 @@ export default function SignupForm() {
             <Controller
               control={control}
               name="dob"
-              render={({ field }) => (
-                <DatePickerWithPresets value={field.value} onChange={field.onChange} />
-              )}
+              render={({ field }) => <DatePicker field={field} />}
             />
+
 
             <Controller
               control={control}
@@ -207,10 +212,10 @@ export default function SignupForm() {
                 </InputOTPGroup>
               </InputOTP>
 
-              <Button 
-                type="button" 
+              <Button
+                type="button"
                 variant="outline"
-                className="shadow-sm w-[75px] h-11 bg-[#00b3b6] text-white font-semibold" 
+                className="shadow-sm w-[75px] h-11 bg-[#00b3b6] text-white font-semibold"
                 onClick={handleGetOtp}
                 disabled={otpCountdown > 0}
               >
@@ -220,7 +225,9 @@ export default function SignupForm() {
           </div>
 
           {/* Submit */}
-          <Button type="submit" className="h-[45px] w-full bg-dark-blue hover:bg-semi-dark-blue text-lg">
+          <Button type="submit"
+            className="h-[45px] w-full bg-dark-blue active:bg-[#131045] active:scale-[0.99] 
+              shadow-sm hover:bg-dark-blue text-lg cursor-pointer transition-all duration-200 ease-in-out">
             Create Account
           </Button>
 
@@ -237,12 +244,16 @@ export default function SignupForm() {
           <Button
             type="button"
             variant="outline"
-            className="h-[45px] w-full flex items-center justify-center gap-2 text-2xs"
+            className="h-[45px] w-full flex items-center justify-center gap-2 text-2xs cursor-pointer 
+             transition-all duration-200 ease-in-out 
+             hover:bg-gray-100
+             active:scale-[0.99] shadow-sm hover:shadow-md"
             onClick={() => console.log("Google login clicked")}
           >
             <img src="/images/google.png" alt="Google" className="w-5 h-5" />
             Login with Google
           </Button>
+
         </form>
       </CardContent>
     </Card>
