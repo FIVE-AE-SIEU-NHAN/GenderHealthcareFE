@@ -28,24 +28,22 @@ const RequireLoginBooking: React.FC = () => {
                             smooth and stress-free. I highly recommend Dr. Jakob Smith
                             and Medova to anyone in need of top-quality medical care.
                         </div>
-                        <div className="text-sm text-[#1C2359] font-bold text-center">
-                            Please log in or register to use sexual health care and counseling services.
-                        </div>
+                        <p className="text-sm text-[#1C2359] font-bold text-center mb-5">Please log in or register to use sexual health care and counseling services.</p>
                         <div className="gap-3 flex justify-center items-center">
-  <a
-    href="/login"
-    className="bg-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-800 transition duration-200 font-semibold"
-  >
-    Log In
-  </a>
-  <p className="flex items-center my-0 text-[#4A4A4A] font-semibold">or</p>
-  <a
-    href="/signup"
-    className="border-2 border-dark-blue text-dark-blue px-4 py-2 rounded-button hover:bg-blue-50 transition duration-200 font-semibold"
-  >
-    Sign Up
-  </a>
-</div>
+                            <a
+                            href="/login"
+                            className="bg-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-800 transition duration-200 font-semibold"
+                            >
+                            Log In
+                            </a>
+                            <p className="flex items-center my-0 text-[#4A4A4A] font-semibold">or</p>
+                            <a
+                            href="/signup"
+                            className="border-2 border-dark-blue text-dark-blue px-4 py-2 rounded-button hover:bg-blue-50 transition duration-200 font-semibold"
+                            >
+                            Sign Up
+                            </a>
+                        </div>
                 </form>
             </div>
 
