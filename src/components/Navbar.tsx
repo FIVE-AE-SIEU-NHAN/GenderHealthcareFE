@@ -1,24 +1,86 @@
-import React from 'react';
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
 
-const Navbar:  React.FC  = () => {
+const Navbar = () => {
   return (
-    <nav className="bg-white shadow sticky top-0 z-40">
-      <div className="mx-10 px-2 flex justify-between items-center py-4">
-        <a href="/" className=" text-xl flex items-center gap-1">
-          <img src='images/logo.webp' alt='logo' className='w-[60px]'/>
+    <nav className="bg-white shadow-md/15 sticky top-0 z-40 shadow-b">
+      <div className="mx-10 px-2 flex justify-between items-center p-1">
+        {/* Logo Section */}
+        <a href="/" className="text-lg flex items-center gap-1">
+          <img src="/images/logo.webp" alt="logo" className="w-[50px]" />
           <div className="logo">
             <div className="font-extrabold text-shadow-lg">Care4Gender</div>
-            <div className='text-shadow-lg'>Gender HealthCare</div>
+            <div className="text-shadow-lg">Gender HealthCare</div>
           </div>
         </a>
-        <ul className="flex gap-6 text-sm font-medium items-center">
-          <li><a href="#top" className="nav-text">Home</a></li>
-          <li><a href="#menu" className="nav-text">Menu</a></li>
-          <li><a href="#blog" className="nav-text">Blog</a></li>
-          <li><a href="#about us" className="nav-text">About Us</a></li>
-          <li><a href="#appointment" className="nav-text">Book an appointment</a></li>
-        </ul>
-        <li className="flex gap-1">
+
+        {/* Navigation Menu */}
+        <NavigationMenu>
+          <NavigationMenuList className="flex gap-6 font-medium items-center">
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#top" className="nav-text text-xl">
+                Home
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className="nav-text text-xl">
+                Menu
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className="bg-white shadow-md rounded-lg p-4">
+                <ul className="grid gap-3 w-[200px]">
+                  <li>
+                    <NavigationMenuLink href="#gynecology" className="block text-lg font-semibold">
+                      Gynecology
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink href="#cardiology" className="block text-lg font-semibold">
+                      Cardiology
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink href="#neurology" className="block text-lg font-semibold">
+                      Neurology
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink href="#dermatology" className="block text-lg font-semibold">
+                      Dermatology
+                    </NavigationMenuLink>
+                  </li>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#blog" className="nav-text text-xl">
+                Blog
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#about-us" className="nav-text text-xl">
+                About Us
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuLink href="#appointment" className="nav-text text-xl">
+                Book an appointment
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        {/* Auth Buttons */}
+        <div className="flex gap-2 items-center">
           <a
             href="/login"
             className="bg-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-800 transition duration-200 font-semibold"
@@ -31,7 +93,7 @@ const Navbar:  React.FC  = () => {
           >
             Sign Up
           </a>
-        </li>
+        </div>
       </div>
     </nav>
   );

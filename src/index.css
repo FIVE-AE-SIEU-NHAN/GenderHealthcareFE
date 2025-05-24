@@ -8,6 +8,8 @@
 
 body {
   background: #fbfbfb;
+  margin: 0;
+  padding: 0;
   /* background: #d2e2ff; */
 }
 
@@ -25,8 +27,30 @@ body {
   --animate-fade-in-up: fade-in-up .6s ease-in-out;
   --animate-caret-blink: caret-blink 1.25s ease-out infinite;
   --animate-jello: jello-horizontal 0.9s both;
+  --animate-slide-up: slideUp .6s ease-out forwards;
+  --animate-fade-in: fadeIn .6s ease-out forwards;
 
   @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn{
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
     0% {
       opacity: 0;
       transform: translateY(20px);
@@ -60,7 +84,7 @@ body {
 
 @layer components {
   .nav-text {
-    @apply font-semibold whitespace-nowrap text-[clamp(1rem,2vw,1.5rem)] hover:text-sky-600 text-navText text-shadow-lg;
+    @apply font-semibold whitespace-nowrap hover:text-sky-600 text-navText text-shadow-lg;
   }
 
   .section-text {
@@ -165,7 +189,8 @@ body {
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  /* --accent: oklch(0.97 0 0); */
+  --accent: oklch(0.7923 0.1547 251.51 / 43%);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
