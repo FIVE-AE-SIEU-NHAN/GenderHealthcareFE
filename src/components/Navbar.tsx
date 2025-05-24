@@ -17,6 +17,7 @@ const Navbar:  React.FC  = () => {
           <li><a href="/blog" className="nav-text">Blog</a></li>
           <li><a href="#about us" className="nav-text">About Us</a></li>
           <li><a href="#appointment" className="nav-text">Book an appointment</a></li>
+          <li><a href="/services" className="nav-text">Services</a></li>
         </ul>
         <li className="flex gap-1">
           <a

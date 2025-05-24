@@ -9,9 +9,10 @@ import Logout from './Application/Logout';
 import Signup from './Application/Signup';
 import LoginPage from './Application/Signin';
 import Blog from './Application/Blog';
+import Services from './Application/Services';
 
 const App: React.FC = () => {
-  const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
+  const hideFooter = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/services';
 
   return (
     <Router>
@@ -24,6 +25,7 @@ const App: React.FC = () => {
         <Route path="/logout" element={<Logout />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/blog" element={<Blog />} /> 
+        <Route path="/services" element={<Services />} />
       </Routes>
 
       {!hideFooter && <Footer />}
