@@ -22,6 +22,7 @@ const App: React.FC = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<HomePage/>} />
       </Routes>
 
       {!hideFooter && <Footer />}

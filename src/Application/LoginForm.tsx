@@ -10,11 +10,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, AtSign, Lock } from "lucide-react";
+import { authApi } from "@/apis/auth.api";
 
 type FormData = {
   email: string;
   password: string;
 };
+
+interface LoginError {
+  response?: {
+    data?: {
+      message?: string;
+      errors?: {
+        [key: string]: string;
+      };
+    };
+  };
+}
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,68 +35,56 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
     setError,
+    formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    setBackendError("");
-
-    await new Promise((r) => setTimeout(r, 600));
-
-    const response = (() => {
-      if (data.email !== "dmaK@gmail.com") {
-        return {
-          ok: false,
-          status: 400,
-          json: async () => ({
-            errors: { email: "Email not found" },
-            message: "Invalid credentials",
-          }),
-        };
-      }
-      if (data.password !== "123") {
-        return {
-          ok: false,
-          status: 400,
-          json: async () => ({
-            errors: { password: "Incorrect password" },
-          }),
-        };
-      }
-
-      // ✅ Success
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({ message: "Login successful!" }),
-      };
-    })();
-
-    try {
-      const result = await response.json();
-
-      if (!response.ok) {
-        // Handle specific field errors
-        if (result.errors) {
-          Object.entries(result.errors).forEach(([field, message]) => {
-            setError(field as keyof FormData, { message: String(message) });
-          });
-        }
-
-        // Handle general error
-        if (result.message) {
-          setBackendError(result.message);
-        }
-
-        return;
-      }
-
-      console.log("Login success:", result);
-    } catch (err: any) {
-      setBackendError("Something went wrong. Please try again.");
+  setBackendError(""); // Reset lỗi trước khi gọi API
+  
+  try {
+    const response = await authApi.login(data);
+    
+    // Xử lý thành công
+    if (response.data?.result) {
+      const { access_token, refresh_token } = response.data.result;
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
+      window.location.href = '/dashboard';
     }
-  };
+
+    window.location.href = '/dashboard';
+  } catch (err: unknown) {
+    const error = err as LoginError;
+    // Đặt lỗi cho các field cụ thể
+    if (error.response?.data?.errors) {
+      const serverErrors = error.response.data.errors;
+      
+      // Set lỗi email từ server
+      if (serverErrors.email) {
+        setError("email", {
+          type: "server",
+          message: serverErrors.email
+        });
+      }
+      
+      // Set lỗi password từ server
+      if (serverErrors.password) {
+        setError("password", {
+          type: "server",
+          message: serverErrors.password
+        });
+      }
+      
+      // Nếu có lỗi khác không map được vào field nào
+      if (!serverErrors.email && !serverErrors.password && error.response?.data?.message) {
+        setBackendError(error.response.data.message);
+      }
+    } else {
+      setBackendError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập");
+    }
+  }
+};
 
   return (
     <Card className="w-full max-w-lg shadow-2xl animate-fade-in-up z-10">
@@ -101,21 +101,21 @@ export default function LoginForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-base 
         [&_label]:font-semibold [&_input]:h-11">
           {/* Email */}
-          <div className="space-y-2">
+          <div className="space-y-2 ">
             <Label htmlFor="email">Email</Label>
-            <div className="relative">
+            <div className="relative ">
               <AtSign className="form-icon" />
               <Input
                 id="email"
-                type="email"
+                type="email" 
                 placeholder="care4gender@example.com"
                 {...register("email")}
                 disabled={isSubmitting}
-                className="pl-8"
+                className={`pl-8 ${errors.email ? "border-2 border-red-500" : "border"}`}
               />
             </div>
             {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
+              <p className="pt-1 text-red-500 text-sm animate-fade-in-up">{errors.email.message}</p>
             )}
           </div>
 
@@ -130,7 +130,7 @@ export default function LoginForm() {
                 placeholder="••••••••"
                 {...register("password")}
                 disabled={isSubmitting}
-                className="pl-8 pr-10"
+                className={`pl-8 ${errors.password ? "border-2 border-red-500" : "border"}`}
               />
               <button
                 type="button"
@@ -142,15 +142,14 @@ export default function LoginForm() {
               </button>
             </div>
             {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
+              <p className="pt-1 text-red-500 text-sm animate-fade-in-up">{errors.password.message}</p>
             )}
           </div>
 
           {/* General Backend Error */}
           {backendError && (
-            <p className="text-red-500 text-sm text-center">{backendError}</p>
+            <p className="text-red-500 text-base text-center animate-fade-in-up m-2">{backendError}</p>
           )}
-
           {/* Forgot password? */}
           <div className="flex justify-end">
             <a

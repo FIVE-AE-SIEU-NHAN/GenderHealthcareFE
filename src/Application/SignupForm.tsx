@@ -16,17 +16,30 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
+import { authApi } from "@/apis/auth.api";
 
 
 type FormData = {
-  fullName: string;
-  gender: string;
-  dob: string;
   email: string;
   password: string;
-  confirmPassword: string;
-  otp: string;
+  confirm_password: string;
+  name: string;
+  phone_number?: string;
+  gender?: string;
+  date_of_birth?: string;
+  email_verify_token?: string;
 };
+
+interface SignupError {
+  response?: {
+    data?: {
+      message?: string;
+      errors?: {
+        [key: string]: string;
+      };
+    };
+  };
+}
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,11 +49,14 @@ export default function SignupForm() {
     register,
     handleSubmit,
     control,
+    setError,
+    watch,
+    clearErrors,
     formState: { errors },
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
-    console.log("Signup data:", data);
+    console.log('data', data);
   };
 
   const [otpCountdown, setOtpCountdown] = useState(0);
@@ -52,10 +68,22 @@ export default function SignupForm() {
       setOtpCountdown((prev) => prev - 1);
     }, 1000);
 
+    
     return () => clearInterval(interval);
+
   }, [otpCountdown]);
 
   const handleGetOtp = () => {
+    const email = watch("email");
+    if (!email) {
+      setError("email", {
+        type: "manual",
+        message: "Email is required to send OTP",
+      });
+      return;
+    } if( errors.email) {
+      clearErrors("email");
+    }
     if (otpCountdown === 0) {
       // Trigger OTP logic (e.g. send OTP to email)
       console.log("Send OTP");
@@ -89,13 +117,13 @@ export default function SignupForm() {
 
           {/* Full Name */}
           <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
+            <Label htmlFor="name">Full Name</Label>
             <div className="relative">
               <User className="form-icon" />
               <Input
-                id="fullName"
+                id="name"
                 placeholder="John Doe"
-                {...register("fullName")}
+                {...register("name")}
                 className="pl-8 text-"
               />
             </div>
@@ -105,9 +133,9 @@ export default function SignupForm() {
           <div className="grid grid-cols-2 gap-4">
             <Controller
               control={control}
-              name="dob"
+              name="date_of_birth"
               render={({ field }) => (
-                <DatePickerWithPresets value={field.value} onChange={field.onChange} />
+                <DatePickerWithPresets  value={field.value ? new Date(field.value) : undefined}  onChange={field.onChange} />
               )}
             />
 
@@ -130,22 +158,7 @@ export default function SignupForm() {
 
           </div>
 
-          {/* Email */}
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <div className="relative">
-              <AtSign className="form-icon" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="care4gender@example.com"
-                {...register("email")}
-                className="pl-8"
-              />
-            </div>
-          </div>
-
-          {/* Password + Confirm Password */}
+              {/* Password + Confirm Password */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -177,7 +190,7 @@ export default function SignupForm() {
                   id="confirmPassword"
                   type={showConfirm ? "text" : "password"}
                   placeholder="••••••••"
-                  {...register("confirmPassword")}
+                  {...register("confirm_password")}
                   className="pl-8 pr-10"
                 />
                 <button
@@ -191,12 +204,38 @@ export default function SignupForm() {
               </div>
             </div>
           </div>
+              
+          {/* Email */}
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <div className="relative">
+              <AtSign className="form-icon" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="care4gender@example.com"
+                {...register("email")}
+                className={`pl-8 ${errors.email ? "border-2 border-red-500" : "border"}`}
+              />
+            </div>
+            {errors.email && (
+              <p className="pt-1 text-red-500 text-sm animate-fade-in-up">{errors.email.message}</p>
+            )}
+          </div>
 
-          {/* OTP Field + Button */}
+           {/* OTP Field + Button */}
           <div className="space-y-2">
             <Label htmlFor="otp">Verification Code</Label>
             <div className="flex gap-2 ">
-              <InputOTP maxLength={6} >
+          <Controller
+            control={control}
+            name="email_verify_token"
+            render={({ field }) => (
+              <InputOTP 
+                maxLength={6}
+                value={field.value}
+                onChange={field.onChange}
+              >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
@@ -206,8 +245,10 @@ export default function SignupForm() {
                   <InputOTPSlot index={5} />
                 </InputOTPGroup>
               </InputOTP>
+            )}
+          />
 
-              <Button 
+          <Button 
                 type="button" 
                 variant="outline"
                 className="shadow-sm w-[75px] h-11 bg-[#00b3b6] text-white font-semibold" 
@@ -215,7 +256,7 @@ export default function SignupForm() {
                 disabled={otpCountdown > 0}
               >
                 {otpCountdown > 0 ? formatTime(otpCountdown) : "Get OTP"}
-              </Button>
+          </Button>
             </div>
           </div>
 
