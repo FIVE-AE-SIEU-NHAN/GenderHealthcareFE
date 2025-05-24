@@ -24,17 +24,14 @@ const ServiceDetail: React.FC = () => {
 
       {/* Main Content */}
       <div className='max-w-6xl mx-auto mt-10 pb-16 px-4 space-y-6'>
-        {/* Title */}
         <h1 className='text-4xl font-bold text-[#030D43]'>
           Professional Medical Service Of Health & Wellness Solutions
         </h1>
 
-        {/* Image */}
         <div>
           <img src='/images/ab2.webp' alt='Service' className='rounded w-full' />
         </div>
 
-        {/* Nội dung mô tả thêm sẽ viết ở đây */}
         <div className='text-sm text-gray-700 leading-relaxed space-y-4'>
           <p>
             Advancements in technology are revolutionizing the healthcare industry, improving patient outcomes and making medical services more accessible. Telemedicine allows patients to consult with
@@ -44,7 +41,6 @@ const ServiceDetail: React.FC = () => {
             as maintaining a balanced diet, staying active, and managing stress contribute significantly to disease prevention.
           </p>
 
-          {/* Hình và nội dung song song */}
           <div className='flex gap-6 items-stretch'>
             <div className='w-3/5'>
               <img
