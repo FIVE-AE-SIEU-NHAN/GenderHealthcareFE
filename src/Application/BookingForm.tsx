@@ -40,7 +40,7 @@ export default function BookingForm() {
         <p className="text-[#1977CC] flex items-center gap-3"><FaHeartbeat /> BOOK AN APPOINTMENT</p>
       </div>
       <div className="text-4xl text-[#1C2359] font-bold">Book a Service</div>
-      {/* Row 1: Name & Phone */}
+      
       <div className="grid grid-cols-2 gap-4">
         <div className="relative">
           <Input
@@ -60,7 +60,6 @@ export default function BookingForm() {
         </div>
       </div>
 
-      {/* Email */}
       <div className="relative">
         <Input
           placeholder="Email"
@@ -71,7 +70,6 @@ export default function BookingForm() {
         <BsEnvelope className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
       </div>
 
-      {/* Service Select */}
       <Controller
         control={control}
         name="service"
@@ -94,10 +92,8 @@ export default function BookingForm() {
         )}
       />
 
-      {/* Message */}
       <Textarea placeholder="Your message..." {...register("message")} className="min-h-[120px]" />
 
-      {/* Agreement & Price Row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Checkbox id="agree" {...register("agreed")} />
@@ -106,7 +102,6 @@ export default function BookingForm() {
         <span className="text-xl font-bold text-right text-shadow-lg">$0</span>
       </div>
 
-      {/* Submit */}
       <Button type="submit" className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md">
         Book An Appointment
       </Button>
