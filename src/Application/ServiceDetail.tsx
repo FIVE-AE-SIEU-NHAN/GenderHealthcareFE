@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaHeartbeat } from "react-icons/fa";
+import { FaSquarePhone } from "react-icons/fa6";
 
 const ServiceDetail: React.FC = () => {
   return (
@@ -29,7 +30,7 @@ const ServiceDetail: React.FC = () => {
         </h1>
 
         <div>
-          <img src='/images/ab2.webp' alt='Service' className='rounded w-full' />
+          <img src='/images/imgService.png' alt='Service' className='rounded-3xl w-full' />
         </div>
 
         <div className='text-sm text-gray-700 leading-relaxed space-y-4'>
@@ -46,7 +47,7 @@ const ServiceDetail: React.FC = () => {
               <img
                 src="/images/ab1.webp"
                 alt="Service detail"
-                className='rounded w-full h-full object-cover'
+                className='rounded-3xl w-full h-full object-cover'
               />
             </div>
             <div className='w-2/5 space-y-3'>
@@ -110,14 +111,23 @@ const ServiceDetail: React.FC = () => {
                      Medical Care 24/7
                 </div>
                 <p className='my-5'>
-                    Treatment for an eye disease or condition, you’ll benefit from our expert skill
-                    and excellent patient service. If  co-management for an ocular disease, such as
+                    Treatment for an eye disease or condition, you'll benefit from our expert skill
+                    and excellent patient service. If  co-management for an ocular disease, such as
                     macular degeneration, cataracts or glaucoma to keep watch on your eye health
                     and prevent future vision loss.
                 </p>
-                <Button type="submit" className="w-1/3 bg-[#1A3973] text-white font-semibold rounded-sm">
-                    Book An Appointment 
-                </Button>
+                <div className="flex items-center gap-4">
+                    <Button type="submit" className="bg-[#1A3973] text-white font-semibold rounded-sm">
+                        Book An Appointment 
+                    </Button>
+                    <div className="h-10 w-10 rounded-full bg-[#1A3973] flex items-center justify-center">
+                        <FaSquarePhone className="text-white text-xl" />
+                    </div>
+                    <div className="flex flex-col">
+                        <div className='font-semibold'>Or Book on Call</div>
+                        <div className="font-semibold">+00 (123) 456789 00</div>
+                    </div>
+                </div>
             </div>
         </div>
 
