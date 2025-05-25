@@ -7,6 +7,7 @@ import { LuInstagram } from "react-icons/lu";
 const ContactPage: React.FC = () => {
   return (
     <div className="bg-white relative h-170">
+      
       {/* Extended blue background behind content */}
       <div className="absolute top-0 w-full h-80 bg-[#6E7BF2] rounded-b-[40px] z-0"></div>
 
