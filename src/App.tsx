@@ -8,11 +8,12 @@ import HomePage from './Application/Homepage';
 import Logout from './Application/Logout';
 import Signup from './Application/Signup';
 import LoginPage from './Application/Signin';
-import BlogDetails from './Application/BlogDetali';
+import BlogDetails from './Application/BlogDetail';
 import BookingService from './Application/BookingService';
 import RequireLoginBooking from './Application/RequireLoginBooking';
 import ServiceList from './Application/ServiceList';
 import ServiceDetail from './Application/ServiceDetail';
+import ContactUs from './Application/ContactUs';
 
 const App: React.FC = () => {
   const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
@@ -32,6 +33,7 @@ const App: React.FC = () => {
         <Route path="/requirebookingform" element={<RequireLoginBooking />} />
         <Route path="/servicelist" element={<ServiceList />} />
         <Route path="/servicedetail" element={<ServiceDetail />} />
+        <Route path="/contactus" element={<ContactUs />} />
       </Routes>
 
       {!hideFooter && <Footer />}
