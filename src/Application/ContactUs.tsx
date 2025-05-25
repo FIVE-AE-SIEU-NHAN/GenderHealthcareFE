@@ -4,7 +4,7 @@ import { FaFacebook } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { LuInstagram } from "react-icons/lu";
 
-export default function ContactPage() {
+const ContactPage: React.FC = () => {
   return (
     <div className="bg-white relative h-170">
       {/* Extended blue background behind content */}
@@ -85,3 +85,5 @@ export default function ContactPage() {
     </div>
   );
 }
+
+export default ContactPage;
