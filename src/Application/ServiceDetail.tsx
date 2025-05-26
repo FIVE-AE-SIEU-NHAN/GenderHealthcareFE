@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { Button } from "@/components/ui/button";
 
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
@@ -99,7 +101,7 @@ const ServiceDetail: React.FC = () => {
         </div>
         <div className='bg-[#F2F3FC] flex p-5 rounded-lg'>
             <div className='w-2/5'>
-                <img src="/public/images/ab1.webp" className='p-5'/>
+                <img src="/images/ab1.webp" className='h-full pr-5'/>
             </div>
             <div className='w-3/5'>
                 <div className='flex items-center gap-2 py-5'>
@@ -117,12 +119,16 @@ const ServiceDetail: React.FC = () => {
                     and prevent future vision loss.
                 </p>
                 <div className="flex items-center gap-4">
-                    <Button type="submit" className="bg-[#1A3973] text-white font-semibold rounded-sm">
-                        Book An Appointment 
-                    </Button>
+                    <Link to={"/bookingservices"} >
+                        <Button className="bg-[#1A3973] text-white font-semibold rounded-sm">
+                            Book An Appointment 
+                        </Button>
+                    </Link>
+                    
                     <div className="h-10 w-10 rounded-full bg-[#1A3973] flex items-center justify-center">
                         <FaSquarePhone className="text-white text-xl" />
                     </div>
+                    
                     <div className="flex flex-col">
                         <div className='font-semibold'>Or Book on Call</div>
                         <div className="font-semibold">+00 (123) 456789 00</div>
