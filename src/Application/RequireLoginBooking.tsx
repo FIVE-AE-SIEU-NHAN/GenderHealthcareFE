@@ -1,5 +1,9 @@
 import React from "react";
 
+import { Link } from 'react-router-dom';
+
+import { Button } from "@/components/ui/button";
+
 const RequireLoginBooking: React.FC = () => {
     return (
 
@@ -29,19 +33,14 @@ const RequireLoginBooking: React.FC = () => {
                         </div>
                         <p className="text-sm text-[#1C2359] font-bold text-center mb-5">Please log in or register to use sexual health care and counseling services.</p>
                         <div className="gap-3 flex justify-center items-center">
-                            <a
-                            href="/login"
-                            className="bg-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-800 transition duration-200 font-semibold"
-                            >
-                            Log In
-                            </a>
+                            
+                            <Link to={"/login"} className="bg-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-800 transition duration-200 font-semibold">
+                                Log In
+                            </Link>
                             <p className="flex items-center my-0 text-[#4A4A4A] font-semibold">or</p>
-                            <a
-                            href="/signup"
-                            className="border-2 border-dark-blue text-dark-blue px-4 py-2 rounded-button hover:bg-blue-50 transition duration-200 font-semibold"
-                            >
-                            Sign Up
-                            </a>
+                            <Link to={"/signup"} className="border-2 border-dark-blue text-dark-blue px-4 py-2 rounded-button hover:bg-blue-50 transition duration-200 font-semibold">
+                                Sign Up
+                            </Link>
                         </div>
                 </form>
             </div>
