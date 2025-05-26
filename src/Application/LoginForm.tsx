@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, AtSign, Lock } from "lucide-react";
 import { authApi } from "@/apis/auth.api";
+import { GoogleCredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 type FormData = {
   email: string;
@@ -85,6 +86,12 @@ export default function LoginForm() {
     }
   }
 };
+
+  const handleSuccess = (credentialResponse: GoogleCredentialResponse) => {
+    console.log("Google login success:", credentialResponse);
+    // Xử lý đăng nhập thành công với Google
+  };
+
 
   return (
     <Card className="w-full max-w-lg shadow-2xl animate-fade-in-up z-10">
@@ -182,8 +189,7 @@ export default function LoginForm() {
             className="h-[45px] w-full flex items-center justify-center gap-2 text-2xs"
             onClick={() => console.log("Google login clicked")}
           >
-            <img src="/images/google.png" alt="Google" className="w-5 h-5" />
-            Login with Google
+            <GoogleLogin onSuccess={handleSuccess} />
           </Button>
         </form>
       </CardContent>
