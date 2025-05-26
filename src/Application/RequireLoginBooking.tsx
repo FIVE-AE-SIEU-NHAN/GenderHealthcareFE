@@ -6,7 +6,6 @@ const RequireLoginBooking: React.FC = () => {
         <div>
 
             <div>
-                {/* Banner */}
                 <section className='bg-blue-100 py-0 text-center'>
                     <div className='relative w-full'>
                     <img src='/images/banner_blog.png' alt='' className='rounded w-full' />
@@ -20,7 +19,7 @@ const RequireLoginBooking: React.FC = () => {
                     </div>
                 </section>
             </div>
-                {/* Form Require Login*/ }
+
             <div> 
                 <form className="w-full max-w-2xl mx-auto space-y-6 p-6 bg-white shadow-2xl rounded-xl mt-15 mb-20">
                         <div className="text-4xl text-[#1C2359] font-bold text-center">Reproductive health care services</div>
