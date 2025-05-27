@@ -14,6 +14,7 @@ import RequireLoginBooking from './Application/RequireLoginBooking';
 import ServiceList from './Application/ServiceList';
 import ServiceDetail from './Application/ServiceDetail';
 import ContactUs from './Application/ContactUs';
+import Prescription from './Application/Prescription';
 
 const App: React.FC = () => {
   const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
@@ -34,6 +35,7 @@ const App: React.FC = () => {
         <Route path="/servicelist" element={<ServiceList />} />
         <Route path="/servicedetail" element={<ServiceDetail />} />
         <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/prescription" element={<Prescription />} />
       </Routes>
 
       {!hideFooter && <Footer />}
