@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 
 const Prescription: React.FC = () => {
@@ -22,26 +23,109 @@ const Prescription: React.FC = () => {
       {/* Cards */}
       <div className="max-w-7xl mx-auto p-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300"
-            >
-              <img
-                src="/images/imgPrescription.webp"
-                alt=""
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
-                <Link to={"#"}>
+          {/* Card 1 */}
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
                   <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
-                    Select product
+                    Select product 
                   </Button>
-                </Link>
-              </div>
+              </Link>
             </div>
-          ))}
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 4 */}
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 5 */}
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 6 */}
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 7 */}
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 8 */}
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* Pagination */}
