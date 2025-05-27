@@ -126,6 +126,103 @@ const Prescription: React.FC = () => {
               </Link>
             </div>
           </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl overflow-hidden shadow hover:shadow-md transition duration-300">
+            <img src="/images/imgPrescription.webp" alt="" className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h3 className="text-base font-semibold mb-2">Ketamin 5k$/1kg</h3>
+              <Link to={"#"}>
+                  <Button className="mx-auto block w-1/2 bg-[#1A3973] text-white font-semibold rounded-md mt-5">
+                    Select product 
+                  </Button>
+              </Link>
+            </div>
+          </div>
+
         </div>
 
         {/* Pagination */}
