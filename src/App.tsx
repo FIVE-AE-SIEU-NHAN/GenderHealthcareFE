@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
@@ -15,10 +15,17 @@ import ServiceList from './Application/ServiceList';
 import ServiceDetail from './Application/ServiceDetail';
 import ContactUs from './Application/ContactUs';
 import Prescription from './Application/PrescriptionDetail';
+import 'sal.js/dist/sal.css';
+import sal from 'sal.js';
+
+
+
 
 const App: React.FC = () => {
   const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
-
+  useEffect(() => {
+    sal(); // kích hoạt animation
+  }, []);
   return (
     <Router>
       {/* <Header /> */}
