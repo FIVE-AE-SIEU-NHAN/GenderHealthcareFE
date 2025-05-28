@@ -84,13 +84,12 @@ function ScrollToTopButton() {
         visible ? "opacity-100" : "opacity-0 pointer-events-none",
         "hover:w-26 hover:h-11 hover:rounded-4xl hover:bg-semi-dark-blue active:translate-y-[3.5px] transition ease-in-out duration-200"
       )}
-      // hover:bg-[#0f0c4f]
       style={{ transitionProperty: "all, background-color" }}
     >
       <ChevronUp
         className="upArrow size-5 text-white transition-transform duration-300 group-hover:-translate-y-[150%]"
       />
-      <span className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1 whitespace-nowrap font-mono text-[1rem] font-semibold text-white opacity-0 text-shadow-sm group-hover:bottom-[30%] group-hover:opacity-100 transition-all duration-300">
+      <span className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-0.75 whitespace-nowrap font-inter text-[1rem] font-semibold text-white opacity-0 text-shadow-sm group-hover:bottom-[30%] group-hover:opacity-100 transition-all duration-300">
         Back to Top
       </span>
     </button>

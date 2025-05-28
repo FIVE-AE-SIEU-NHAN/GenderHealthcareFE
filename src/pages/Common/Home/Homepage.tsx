@@ -1,8 +1,9 @@
 import React from 'react';
-import Home from '../components/Home';
-import About from '../components/About';
-import News from '../components/News';
-import Doctors from '../components/Doctors';
+import Home from './components/Landing';
+import About from './components/About';
+import News from './components/News';
+import Doctors from './components/Doctors';
+import FAQSection from './components/FAQ';
 import { ScrollToTopButton } from '@/components/ui/button';
 
 
@@ -31,6 +32,7 @@ const HomePage: React.FC = () => {
           />
         </svg>
       </div>
+      <FAQSection />
       <News />
       <ScrollToTopButton />
     </>

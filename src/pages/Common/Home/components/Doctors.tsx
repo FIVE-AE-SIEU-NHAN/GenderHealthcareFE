@@ -8,6 +8,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { FaHeartbeat, FaPhone, FaFacebookF, FaInfoCircle } from "react-icons/fa";
 import Autoplay from "embla-carousel-autoplay"
+import doctor from "@/assets/images/bacsi3.jpg"; 
 
 type Doctor = {
   name: string;
@@ -19,32 +20,32 @@ const doctors: Doctor[] = [
   {
     name: "Dr. Julia Jany",
     specialty: "Gynecology Specialist",
-    image: "/images/bacsi3.jpg",
+    image: doctor,
   },
   {
     name: "Dr. Michel Liu",
     specialty: "Heart Specialist",
-    image: "/images/bacsi3.jpg",
+    image: doctor,
   },
   {
     name: "Dr. Jesmine Ruby",
     specialty: "Neurology Specialist",
-    image: "/images/bacsi3.jpg",
+    image: doctor,
   },
   {
     name: "Dr. bacsi3 Smith",
     specialty: "Cardiology Specialist",
-    image: "/images/bacsi3.jpg",
+    image: doctor,
   },
   {
     name: "Dr. Julia Jany",
     specialty: "Gynecology Specialist",
-    image: "/images/bacsi3.jpg",
+    image: doctor,
   },
   {
     name: "Dr. Michel Liu",
     specialty: "Heart Specialist",
-    image: "/images/bacsi3.jpg",
+    image: doctor,
   },
 ];
 
@@ -67,7 +68,7 @@ const Doctors = () => {
           <h2>
             Skilled <span className="font-normal">Professionals</span>
           </h2>
-          <div>at <span className="text-[#16259a]">Care4Gender</span></div>
+          <div>at <span className="bg-gradient-to-r from-blue-900 via-blue-700 to-blue-400 text-transparent bg-clip-text">Care4Gender</span></div>
         </div>
 
       </div>
@@ -96,11 +97,11 @@ const Doctors = () => {
             >
               <Card className="p-0 text-center shadow-xl rounded-2xl h-[93%] flex flex-col">
                 <CardContent className="flex flex-col items-center space-y-4 p-0 h-full">
-                  <div className="w-full h-[70%] mb-2">
+                  <div className="w-full h-[70%] mb-2 overflow-hidden rounded-t-2xl">
                     <img
                       src={doc.image}
                       alt={doc.name}
-                      className="rounded-t-lg object-cover w-full h-full"
+                      className="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-108 hover:rotate-2"
                     />
                   </div>
                   <div className=" flex flex-col justify-between items-center">
@@ -121,7 +122,6 @@ const Doctors = () => {
                         <FaInfoCircle className="text-xl" />
                       </div>
                     </div>
-
                   </div>
                 </CardContent>
               </Card>

@@ -8,55 +8,56 @@ import {
 import { Card } from "@/components/ui/card";
 import { FaCalendarAlt, FaHeartbeat } from "react-icons/fa";
 import Autoplay from "embla-carousel-autoplay";
+import news from "@/assets/images/new1.jpg"; 
 
 const newsPosts = [
   {
     date: "Mar 20, 2021",
     title: "Get the Home care and nursing service",
     excerpt: "Debitis aut rerum nec sitatoe bus saereve eveniet...",
-    image: "/images/new1.jpg",
+    image: news,
   },
   {
     date: "Mar 20, 2021",
     title: "Get the Home care and nursing service",
     excerpt: "Debitis aut rerum nec sitatoe bus saereve eveniet...",
-    image: "/images/new1.jpg",
+    image: news,
   },
   {
     date: "Mar 20, 2021",
     title: "Get the Home care and nursing service",
     excerpt: "Debitis aut rerum nec sitatoe bus saereve eveniet...",
-    image: "/images/new1.jpg",
+    image: news,
   },
   {
     date: "Mar 20, 2021",
     title: "Get the Home care and nursing service",
     excerpt: "Debitis aut rerum nec sitatoe bus saereve eveniet...",
-    image: "/images/new1.jpg",
+    image: news,
   },
   {
     date: "Mar 20, 2021",
     title: "Get the Home care and nursing service",
     excerpt: "Debitis aut rerum nec sitatoe bus saereve eveniet...",
-    image: "/images/new1.jpg",
+    image: news,
   },
   {
     date: "Mar 20, 2021",
     title: "Get the Home care and nursing service",
     excerpt: "Debitis aut rerum nec sitatoe bus saereve eveniet...",
-    image: "/images/new1.jpg",
+    image: news,
   },
   {
     date: "Mar 20, 2021",
     title: "Get the Home care and nursing service",
     excerpt: "Debitis aut rerum nec sitatoe bus saereve eveniet...",
-    image: "/images/new1.jpg",
+    image: news,
   },
   {
     date: "Mar 20, 2021",
     title: "Get the Home care and nursing service",
     excerpt: "Debitis aut rerum nec sitatoe bus saereve eveniet...",
-    image: "/images/new1.jpg",
+    image: news,
   },
 ];
 
@@ -96,7 +97,7 @@ export function News() {
     <section
       id="news"
       className="py-20 text-center max-w-[1400px] mx-auto px-4 mb-12 relative"
-      // data-sal="fade"
+      data-sal="fade"
       data-sal-duration="700"
       data-sal-delay="100"
       data-sal-easing="ease-out-back"
@@ -132,7 +133,7 @@ export function News() {
           }),
         ]}
         className="w-full mb-6"
-        // data-sal="fade"
+        data-sal="fade"
         data-sal-duration="800"
         data-sal-delay="400"
       >

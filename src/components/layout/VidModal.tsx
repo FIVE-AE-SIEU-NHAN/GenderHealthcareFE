@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaPlay } from "react-icons/fa";
+import VidOverlay from "@/assets/images/overlay.webp"; 
 
 const VideoPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +33,7 @@ const VideoPopup = () => {
         className="relative cursor-pointer w-full h-full rounded-lg overflow-hidden shadow-md"
       >
         <img
-          src="/images/overlay.webp"
+          src={VidOverlay}
           alt="Video preview"
           className="w-full h-full object-cover"
         />

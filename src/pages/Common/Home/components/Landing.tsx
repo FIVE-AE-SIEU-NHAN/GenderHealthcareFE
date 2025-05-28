@@ -1,6 +1,11 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
+import slide1 from '@/assets/images/bs1.webp';
+import slide2 from '@/assets/images/bs2.webp';
+import slide3 from '@/assets/images/bs3.webp';
+
+
 
 import { FaArrowRightLong } from "react-icons/fa6";
 
@@ -22,19 +27,22 @@ const Home: React.FC = () => {
     {
       heading: "Ipsum Lorem",
       title: 'lorem ipsum lorem ipsum lorem ipsumlorem ipsum',
-      description: '', // đoạn giới thiệu 10-15 chữ
+      description: 'Discover new ways to live healthier and happier.', 
+      image: slide1,
       buttons: sharedButtons
     },
     {
       heading: 'Aenean luctus lobortis tellus',
       title: 'New Lifestyle',
       description: 'Discover new ways to live healthier and happier.',
+      image: slide2,
       buttons: sharedButtons
     },
     {
       heading: 'Pellentesque nec libero nisi',
       title: 'Your Health Benefits',
       description: 'Learn how to maximize your wellness and benefits.',
+      image: slide3,
       buttons: sharedButtons
     },
   ];
@@ -57,7 +65,7 @@ const Home: React.FC = () => {
             <div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat sm:bg-[center_top] lg:bg-center"
               style={{
-                backgroundImage: `url(/images/bs${index + 1}.webp)`,
+                backgroundImage: `url(${slide.image})`,
                 zIndex: 0,
               }}
             />

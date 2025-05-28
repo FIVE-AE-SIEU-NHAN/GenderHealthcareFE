@@ -1,11 +1,13 @@
 import React from "react";
 import { FaArrowRight, FaHeartbeat } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import VideoPopup from "./VidModal";
+import VideoPopup from "@/components/layout/VidModal"; 
+import about1 from "@/assets/images/ab1.webp";
+import about2 from "@/assets/images/ab2.webp";
 
 const About = () => {
   return (
-    <section className="py-12 px-4 md:px-12 mb-12 mt-7">
+    <section className="py-12 px-4 md:px-12 mb-12 mt-7 overflow-hidden">
       <div>
         <div className="flex flex-col lg:flex-row gap-10 mx-4 md:mx-12 lg:mx-28">
           <div className="lg:w-1/1 space-y-3">
@@ -94,25 +96,25 @@ const About = () => {
 
           <div className="lg:w-2/4 flex flex-col items-center gap-6">
             <div
-              className="w-full h-86 rounded-lg overflow-hidden shadow-md"
+              className="w-full h-86 rounded-lg shadow-md"
               data-sal="slide-left"
               data-sal-duration="800"
               data-sal-delay="200"
             >
               <img
-                src="/images/ab1.webp"
+                src={about1}
                 alt="Doctor consulting"
                 className="w-full h-full object-cover"
               />
             </div>
             <div
-              className="w-full h-86 rounded-lg overflow-hidden shadow-md"
+              className="w-full h-86 rounded-lg shadow-md"
               data-sal="slide-left"
               data-sal-duration="800"
               data-sal-delay="350"
             >
               <img
-                src="/images/ab2.webp"
+                src={about2}
                 alt="Nurse with patient"
                 className="w-full h-full object-cover shadow-2xl"
               />
