@@ -10,7 +10,7 @@ const BlogDetails: React.FC = () => {
   return (
     <div className='font-sans text-gray-800'>
       {/* Banner */}
-      <section className='bg-blue-100 py-0 text-center'>
+      <section className='bg-blue-100 py-0 text-center '>
         <div className='relative w-full'>
           <img src='/images/banner_blog.png' alt='' className='rounded w-full' />
           <div className='absolute inset-0 w-full bg-[#1A2159]/70 flex flex-col items-center justify-center'>
