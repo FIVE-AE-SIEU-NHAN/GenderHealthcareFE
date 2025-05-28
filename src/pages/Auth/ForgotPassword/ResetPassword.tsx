@@ -18,7 +18,7 @@ type FormData = {
   confirmPassword: string;
 };
 
-export default function ResetPassword() {
+const ResetPassword: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
@@ -156,3 +156,5 @@ export default function ResetPassword() {
     </div>
   );
 }
+
+export default ResetPassword;
