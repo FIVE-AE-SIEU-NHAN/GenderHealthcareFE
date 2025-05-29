@@ -26,7 +26,7 @@ const BlogDetails: React.FC = () => {
       <div className='max-w-6xl mx-auto mt-10 pb-16 grid grid-cols-1 lg:grid-cols-4 gap-8'>
         {/* Main content */}
         <div className='lg:col-span-3 space-y-6'>
-          {/* Title */}
+
           <h1 className='text-3xl font-bold '>lorem ipsum lorem ipsum lorem ipsum lorem </h1>
 
           {/* Meta info */}
@@ -52,13 +52,11 @@ const BlogDetails: React.FC = () => {
               <span>Table of Content</span>
             </h3>
             
-            {/* Phần giới thiệu */}
             <div className='mb-3 text-sm text-gray-600'>
               <p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
               <p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
             </div>
             
-            {/* Danh sách mục lục */}
             <ul className='list-disc list-inside text-sm space-y-1'>
               <li className='hover:text-blue-500 cursor-pointer'>Nội dung chính</li>
               <li className='hover:text-blue-500 cursor-pointer'>Tổng quan về vấn đề</li>
@@ -67,7 +65,6 @@ const BlogDetails: React.FC = () => {
             </ul>
           </div>
 
-          {/* Summary */}
           <div>
             <h3 className='font-semibold text-xl mb-2'>Tóm tắt nội dung</h3>
             <p className='text-gray-700 text-sm leading-relaxed'>
@@ -76,7 +73,6 @@ const BlogDetails: React.FC = () => {
             </p>
           </div>
 
-          {/* Section 1 */}
           <div>
             <h3 className='text-xl font-semibold mb-2'>1. Nội dung chính</h3>
             <p className='text-gray-700 text-sm mb-3'>
@@ -87,7 +83,6 @@ const BlogDetails: React.FC = () => {
             <img src='/images/demo1.jpg' alt='' className='rounded w-full' />
           </div>
 
-          {/* Section 2 */}
           <div>
             <h3 className='text-xl font-semibold mb-2'>2. Phân tích chi tiết</h3>
             <p className='text-gray-700 text-sm mb-3'>
@@ -97,7 +92,6 @@ const BlogDetails: React.FC = () => {
             <img src='/images/bacsi1.jpg' alt='' className='rounded w-full' />
           </div>
 
-          {/* Section 3 */}
           <div>
             <h3 className='text-xl font-semibold mb-2'>3. Kết luận</h3>
             <p className='text-gray-700 text-sm'>Tóm gọn lại ý chính, đưa ra kết luận và lời khuyên cuối bài viết.
