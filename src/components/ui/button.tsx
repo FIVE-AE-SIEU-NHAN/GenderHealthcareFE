@@ -1,6 +1,8 @@
 import * as React from "react"
+import { useEffect, useState } from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import { ChevronUp } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -56,4 +58,42 @@ function Button({
   )
 }
 
-export { Button, buttonVariants }
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      setVisible(window.scrollY > 300)
+    }
+
+    window.addEventListener("scroll", toggleVisibility)
+    return () => window.removeEventListener("scroll", toggleVisibility)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0 })
+  }
+
+  if (!visible) return null
+
+  return (
+    <button
+      onClick={scrollToTop}
+      className={cn(
+        "group fixed bottom-6 right-6 z-5 flex h-[50px] w-[50px] items-center justify-center rounded-full bg-light-blue shadow-xl transition-all duration-300 overflow-hidden cursor-pointer",
+        visible ? "opacity-100" : "opacity-0 pointer-events-none",
+        "hover:w-26 hover:h-11 hover:rounded-4xl hover:bg-semi-dark-blue active:translate-y-[3.5px] transition ease-in-out duration-200"
+      )}
+      style={{ transitionProperty: "all, background-color" }}
+    >
+      <ChevronUp
+        className="upArrow size-5 text-white transition-transform duration-300 group-hover:-translate-y-[150%]"
+      />
+      <span className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-0.75 whitespace-nowrap font-inter text-[1rem] font-semibold text-white opacity-0 text-shadow-sm group-hover:bottom-[30%] group-hover:opacity-100 transition-all duration-300">
+        Back to Top
+      </span>
+    </button>
+  )
+}
+
+export { Button, buttonVariants, ScrollToTopButton }

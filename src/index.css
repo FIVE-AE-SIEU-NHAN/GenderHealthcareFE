@@ -8,6 +8,8 @@
 
 body {
   background: #fbfbfb;
+  margin: 0;
+  padding: 0;
   /* background: #d2e2ff; */
 }
 
@@ -23,6 +25,14 @@ body {
   --radius-button: 14px;
 
   --animate-fade-in-up: fade-in-up .6s ease-in-out;
+  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+  --animate-jello: jello-horizontal 0.9s both;
+  --animate-slide-up: slideUp .6s ease-out forwards;
+  --animate-fade-in: fadeIn .6s ease-out forwards;
+  --animate-shadow: shadow 2.45s infinite;
+  --animate-floating: floating 2.45s infinite;
+  --animate-fade-in-scale: fadeInScale .5s ease forwards;
+
   @keyframes fade-in-up {
     0% {
       opacity: 0;
@@ -34,7 +44,56 @@ body {
     }
   }
 
-  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes shadow {
+    0%,100% {
+      transform: scale(1,1);
+    }
+    50% {
+      transform: scale(.85,.85);
+    }
+  }
+
+
+  @keyframes floating {
+    0%,100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(15px);
+    }
+  }
+
+  @keyframes fadeIn{
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @keyframes caret-blink {
     0%,70%,100% {
       opacity: 1;
@@ -43,11 +102,24 @@ body {
       opacity: 0;
     }
   }
+
+  @keyframes sliceLeftToRight {
+    0% {
+      clip-path: inset(0 100% 0 0);
+      opacity: 0;
+    }
+    100% {
+      clip-path: inset(0 0 0 0);
+      opacity: 1;
+    }
+  }
 }
 
 @layer components {
   .nav-text {
-    @apply font-semibold whitespace-nowrap text-[clamp(1rem,2vw,1.5rem)] hover:text-sky-600 text-navText text-shadow-lg;
+    @apply whitespace-nowrap hover:text-sky-600 text-navText text-shadow-md
+    relative text-xl inline-block after:absolute after:left-2 after:bottom-2 after:h-[2px] after:w-0
+     lg:after:bg-black after:transition-all after:duration-300 hover:after:w-[80%];
   }
 
   .section-text {
@@ -58,6 +130,30 @@ body {
     @apply absolute left-2 top-[14px] h-4 w-4 text-[#101245] stroke-[2.7];
   }
 }
+
+
+/* Normal CSS */
+.animated-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.animated-hover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 0%;
+  width: 100%;
+  background-color: rgba(107, 114, 128, 0.2); /* muted-foreground/20 */
+  z-index: -1;
+  transition: height 0.3s ease;
+}
+
+.animated-hover:hover::before {
+  height: 100%;
+}
+
 
 .swiper-pagination-bullet {
   width: 0.75rem;
@@ -71,6 +167,9 @@ body {
   background-color: #1a3973 !important; 
   opacity: 1;
 }
+
+/* External animation */
+@-webkit-keyframes jello-horizontal{0%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}30%{-webkit-transform:scale3d(1.25,.75,1);transform:scale3d(1.25,.75,1)}40%{-webkit-transform:scale3d(.75,1.25,1);transform:scale3d(.75,1.25,1)}50%{-webkit-transform:scale3d(1.15,.85,1);transform:scale3d(1.15,.85,1)}65%{-webkit-transform:scale3d(.95,1.05,1);transform:scale3d(.95,1.05,1)}75%{-webkit-transform:scale3d(1.05,.95,1);transform:scale3d(1.05,.95,1)}100%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}}@keyframes jello-horizontal{0%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}30%{-webkit-transform:scale3d(1.25,.75,1);transform:scale3d(1.25,.75,1)}40%{-webkit-transform:scale3d(.75,1.25,1);transform:scale3d(.75,1.25,1)}50%{-webkit-transform:scale3d(1.15,.85,1);transform:scale3d(1.15,.85,1)}65%{-webkit-transform:scale3d(.95,1.05,1);transform:scale3d(.95,1.05,1)}75%{-webkit-transform:scale3d(1.05,.95,1);transform:scale3d(1.05,.95,1)}100%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}}
 
 
 /* === SCROLL === */
@@ -146,7 +245,8 @@ body {
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.97 0 0 / 0%);
+  /* --accent: oklch(0.7923 0.1547 251.51 / 43%); */
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);

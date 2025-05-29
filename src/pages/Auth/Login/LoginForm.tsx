@@ -87,7 +87,7 @@ export default function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-lg shadow-2xl animate-fade-in-up z-10">
+    <Card className="w-full max-w-lg shadow-2xl animate-fade-in-up z-10 mt-8 mb-8">
       <CardHeader className="text-center">
         <img src="/images/logo.webp" alt="logo" className="mx-auto" />
         <CardTitle className="text-2xl font-bold text-dark-blue text-shadow-lg">
