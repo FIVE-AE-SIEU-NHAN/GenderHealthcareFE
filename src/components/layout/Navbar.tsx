@@ -44,7 +44,7 @@ const Navbar = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuLink href="#blog" className="nav-text text-xl">Blog</NavigationMenuLink>
+                  <NavigationMenuLink href="/blog" className="nav-text text-xl">Blog</NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuLink href="#about-us" className="nav-text text-xl">About</NavigationMenuLink>
