@@ -10,8 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, AtSign, Lock } from "lucide-react";
-import { authApi } from "@/apis/auth.api";
+import { authApi } from "@/apis/authApi";
 import { GoogleCredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 type FormData = {
   email: string;
@@ -32,7 +33,7 @@ interface LoginError {
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [backendError, setBackendError] = useState("");
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -44,17 +45,11 @@ export default function LoginForm() {
   setBackendError(""); // Reset lỗi trước khi gọi API
   
   try {
-    const response = await authApi.login(data);
-    
-    // Xử lý thành công
-    if (response.data?.result) {
-      const { access_token, refresh_token } = response.data.result;
-      localStorage.setItem('access_token', access_token);
-      localStorage.setItem('refresh_token', refresh_token);
-      window.location.href = '/dashboard';
+    const res = await authApi.login(data);
+    if(res.status === 200){
+      navigate('/dashboard');
     }
 
-    window.location.href = '/dashboard';
   } catch (err: unknown) {
     const error = err as LoginError;
     // Đặt lỗi cho các field cụ thể

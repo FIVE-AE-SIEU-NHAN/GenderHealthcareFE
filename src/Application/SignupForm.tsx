@@ -16,7 +16,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
-import { authApi } from "@/apis/auth.api";
+import { authApi } from "@/apis/authApi";
 
 
 type FormData = {

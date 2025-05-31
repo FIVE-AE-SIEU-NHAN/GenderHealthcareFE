@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter , Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -13,21 +13,17 @@ const App: React.FC = () => {
   const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
-    <Router>
-      {/* <Header /> */}
+    <BrowserRouter>
       <Navbar />
-
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<HomePage/>} />
+        <Route path="/dashboard" element={<HomePage />} />
       </Routes>
-
       {!hideFooter && <Footer />}
-
-    </Router>
+    </BrowserRouter>
   );
 };
 
