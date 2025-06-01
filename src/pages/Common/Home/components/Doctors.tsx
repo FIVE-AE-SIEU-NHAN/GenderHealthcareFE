@@ -95,7 +95,7 @@ const Doctors = () => {
               key={index}
               className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
-              <Card className="p-0 text-center shadow-xl rounded-2xl h-[93%] flex flex-col">
+              <Card className="p-0 text-center shadow-md rounded-2xl h-[93%] flex flex-col">
                 <CardContent className="flex flex-col items-center space-y-4 p-0 h-full">
                   <div className="w-full h-[70%] mb-2 overflow-hidden rounded-t-2xl">
                     <img
@@ -129,8 +129,8 @@ const Doctors = () => {
           ))}
         </CarouselContent>
         <div className="flex justify-center mt-4 gap-2 2xl:block">
-          <CarouselPrevious className="bg-dark-blue/10 shadow-md backdrop-blur hover:bg-dark-blue/20 text-dark-blue hidden [@media(min-width:1464px)]:grid" />
-          <CarouselNext className="bg-dark-blue/10 shadow-md backdrop-blur hover:bg-dark-blue/20 text-dark-blue hidden [@media(min-width:1464px)]:grid" />
+          <CarouselPrevious className="bg-dark-blue/10 backdrop-blur hover:bg-dark-blue/15 hover:-translate-x-0.5 text-dark-blue duration-300 transition hidden [@media(min-width:1464px)]:grid" />
+          <CarouselNext className="bg-dark-blue/10 backdrop-blur hover:bg-dark-blue/15 text-dark-blue hover:translate-x-0.5 transition duration-300 hidden [@media(min-width:1464px)]:grid" />
         </div>
       </Carousel>
     </div>

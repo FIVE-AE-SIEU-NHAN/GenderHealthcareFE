@@ -33,7 +33,7 @@ const Navbar = () => {
                   <NavigationMenuLink href="#top" className="nav-text text-xl">Home</NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="nav-text text-xl">Services</NavigationMenuTrigger>
+                  <a href="/services"><NavigationMenuTrigger className="nav-text text-xl">Services</NavigationMenuTrigger></a>
                   <NavigationMenuContent className="bg-white shadow-md rounded-lg p-4">
                     <ul className="grid gap-3 w-[200px]">
                       <li><NavigationMenuLink href="#gynecology" className="block text-lg font-semibold hover:bg-semi-dark-blue/8">Gynecology</NavigationMenuLink></li>

@@ -27,7 +27,7 @@ const FAQSection = () => {
 
   return (
     <section className="max-w-7xl mx-auto px-6 py-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div data-sal="slide-right" data-sal-delay="100" data-sal-duration="800">
           <p
             className="section-text flex gap-4 items-center"

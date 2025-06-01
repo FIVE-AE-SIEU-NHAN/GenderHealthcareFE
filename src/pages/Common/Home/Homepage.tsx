@@ -33,7 +33,12 @@ const HomePage: React.FC = () => {
         </svg>
       </div>
       <FAQSection />
-      <News />
+      <div className="relative overflow-hidden">
+        {/* Decorative blob background */}
+        <div className="absolute top-20 -left-70 w-137 h-144 opacity-12 blur-2xl bg-blue-300 rounded-full -z-10" />
+        <div className="absolute -bottom-20 -right-60 w-120 h-140 opacity-12 blur-2xl bg-purple-300 rounded-full -z-10" />
+        <News />
+      </div>
       <ScrollToTopButton />
     </>
   );

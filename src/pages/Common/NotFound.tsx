@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"; // shadcn button
 import MedicalIllustration from "@/assets/images/notfound1.png";
 import { Stethoscope, HeartPulse, Hospital, Syringe } from "lucide-react";
 
-export const NotFound = () => {
+const NotFound = () => {
   return (
     <div className="relative w-full text-dark-blue flex flex-col bg-gradient-to-br from-blue-50 via-white to-blue-100 min-h-[calc(100vh-72px)]">
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -48,3 +48,5 @@ export const NotFound = () => {
     </div>
   );
 };
+
+export default NotFound;

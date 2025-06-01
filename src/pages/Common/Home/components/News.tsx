@@ -6,7 +6,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { Card } from "@/components/ui/card";
-import { FaCalendarAlt, FaHeartbeat } from "react-icons/fa";
+import { FaCalendarAlt, FaHeartbeat, FaHospital } from "react-icons/fa";
 import Autoplay from "embla-carousel-autoplay";
 import news from "@/assets/images/new1.jpg"; 
 
@@ -102,7 +102,7 @@ export function News() {
       data-sal-delay="100"
       data-sal-easing="ease-out-back"
     >
-      <div className="text-center mb-20"
+      <div className="text-center mb-20 items-center justify-center"
         data-sal="slide-up"
         data-sal-duration="600"
         data-sal-delay="200">
@@ -115,7 +115,10 @@ export function News() {
             Latest News & Blogs
           </h2>
         </div>
-
+        <p className="text-gray-600 mt-4 max-w-2xl mx-auto text-base sm:text-lg md:text-xl"
+          data-sal="slide-up" data-sal-delay="500">
+          Stay updated with the latest news and blogs from our healthcare experts.
+        </p>
       </div>
 
       <Carousel
@@ -132,27 +135,30 @@ export function News() {
             stopOnMouseEnter: true,
           }),
         ]}
-        className="w-full mb-6"
+        className="w-full mb-4"
         data-sal="fade"
         data-sal-duration="800"
         data-sal-delay="400"
       >
-        <CarouselContent className="flex h-86 pb-142 -ml-10">
+        <CarouselContent className="flex h-86 pb-132 -ml-10">
           {newsPosts.map((post, index) => (
             <CarouselItem
               key={index}
               className="basis-full sm:basis-1/2 lg:basis-1/3 pl-10"
             >
-              <Card className="relative shadow-md rounded-xl overflow-visible flex flex-col h-105">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full absolute inset-0 h-full object-cover rounded-xl"
-                />
-
+              <Card className="relative shadow-md rounded-xl overflow-visible flex flex-col h-95 group">
+                <div className="relative w-full h-full overflow-hidden rounded-xl">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full absolute inset-0 h-full object-cover rounded-xl"
+                  />
+                  <span className="shine group-hover:animate-shine" />
+                </div>
+                
+                {/* Small Box */}
                 <div
-                  className="absolute left-20 right-20 bottom-[-6rem] bg-white rounded-xl p-5 shadow-lg z-10 border-b-4 border-light-blue h-60"
-                  style={{ maxWidth: "calc(100% - 2rem)" }}
+                  className="absolute left-20 right-20 bottom-[-6rem] bg-white rounded-xl p-5 shadow-lg z-10 border-b-4 border-light-blue h-55 max-w-[cacl(100% - 2rem)] flex flex-col justify-between"
                 >
                   <div className="text-light-blue text-sm flex items-center mb-2">
                     <FaCalendarAlt className="mr-2 -mt-0.5" />
@@ -172,7 +178,7 @@ export function News() {
                     <span className="ml-1 transition-all duration-300 group-hover:ml-2 group-hover:opacity-0">
                       &rsaquo;
                     </span>
-                    <span className="-translate-x-5 ml-1 left-full absolute opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:left-[calc(100%+0.5rem)]">
+                    <span className="-translate-x-24 ml-1 left-full absolute opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:left-[calc(100%+0.5rem)]">
                       --&gt;
                     </span>
                   </a>
@@ -186,7 +192,7 @@ export function News() {
       </Carousel>
 
       {/* Navigation Dots */}
-      <div className="flex justify-center gap-2 mt-6">
+      <div className="flex justify-center gap-2">
         {[...Array(pageCount)].map((_, pageIndex) => (
           <button
             key={pageIndex}

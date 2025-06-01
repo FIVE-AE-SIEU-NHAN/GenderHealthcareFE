@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Lock, UserPlus, LogIn } from "lucide-react";
 import unAuth from "@/assets/images/unauth.png"; 
 
-export const Unauthorized = () => {
+const Unauthorized = () => {
   return (
     <div className="relative w-full text-dark-blue flex flex-col bg-gradient-to-br from-blue-50 via-white to-blue-100 min-h-[calc(100vh-72px)]">
       <div className="absolute inset-0 pointer-events-none z-0">

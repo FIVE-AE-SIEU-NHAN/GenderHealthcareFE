@@ -2,7 +2,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
 import slide1 from '@/assets/images/bs1.webp';
-import slide2 from '@/assets/images/bs2.webp';
+// import slide2 from '@/assets/images/bs2.webp';
 import slide3 from '@/assets/images/bs3.webp';
 
 
@@ -35,7 +35,7 @@ const Home: React.FC = () => {
       heading: 'Aenean luctus lobortis tellus',
       title: 'New Lifestyle',
       description: 'Discover new ways to live healthier and happier.',
-      image: slide2,
+      image: "/images/bs2.webp", 
       buttons: sharedButtons
     },
     {

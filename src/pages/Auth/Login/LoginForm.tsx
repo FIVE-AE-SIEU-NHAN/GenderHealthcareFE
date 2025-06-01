@@ -10,15 +10,33 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, AtSign, Lock } from "lucide-react";
+// import { GoogleCredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
+import { authApi } from "@/apis/authApi";
+
+import logo from "@/assets/images/logo1.png"; 
+import GoogleLoginButton from "../GoogleLogin";
+// import googleLogo from "@/assets/images/google.png";
 
 type FormData = {
   email: string;
   password: string;
 };
+interface LoginError {
+  response?: {
+    data?: {
+      message?: string;
+      errors?: {
+        [key: string]: string;
+      };
+    };
+  };
+}
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [backendError, setBackendError] = useState("");
+  const navigate = useNavigate();
 
   const {
     register,
@@ -28,68 +46,51 @@ export default function LoginForm() {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    setBackendError("");
-
-    await new Promise((r) => setTimeout(r, 600));
-
-    const response = (() => {
-      if (data.email !== "dmaK@gmail.com") {
-        return {
-          ok: false,
-          status: 400,
-          json: async () => ({
-            errors: { email: "Email not found" },
-            message: "Invalid credentials",
-          }),
-        };
-      }
-      if (data.password !== "123") {
-        return {
-          ok: false,
-          status: 400,
-          json: async () => ({
-            errors: { password: "Incorrect password" },
-          }),
-        };
-      }
-
-      // ✅ Success
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({ message: "Login successful!" }),
-      };
-    })();
+    setBackendError(""); // Reset lỗi trước khi gọi API
 
     try {
-      const result = await response.json();
+      const res = await authApi.login(data);
+      if (res.status === 200) {
+        navigate('/dashboard');
+      }
 
-      if (!response.ok) {
-        // Handle specific field errors
-        if (result.errors) {
-          Object.entries(result.errors).forEach(([field, message]) => {
-            setError(field as keyof FormData, { message: String(message) });
+    } catch (err: unknown) {
+      const error = err as LoginError;
+      // Đặt lỗi cho các field cụ thể
+      if (error.response?.data?.errors) {
+        const serverErrors = error.response.data.errors;
+
+        // Set lỗi email từ server
+        if (serverErrors.email) {
+          setError("email", {
+            type: "server",
+            message: serverErrors.email
           });
         }
 
-        // Handle general error
-        if (result.message) {
-          setBackendError(result.message);
+        // Set lỗi password từ server
+        if (serverErrors.password) {
+          setError("password", {
+            type: "server",
+            message: serverErrors.password
+          });
         }
 
-        return;
+        // Nếu có lỗi khác không map được vào field nào
+        if (!serverErrors.email && !serverErrors.password && error.response?.data?.message) {
+          setBackendError(error.response.data.message);
+        }
+      } else {
+        setBackendError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập");
       }
 
-      console.log("Login success:", result);
-    } catch (err: any) {
-      setBackendError("Something went wrong. Please try again.");
-    }
-  };
+    };
+  }
 
   return (
     <Card className="w-full max-w-lg shadow-2xl animate-fade-in-up z-10 mt-8 mb-8">
       <CardHeader className="text-center">
-        <img src="/images/logo.webp" alt="logo" className="mx-auto" />
+        <img src={logo} alt="logo" className="mx-auto w-20" />
         <CardTitle className="text-2xl font-bold text-dark-blue text-shadow-lg">
           Welcome Back
         </CardTitle>
@@ -97,7 +98,7 @@ export default function LoginForm() {
           Don't have an account? <a href="/signup" className="text-[#0066ff] hover:underline">Sign up</a>
         </p>
       </CardHeader>
-      <CardContent>
+      <CardContent className="mb-7">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-base 
         [&_label]:font-semibold [&_input]:h-11">
           {/* Email */}
@@ -177,15 +178,8 @@ export default function LoginForm() {
             </div>
           </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            className="h-[45px] w-full flex items-center justify-center gap-2 text-2xs"
-            onClick={() => console.log("Google login clicked")}
-          >
-            <img src="/images/google.png" alt="Google" className="w-5 h-5" />
-            Login with Google
-          </Button>
+          {/* Google Login Button */}
+          <GoogleLoginButton />
         </form>
       </CardContent>
     </Card>

@@ -10,12 +10,14 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Lock, User, Eye, EyeOff, KeyRound, AtSign } from "lucide-react";
 import { DatePicker } from "@/lib/DatePicker";
 import { format } from "date-fns"
+import logo from "@/assets/images/logo1.png"; 
 
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
+import GoogleLoginButton from "../GoogleLogin";
 
 
 type FormData = {
@@ -80,7 +82,7 @@ export default function SignupForm() {
   return (
     <Card className="w-full max-w-xl shadow-2xl animate-fade-in-up z-10 mt-8 mb-8">
       <CardHeader className="text-center">
-        <img src="/images/logo.webp" alt="logo" className="mx-auto" />
+        <img src={logo} alt="logo" className="mx-auto w-20" />
         <CardTitle className="text-2xl font-bold text-dark-blue text-shadow-lg">
           Hello there!
         </CardTitle>
@@ -89,7 +91,7 @@ export default function SignupForm() {
         </p>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="mb-7">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-base 
         [&_label]:font-semibold [&_input]:h-11">
 
@@ -241,19 +243,7 @@ export default function SignupForm() {
             </div>
           </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            className="h-[45px] w-full flex items-center justify-center gap-2 text-2xs cursor-pointer 
-             transition-all duration-200 ease-in-out 
-             hover:bg-gray-100
-             active:scale-[0.99] shadow-sm hover:shadow-md"
-            onClick={() => console.log("Google login clicked")}
-          >
-            <img src="/images/google.png" alt="Google" className="w-5 h-5" />
-            Login with Google
-          </Button>
-
+          <GoogleLoginButton />
         </form>
       </CardContent>
     </Card>

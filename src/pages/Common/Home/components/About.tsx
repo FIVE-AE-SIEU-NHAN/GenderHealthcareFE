@@ -1,7 +1,7 @@
 import React from "react";
 import { FaArrowRight, FaHeartbeat } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import VideoPopup from "@/components/layout/VidModal"; 
+import VideoPopup from "@/components/layouts/VidModal"; 
 import about1 from "@/assets/images/ab1.webp";
 import about2 from "@/assets/images/ab2.webp";
 
@@ -116,7 +116,7 @@ const About = () => {
               <img
                 src={about2}
                 alt="Nurse with patient"
-                className="w-full h-full object-cover shadow-2xl"
+                className="w-full h-full object-cover shadow-md"
               />
             </div>
           </div>
