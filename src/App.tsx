@@ -16,7 +16,8 @@ import Dashboard from './pages/Admin/Dashboard';
 import Unauthorized from './pages/Common/Unauthorized';
 import ResetPassword from './pages/Auth/ForgotPassword/ResetPassword';
 import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
-
+import BlogDetails from './pages/Content/Blog/BlogDetails';
+import BlogList from './pages/Content/Blog/BlogList';
 const App: React.FC = () => {
   const hideFooter = location.pathname === '/login' || location.pathname === '/signup' 
                     || location.pathname === '/404' || location.pathname === '/unauth'
@@ -47,6 +48,8 @@ const App: React.FC = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/blog" element={<BlogList />} />
+          <Route path="/blog/:id" element={<BlogDetails />} />
         </Routes>
 
         {!hideFooter && <Footer />}
