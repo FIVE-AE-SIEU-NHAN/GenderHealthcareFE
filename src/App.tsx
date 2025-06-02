@@ -16,16 +16,13 @@ import ServiceDetail from './Application/ServiceDetail';
 import ContactUs from './Application/ContactUs';
 import Prescription from './Application/PrescriptionDetail';
 import 'sal.js/dist/sal.css';
-import sal from 'sal.js';
 
 
 
 
 const App: React.FC = () => {
   const hideFooter = location.pathname === '/login' || location.pathname === '/signup';
-  useEffect(() => {
-    sal(); // kích hoạt animation
-  }, []);
+
   return (
     <Router>
       {/* <Header /> */}
