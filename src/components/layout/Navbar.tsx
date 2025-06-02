@@ -32,7 +32,7 @@ const Navbar = () => {
                 <NavigationMenuItem>
                   <NavigationMenuLink href="#top" className="nav-text text-xl">Home</NavigationMenuLink>
                 </NavigationMenuItem>
-                <NavigationMenuItem>
+                {/* <NavigationMenuItem>
                   <NavigationMenuTrigger className="nav-text text-xl">Services</NavigationMenuTrigger>
                   <NavigationMenuContent className="bg-white shadow-md rounded-lg p-4">
                     <ul className="grid gap-3 w-[200px]">
@@ -42,7 +42,8 @@ const Navbar = () => {
                       <li><NavigationMenuLink href="#dermatology" className="block text-lg font-semibold hover:bg-semi-dark-blue/8">Dermatology</NavigationMenuLink></li>
                     </ul>
                   </NavigationMenuContent>
-                </NavigationMenuItem>
+                </NavigationMenuItem> */}
+                <NavigationMenuLink href="/services" className="nav-text text-xl">Services</NavigationMenuLink>
                 <NavigationMenuItem>
                   <NavigationMenuLink href="/blog" className="nav-text text-xl">Blog</NavigationMenuLink>
                 </NavigationMenuItem>
