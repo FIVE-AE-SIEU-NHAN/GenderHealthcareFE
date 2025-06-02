@@ -194,9 +194,13 @@ export default function BookingForm() {
 
       <Button 
         type="submit" 
-        className="mx-auto block w-1/2 bg-[#1A3973] hover:bg-[#2A59A3] transition-colors duration-300 text-white font-semibold rounded-md"
+        className="mx-auto block w-3/4 md:w-2/3 bg-gradient-to-r from-[#1A3973] to-[#2A59A3] hover:from-[#2A59A3] hover:to-[#3A69B3] transition-all duration-300 text-white text-lg font-semibold rounded-lg px-10 py-4 shadow-lg hover:shadow-xl transform hover:translate-y-[-2px] relative overflow-hidden group"
       >
-        Đặt Lịch Hẹn
+        <span className="absolute inset-0 w-full h-full bg-white/10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <FaHeartbeat className="text-white text-lg mr-2" />
+          <span>Đặt Lịch Hẹn</span>
+        </div>
       </Button>
     </form>
   );
