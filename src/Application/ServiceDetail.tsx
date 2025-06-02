@@ -19,7 +19,7 @@ const ServiceDetail: React.FC = () => {
             <h2 className='text-6xl font-bold text-white'>Service Detail</h2>
             <p className='text-sm mt-3'>
               <span className='text-white'>Home</span>
-              <span className='text-[#55AEFF]'> &gt; Services &gt; BookingService</span>
+              <span className='text-[#55AEFF]'> &gt; Services &gt; ServiceDetail</span>
             </p>
           </div>
         </div>
