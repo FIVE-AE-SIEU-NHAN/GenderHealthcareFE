@@ -114,7 +114,7 @@ const BlogDetails: React.FC = () => {
         {/* Cột phải: Nội dung chi tiết blog */}
         <article className="md:col-span-3">
           <h1 className="text-4xl font-bold mb-3">{blog.title}</h1>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-sm text- mb-6">
             {blog.authorName} |{" "}
             <time dateTime={blog.createdAt}>
               {new Date(blog.createdAt).toLocaleString("vi-VN")}
@@ -127,7 +127,7 @@ const BlogDetails: React.FC = () => {
           {/* Content */}
           {blog.content && (
             <section className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">📄 Nội dung bài viết</h2>
+              <h2 className="text-xl font-semibold mb-2"> Nội dung bài viết</h2>
               <p className="text-base leading-7 whitespace-pre-line">{blog.content}</p>
             </section>
           )}
@@ -135,7 +135,7 @@ const BlogDetails: React.FC = () => {
           {/* Section 1 */}
           {blog.section1 && blog.section1.trim() !== "" && (
             <section className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">📘 Nội dung chính</h2>
+              <h2 className="text-xl font-semibold mb-2"> Nội dung chính</h2>
               <p className="text-base leading-7 whitespace-pre-line">{blog.section1}</p>
             </section>
           )}
@@ -154,7 +154,7 @@ const BlogDetails: React.FC = () => {
           {/* Section 2 */}
           {blog.section2 && blog.section2.trim() !== "" && (
             <section className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">📗 Thông tin bổ sung</h2>
+              <h2 className="text-xl font-semibold mb-2"> Thông tin bổ sung</h2>
               <p className="text-base leading-7 whitespace-pre-line">{blog.section2}</p>
             </section>
           )}
