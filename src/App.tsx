@@ -17,6 +17,7 @@ import Unauthorized from './pages/Common/Unauthorized';
 import ResetPassword from './pages/Auth/ForgotPassword/ResetPassword';
 import BlogDetails from './pages/Content/Blog/BlogDetails';
 import BlogList from './pages/Content/Blog/BlogList';
+import Services from './pages/Services';
 const App: React.FC = () => {
   const hideFooter = location.pathname === '/login' || location.pathname === '/signup' 
                     || location.pathname === '/404' || location.pathname === '/unauth';
@@ -47,6 +48,7 @@ const App: React.FC = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:id" element={<BlogDetails />} />
+          <Route path="/services" element={<Services />} />
         </Routes>
 
         {!hideFooter && <Footer />}
