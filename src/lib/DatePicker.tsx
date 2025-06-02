@@ -30,11 +30,15 @@ export function DatePicker({ field }: DatePickerProps) {
     field.value ? field.value.getFullYear() : new Date().getFullYear()
   )
   const [isSelectOpen, setIsSelectOpen] = React.useState(false)
+  const [calendarMonth, setCalendarMonth] = React.useState(() =>
+    field.value ? field.value : new Date(selectedYear, 0, 1)
+  )
 
   // Sync selectedYear with field.value changes
   React.useEffect(() => {
     if (field.value) {
       setSelectedYear(field.value.getFullYear())
+      setCalendarMonth(field.value)
     }
   }, [field.value])
 
@@ -87,12 +91,12 @@ export function DatePicker({ field }: DatePickerProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[240px] justify-start text-left font-normal",
+            "w-[240px] justify-start text-left font-normal p-5",
             !field.value && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {field.value ? format(field.value, "PPP") : <span>Date of Birth</span>}
+          {field.value ? format(field.value, "PPP") : <span>Pick a Date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="flex w-auto flex-col space-y-2 p-2">
@@ -101,7 +105,7 @@ export function DatePicker({ field }: DatePickerProps) {
           onValueChange={handleYearChange}
           onOpenChange={setIsSelectOpen}
         >
-          <SelectTrigger className="w-[200px] h-9">
+          <SelectTrigger className="w-[150px] h-9">
             <SelectValue placeholder="Select Year" />
           </SelectTrigger>
           <SelectContent className="max-h-64 overflow-y-auto">
@@ -128,8 +132,10 @@ export function DatePicker({ field }: DatePickerProps) {
             mode="single"
             selected={field.value}
             onSelect={field.onChange}
-            month={new Date(selectedYear, 0, 1)}
+            month={calendarMonth}
+            onMonthChange={setCalendarMonth}
           />
+
         </div>
       </PopoverContent>
     </Popover>

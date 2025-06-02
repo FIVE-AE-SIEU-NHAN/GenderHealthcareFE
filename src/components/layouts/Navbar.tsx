@@ -42,7 +42,7 @@ const Navbar = () => {
                       <li><NavigationMenuLink href="#dermatology" className="block text-lg font-semibold hover:bg-semi-dark-blue/8">Dermatology</NavigationMenuLink></li>
                     </ul>
                   </NavigationMenuContent>
-                </NavigationMenuItem> */}
+                </NavigationMenuItem>
                 <NavigationMenuLink href="/services" className="nav-text text-xl">Services</NavigationMenuLink>
                 <NavigationMenuItem>
                   <NavigationMenuLink href="/blog" className="nav-text text-xl">Blog</NavigationMenuLink>

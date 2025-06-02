@@ -104,41 +104,45 @@ export default function SignupForm() {
                 id="fullName"
                 placeholder="John Doe"
                 {...register("fullName")}
-                className="pl-8 text-"
+                className="pl-8"
               />
             </div>
           </div>
 
           {/* Gender & Date of Birth */}
-          <div className="grid grid-cols-2 gap-4">
-            <Controller
-              control={control}
-              name="dob"
-              render={({ field }) => <DatePicker field={field} />}
-            />
-
-
-            <Controller
-              control={control}
-              name="gender"
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-full h-11 min-h-[2.75rem] px-3">
-                    <SelectValue placeholder="Select Gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-
+          <div className="grid grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="dob">Date of Birth</Label>
+              <Controller
+                control={control}
+                name="dob"
+                render={({ field }) => <DatePicker field={field} />}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="gender">Gender</Label>
+              <Controller
+                control={control}
+                name="gender"
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="w-full h-11 min-h-[2.75rem] px-3">
+                      <SelectValue placeholder="Select Gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
           </div>
 
           {/* Email */}
-          <div className="space-y-2">
+          <div className="space-y-2 -mt-2.5">
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
               <AtSign className="form-icon" />

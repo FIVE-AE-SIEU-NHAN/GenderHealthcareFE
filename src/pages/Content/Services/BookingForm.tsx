@@ -13,6 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarIcon, Phone } from "lucide-react";
+import { DatePicker } from "@/lib/DatePicker";
 
 export interface FormData {
   fullName: string;
@@ -59,29 +60,11 @@ const BookingForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Gender & Date of Birth */}
         <div className="grid grid-cols-2 gap-4">
           <Controller
             control={control}
             name="dob"
             render={({ field }) => <DatePicker field={field} />}
-          />
-
-          <Controller
-            control={control}
-            name="gender"
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger className="w-full h-11 min-h-[2.75rem] px-3">
-                  <SelectValue placeholder="Select Gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
           />
         </div>
 

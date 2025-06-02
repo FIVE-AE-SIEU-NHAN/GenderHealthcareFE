@@ -49,11 +49,11 @@ const App: React.FC = () => {
           <Route path="/unauth" element={<Unauthorized />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:id" element={<BlogDetails />} />
           <Route path="/booking-form" element={<BookingForm />} />
           <Route path="/services" element={<Services />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
         {!hideFooter && <Footer />}
