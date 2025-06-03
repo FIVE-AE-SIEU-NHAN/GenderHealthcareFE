@@ -1,36 +1,41 @@
-import { Routes, Route } from "react-router-dom";
-import CustomerRoutes from "./CustomerRoutes";
-import AdminRoutes from "./AdminRoutes";
-import HomePage from "@/pages/Common/Home/Homepage";
-import LoginPage from "@/pages/Auth/Login/Login";
-import NotFound from "@/pages/Common/NotFound";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AdminRoutes } from './AdminRoutes';
+// import { ManagerRoutes } from './ManagerRoutes';
+// import { DoctorRoutes } from './DoctorRoutes';
+// import { CustomerRoutes } from './CustomerRoutes';
+// import { GuestRoutes } from './GuestRoutes';
+
 import PublicLayout from "@/components/layouts/PublicLayout";
-import { isUserRole, USER_ROLES, UserRole } from "@/types/UserRole";
+import AuthLayout from "@/components/layouts//AuthLayout";
+import HomePage from "@/pages/Common/Home/Homepage";
+import LoginPage from '@/pages/Auth/Login/Login';
+import SignupPage from '@/pages/Auth/Signup/Signup';
+import RoleSwitcher from '@/components/RoleSwitcher';
 
-const AppRouter = () => {
-  const rawRole = localStorage.getItem("userRole");
-  const userRole: UserRole | null = isUserRole(rawRole) ? rawRole : null;
-
+export default function AppRouter() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<PublicLayout />}>
-        <Route index element={<HomePage />} />
-        <Route path="login" element={<LoginPage />} />
-      </Route>
+    <BrowserRouter>
+      <RoleSwitcher />
 
-      {/* Role-Based Routes */}
-      {userRole === USER_ROLES.USER && (
-        <Route path="/customer/*" element={<CustomerRoutes userRole={userRole} />} />
-      )}
+      <Routes>
+        {/* Public Routes */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+        </Route>
 
-      {userRole === USER_ROLES.ADMIN && (
-        <Route path="/admin/*" element={<AdminRoutes userRole={userRole} />} />
-      )}
+        {/* Auth Routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+        </Route>
 
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* Role-Based Dashboard Routes */}
+        {AdminRoutes}
+        {/* {ManagerRoutes}
+        {DoctorRoutes}
+        {CustomerRoutes}
+        {GuestRoutes} */}
+      </Routes>
+    </BrowserRouter>
   );
-};
-
-export default AppRouter;
+}

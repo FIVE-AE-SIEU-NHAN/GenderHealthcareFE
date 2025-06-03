@@ -1,24 +1,24 @@
-import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoute";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
-import CustomerDashboard from "@/pages/Customer/Dashboard";
-import { USER_ROLES, UserRole } from "@/types/UserRole";
-import NotFound from "@/pages/Common/NotFound";
+import { Route } from "react-router-dom"
+import ProtectedRoute from "./ProtectedRoute"
+import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"
+// import { customerSidebarItems } from "@/Application/constants/customerSidebarItems"
+import { UserRole } from "@/types/UserRole"
+import CustomerDashboard from "@/pages/Customer/Dashboard"
+// import CustomerAppointments from "@/pages/dashboard/customer/Appointments"
 
-const CustomerRoutes = ({ userRole }: { userRole: UserRole | null }) => (
-  <Routes>
-    <Route
-      path="/customer"
-      element={
-        <ProtectedRoute allowedRoles={[USER_ROLES.USER]} userRole={userRole}>
-          <DashboardLayout />
-        </ProtectedRoute>
-      }
-    >
-      <Route path="dashboard" element={<CustomerDashboard />} />
-      <Route path="*" element={<NotFound />} />
-    </Route>
-  </Routes>
-);
-
-export default CustomerRoutes;
+export const CustomerRoutes = (
+  <Route
+    path="/customer"
+    element={
+      <ProtectedRoute allowedRoles={[UserRole.Customer]}>
+        <DashboardLayout
+          // sidebarItems={customerSidebarItems}
+        />
+      </ProtectedRoute>
+    }
+  >
+    <Route index element={<CustomerDashboard />} />
+    {/* <Route path="appointments" element={<CustomerAppointments />} /> */}
+    {/* Add more customer pages here */}
+  </Route>
+)

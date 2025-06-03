@@ -1,22 +1,25 @@
-import { Routes, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
+import { UserRole } from "../../types/UserRole";
 import ProtectedRoute from "./ProtectedRoute";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout";
 import AdminDashboard from "@/pages/Admin/Dashboard";
-import { USER_ROLES, UserRole } from "@/types/UserRole";
+import BlogListDashboard from "@/components/layouts/Dashboard/blog/BlogList";
+import { adminSidebarItems } from "@/Application/constants/adminSidebarItems";
 
-const AdminRoutes = ({ userRole }: { userRole: UserRole | null }) => (
-  <Routes>
-    <Route
-      path="/admin"
-      element={
-        <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]} userRole={userRole}>
-          <DashboardLayout />
-        </ProtectedRoute>
-      }
-    >
-      <Route path="dashboard" element={<AdminDashboard />} />
-    </Route>
-  </Routes>
+export const AdminRoutes = (
+  <Route
+    path="/admin"
+    element={
+      <ProtectedRoute allowedRoles={[UserRole.Admin]}>
+        <DashboardLayout
+          sidebarItems={adminSidebarItems}
+        />
+      </ProtectedRoute>
+    }
+  >
+    <Route index element={<AdminDashboard />} />
+    <Route path="blog/list" element={<BlogListDashboard />} />
+    <Route path="blog/create" element={<BlogListDashboard />} />
+    {/* Add more nested admin routes here */}
+  </Route>
 );
-
-export default AdminRoutes;

@@ -3,7 +3,7 @@ import { Pencil, Trash2, ChevronUp, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { Pagination } from "../layouts/pagin"
+import { Pagination } from "../../pagin"
 
 type Blog = {
   id: string
