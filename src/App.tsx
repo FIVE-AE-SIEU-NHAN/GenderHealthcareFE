@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import sal from 'sal.js';
 import 'sal.js/dist/sal.css';
 
-import Navbar from './components/layouts/Navbar';
-import Footer from './components/layouts/Footer';
+import Navbar from './components/layouts/NavFoot/Navbar';
+import Footer from './components/layouts/NavFoot/Footer';
 
 import HomePage from './pages/Common/Home/Homepage';
 import Logout from './Application/Logout';
@@ -20,7 +20,7 @@ import BlogDetails from './pages/Content/Blog/BlogDetails';
 import BlogList from './pages/Content/Blog/BlogList';
 import BookingForm from './pages/Content/Services/BookingForm';
 import Services from './pages/Services';
-import BlogListDashboard from './components/layouts/Dashboard/blog/BlogList';
+// import BlogListDashboard from './components/layouts/Dashboard/blog/BlogList';
 const App: React.FC = () => {
   const hideFooter = location.pathname === '/login' || location.pathname === '/signup' 
                     || location.pathname === '/404' || location.pathname === '/unauth'
@@ -54,7 +54,7 @@ const App: React.FC = () => {
           <Route path="/blog/:id" element={<BlogDetails />} />
           <Route path="/booking-form" element={<BookingForm />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/admin/blog/list" element={<BlogListDashboard />} />
+          {/* <Route path="/admin/blog/list" element={<BlogListDashboard />} /> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
 

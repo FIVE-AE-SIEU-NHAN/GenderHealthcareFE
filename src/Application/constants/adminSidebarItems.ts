@@ -4,17 +4,17 @@ import type { NavMainProps } from "@/components/nav-main"
 export const adminSidebarItems: NavMainProps["items"] = [
   {
     title: "Blog",
-    url: "/admin/blog",
+    url: "/dashboard/blog",
     icon: FileText,
     isActive: true, // optional: will open this section by default
     items: [
       {
         title: "Blog List",
-        url: "/admin/blog/list",
+        url: "/dashboard/blog/list",
       },
       {
         title: "Create Blog",
-        url: "/admin/blog/create",
+        url: "/dashboard/blog/create",
       },
     ],
   },

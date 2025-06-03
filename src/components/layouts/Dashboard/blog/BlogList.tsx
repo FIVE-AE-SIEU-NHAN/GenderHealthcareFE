@@ -5,8 +5,6 @@ import BlogTable from "@/components/layouts/Dashboard/blog/BlogTable"
 import { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import type { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
-// import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"
-// import { adminSidebarItems } from "@/Application/constants/adminSidebarItems"
 
 const blogStatusOptions = [
   { label: "Published", value: "Published" },
@@ -34,9 +32,6 @@ export default function BlogListDashboard() {
   }, [setBreadcrumb]);
   return (
     <>
-      {/* <DashboardLayout
-        sidebarItems={adminSidebarItems}
-        breadcrumb={{ title: "Blog List", parent: "Blog", parentHref: "" }}> */}
       <BlogTableToolbar
         statusPlaceholder="Status"
         statusOptions={blogStatusOptions}
@@ -71,8 +66,6 @@ export default function BlogListDashboard() {
         dateRange={{ from: fromDate, to: toDate }}
         visibleColumns={visibleColumns}
       />
-    {/* </DashboardLayout> */ }
-
     </>
   )
 }

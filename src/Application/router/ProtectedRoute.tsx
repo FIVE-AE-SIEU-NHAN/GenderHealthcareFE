@@ -9,9 +9,12 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
   const { role } = useRole();
+  console.log("Current role from context:", role);
+  console.log("Allowed roles:", allowedRoles);
+
 
   if (!allowedRoles.includes(role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/unauth" replace />;
   }
 
   return children ? <>{children}</> : <Outlet />;

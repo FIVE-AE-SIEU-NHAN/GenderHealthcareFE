@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client'
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
+import 'sal.js/dist/sal.css';
 import './index.css'
 
 // import App from './App'

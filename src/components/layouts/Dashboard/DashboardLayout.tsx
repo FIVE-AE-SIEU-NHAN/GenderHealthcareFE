@@ -30,6 +30,7 @@ export interface DashboardLayoutContext {
 
 interface DashboardLayoutProps {
   sidebarItems?: NavMainProps["items"];
+  children?: React.ReactNode;
 }
 
 export default function DashboardLayout({
@@ -53,7 +54,7 @@ export default function DashboardLayout({
                   <>
                     <BreadcrumbItem className="hidden md:block">
                       <BreadcrumbLink asChild>
-                        <Link to={breadcrumb.parentHref || ""}>
+                        <Link to={breadcrumb.parentHref || "#"}>
                           {breadcrumb.parent}
                         </Link>
                       </BreadcrumbLink>

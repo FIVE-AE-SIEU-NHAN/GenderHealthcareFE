@@ -8,7 +8,7 @@ import { adminSidebarItems } from "@/Application/constants/adminSidebarItems";
 
 export const AdminRoutes = (
   <Route
-    path="/admin"
+    path="/admin/dashboard"
     element={
       <ProtectedRoute allowedRoles={[UserRole.Admin]}>
         <DashboardLayout

@@ -3,7 +3,7 @@
 // import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"
 
 
-export default function DashboardHomePage() {
+export default function AdminDashboard() {
   return (
     // <DashboardLayout 
     //   sidebarItems={adminSidebarItems}
