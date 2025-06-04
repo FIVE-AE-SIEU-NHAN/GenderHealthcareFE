@@ -10,14 +10,14 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Lock, User, Eye, EyeOff, KeyRound, AtSign } from "lucide-react";
 import { DatePicker } from "@/lib/DatePicker";
 import { format } from "date-fns"
-import logo from "@/assets/images/logo1.png"; 
+import logo from "@/assets/images/logo1.png";
 
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
-import GoogleLoginButton from "../GoogleLogin";
+// import GoogleLoginButton from "../GoogleLogin";
 
 
 type FormData = {
@@ -43,11 +43,11 @@ export default function SignupForm() {
 
   const onSubmit = (data: FormData) => {
     const formatted = {
-    ...data,
-    dob: data.dob
-      ? format(new Date(data.dob), "dd/MM/yyyy")
-      : "",
-  };
+      ...data,
+      dob: data.dob
+        ? format(new Date(data.dob), "dd/MM/yyyy")
+        : "",
+    };
     console.log("Signup data:", formatted);
   };
 
@@ -119,7 +119,7 @@ export default function SignupForm() {
                 render={({ field }) => <DatePicker field={field} />}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="gender">Gender</Label>
               <Controller
@@ -247,7 +247,7 @@ export default function SignupForm() {
             </div>
           </div>
 
-          <GoogleLoginButton />
+          {/* <GoogleLoginButton /> */}
         </form>
       </CardContent>
     </Card>

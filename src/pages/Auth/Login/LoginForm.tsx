@@ -179,7 +179,7 @@ export default function LoginForm() {
           </div>
 
           {/* Google Login Button */}
-          <GoogleLoginButton />
+          {/* <GoogleLoginButton /> */}
         </form>
       </CardContent>
     </Card>

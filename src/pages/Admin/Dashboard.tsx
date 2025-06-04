@@ -1,16 +1,20 @@
-import BlogListPage from "@/components/blog/BlogList"
-// import DashboardLayout from "@/components/layouts/DashboardLayout"
+// import BlogListPage from "@/components/layouts/Dashboard/blog/BlogList"
+// import { adminSidebarItems } from "@/Application/constants/adminSidebarItems"
+// import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"
 
-export default function DashboardHomePage() {
+
+export default function AdminDashboard() {
   return (
-    // <DashboardLayout breadcrumb={{ title: "Home" }}>
-    //   <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-    //     <div className="aspect-video rounded-xl bg-muted/50" />
-    //     <div className="aspect-video rounded-xl bg-muted/50" />
-    //     <div className="aspect-video rounded-xl bg-muted/50" />
+    // <DashboardLayout 
+    //   sidebarItems={adminSidebarItems}
+    //   breadcrumb={{ title: "Admin Dashboard" }}
+    // >
+    //   <div className="p-4">
+    //     <h2 className="text-xl font-bold">Welcome, Admin!</h2>
+    //     <p>Here’s your overview and quick actions.</p>
     //   </div>
-    //   <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
     // </DashboardLayout>
-    <BlogListPage />
+    // <BlogListPage />
+    <p>test</p>
   )
 }

@@ -6,7 +6,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { Card } from "@/components/ui/card";
-import { FaCalendarAlt, FaHeartbeat, FaHospital } from "react-icons/fa";
+import { FaCalendarAlt, FaHeartbeat } from "react-icons/fa";
 import Autoplay from "embla-carousel-autoplay";
 import news from "@/assets/images/new1.jpg"; 
 

@@ -1,19 +1,23 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { UserRole } from "@/types/UserRole";
+import { useRole } from "@/contexts/RoleContext";
 
-interface Props {
+interface ProtectedRouteProps {
   allowedRoles: UserRole[];
-  userRole: UserRole | null;
-  children: React.ReactNode;
-  redirectPath?: string;
+  children?: React.ReactNode;
 }
 
-const ProtectedRoute = ({ allowedRoles, userRole, children, redirectPath = "/" }: Props) => {
-  if (!userRole || !allowedRoles.includes(userRole)) {
-    return <Navigate to={redirectPath} replace />;
+const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
+  const { role } = useRole();
+  console.log("Current role from context:", role);
+  console.log("Allowed roles:", allowedRoles);
+
+
+  if (!allowedRoles.includes(role)) {
+    return <Navigate to="/unauth" replace />;
   }
 
-  return <>{children}</>;
+  return children ? <>{children}</> : <Outlet />;
 };
 
 export default ProtectedRoute;

@@ -1,8 +1,10 @@
 import React from "react"
 
-import BlogTableToolbar from "@/components/blog/TableToolbar"
-import BlogTable from "@/components/blog/BlogTable"
-import DashboardLayout from "@/components/layouts/DashboardLayout"
+import BlogTableToolbar from "@/components/layouts/Dashboard/TableToolbar"
+import BlogTable from "@/components/layouts/Dashboard/blog/BlogTable"
+import { useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
+import type { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
 
 const blogStatusOptions = [
   { label: "Published", value: "Published" },
@@ -12,15 +14,24 @@ const blogStatusOptions = [
 
 const blogColumns = ["id", "title", "status", "author", "createdAt", "description", "actions"]
 
-export default function BlogListPage() {
+export default function BlogListDashboard() {
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
   const [status, setStatus] = React.useState<string[]>([])
   const [search, setSearch] = React.useState("")
   const [visibleColumns, setVisibleColumns] = React.useState(blogColumns)
   const [fromDate, setFromDate] = React.useState<Date>()
   const [toDate, setToDate] = React.useState<Date>()
 
+
+  useEffect(() => {
+    setBreadcrumb({
+      title: "Blog List",
+      parent: "Blog",
+      parentHref: "",
+    });
+  }, [setBreadcrumb]);
   return (
-    <DashboardLayout breadcrumb={{ title: "Blog List", parent: "Blog", parentHref: "/dash/blog" }}>
+    <>
       <BlogTableToolbar
         statusPlaceholder="Status"
         statusOptions={blogStatusOptions}
@@ -49,12 +60,12 @@ export default function BlogListPage() {
         }}
         createButtonLabel="+ CREATE BLOG"
       />
-      <BlogTable 
+      <BlogTable
         status={status}
         search={search}
         dateRange={{ from: fromDate, to: toDate }}
         visibleColumns={visibleColumns}
       />
-    </DashboardLayout>
+    </>
   )
 }

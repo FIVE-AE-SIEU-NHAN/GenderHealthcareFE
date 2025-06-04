@@ -12,38 +12,43 @@ import { FaArrowRightLong } from "react-icons/fa6";
 const Home: React.FC = () => {
   const sharedButtons = [
     {
-      text: 'Find a Consultant',
+      text: 'Tìm chuyên gia',
       link: '#consultant',
-      color: 'text-xl bg-semi-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-900 transition duration-200 font-semibold',
+      color:
+        'text-xl bg-semi-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-900 transition duration-200 font-semibold',
     },
     {
-      text: 'Meet Our Doctors',
+      text: 'Gặp bác sĩ của chúng tôi',
       link: '#doctors',
-      color: 'text-xl border-2 border-white text-white px-4 py-2 rounded-button font-semibold',
+      color:
+        'text-xl border-2 border-white text-white px-4 py-2 rounded-button font-semibold',
     },
   ];
 
   const slides = [
     {
-      heading: "Ipsum Lorem",
-      title: 'lorem ipsum lorem ipsum lorem ipsumlorem ipsum',
-      description: 'Discover new ways to live healthier and happier.', 
-      image: slide1,
-      buttons: sharedButtons
+      heading: "Chăm sóc sức khỏe giới tính toàn diện",
+      title: 'Bảo vệ sức khỏe của bạn — mọi lúc, mọi nơi',
+      description:
+        'Tư vấn và chăm sóc chuyên nghiệp về sức khỏe sinh sản và giới tính từ các bác sĩ hàng đầu.',
+      image: slide1, // Your local asset
+      buttons: sharedButtons,
     },
     {
-      heading: 'Aenean luctus lobortis tellus',
-      title: 'New Lifestyle',
-      description: 'Discover new ways to live healthier and happier.',
-      image: "/images/bs2.webp", 
-      buttons: sharedButtons
+      heading: "Đội ngũ bác sĩ tận tâm và giàu kinh nghiệm",
+      title: 'Gặp gỡ chuyên gia của chúng tôi',
+      description:
+        'Hỗ trợ tận tình, lắng nghe và đồng hành cùng bạn trong mọi giai đoạn chăm sóc sức khỏe.',
+      image: "/images/bs2.webp", // Existing image path
+      buttons: sharedButtons,
     },
     {
-      heading: 'Pellentesque nec libero nisi',
-      title: 'Your Health Benefits',
-      description: 'Learn how to maximize your wellness and benefits.',
-      image: slide3,
-      buttons: sharedButtons
+      heading: "Dịch vụ đặt lịch khám tiện lợi",
+      title: 'Đặt lịch hẹn chỉ với vài bước đơn giản',
+      description:
+        'Chọn bác sĩ, chọn thời gian phù hợp và bắt đầu hành trình chăm sóc sức khỏe ngay hôm nay.',
+      image: slide3, // Your local asset
+      buttons: sharedButtons,
     },
   ];
 
@@ -71,7 +76,7 @@ const Home: React.FC = () => {
             />
             <div className="absolute inset-0 bg-black/45 z-10" /> {/* Màu nền tối */}
             <div className="lg:text-left relative z-20 flex flex-col items-center justify-center h-full text-white px-4 space-y-4 max-w-2xl ml-25">
-              <h3 className="text-3xl sm:text-5xl lg:text-7xl text-center font-black">
+              <h3 className="text-3xl sm:text-5xl lg:text-7xl text-center font-black w-200">
                 {slide.heading}
               </h3>
               <h1 className="text-xl sm:text-3xl lg:text-5xl text-center font-medium w-full">
