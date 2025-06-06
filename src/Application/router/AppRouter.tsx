@@ -16,6 +16,9 @@ import RoleSwitcher from '@/components/RoleSwitcher';
 import ServiceDetail from '@/pages/Content/Services/ServiceDetails';
 import { PrivateRoutes } from './PrivateRoutes';
 import Unauthorized from '@/pages/Common/Unauthorized';
+import ResetPassword from '@/pages/Auth/ForgotPassword/ResetPassword';
+import ForgotPassword from '@/pages/Auth/ForgotPassword/ForgotPassword';
+import NotFound from '@/pages/Common/NotFound';
 
 export default function AppRouter() {
   return (
@@ -35,6 +38,9 @@ export default function AppRouter() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/unauth" element={<Unauthorized />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Private Routes */}

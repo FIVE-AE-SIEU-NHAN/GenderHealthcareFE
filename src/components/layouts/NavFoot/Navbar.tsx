@@ -164,6 +164,10 @@ const Navbar = () => {
                 <a href="user/dashboard/appointments/history">Appointment History</a>
               </DropdownMenuItem>
               <DropdownMenuItem className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <a href="admin/dashboard">Admin Dashboard</a>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
                 <a href="user/dashboard/appointments/history">Settings</a>
               </DropdownMenuItem>
