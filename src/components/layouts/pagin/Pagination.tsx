@@ -114,7 +114,7 @@ export function Pagination({
         </Button>
       </div>
 
-      <div className="flex items-center gap-2 text-sm">
+      <div className="hidden sm:flex items-center gap-2 text-sm">
         <span>Jump to:</span>
         <Input
           type="number"

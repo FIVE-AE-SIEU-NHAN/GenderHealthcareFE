@@ -12,11 +12,9 @@ import {
 
 import { NavMain } from "@/components/nav-main"
 // import { NavProjects } from "@/components/nav-projects"
-import WebLogo from "@/assets/images/logo1.png"
 import {
   Sidebar,
   SidebarContent,
-  SidebarHeader,
 } from "@/components/ui/sidebar"
 import type { NavMainProps } from "@/components/nav-main"
 
@@ -140,15 +138,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ items, ...props }: AppSidebarProps) {
   return (
     <Sidebar variant="floating" collapsible="icon" {...props}>
-      <SidebarHeader>
-        <div className="logo-container flex">
-          <img src={WebLogo} alt="logo" className="size-10 absolute left-[13px]" />
-          <h1 className="truncate text-lg font-bold mt-[8px] ml-9 bg-gradient-to-r from-blue-900 via-blue-700 to-blue-500 text-transparent bg-clip-text">
-            Care4Gender
-          </h1>
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="mt-2 -ml-1">
         <NavMain items={items} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>

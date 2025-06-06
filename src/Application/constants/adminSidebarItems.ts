@@ -1,36 +1,41 @@
-import { FileText, Users } from "lucide-react"
+import { BarChart2, CalendarCheck, ClipboardList, FileText, Settings, User, Users } from "lucide-react"
 import type { NavMainProps } from "@/components/nav-main"
 
 export const adminSidebarItems: NavMainProps["items"] = [
   {
-    title: "Blog",
-    url: "/dashboard/blog",
-    icon: FileText,
-    isActive: true, // optional: will open this section by default
-    items: [
-      {
-        title: "Blog List",
-        url: "/dashboard/blog/list",
-      },
-      {
-        title: "Create Blog",
-        url: "/dashboard/blog/create",
-      },
-    ],
+    title: "Blog Management",
+    url: "/admin/dashboard/blog/list",
+    icon: FileText, 
   },
   {
-    title: "Users",
+    title: "Users Management",
     url: "/admin/users",
-    icon: Users,
-    items: [
-      {
-        title: "User List",
-        url: "/admin/users/list",
-      },
-      {
-        title: "Create User",
-        url: "/admin/users/create",
-      },
-    ],
+    icon: Users, 
+  },
+  {
+    title: "Services Management",
+    url: "/admin/services",
+    icon: ClipboardList, 
+  },
+  {
+    title: "Appointments Management",
+    url: "/admin/appointments",
+    icon: CalendarCheck, 
+  },
+  {
+    title: "Báo Cáo Thống Kê",
+    url: "/admin/reports",
+    icon: BarChart2, 
+  },
+  {
+    title: "Cấu Hình Tham Số",
+    url: "/admin/settings",
+    icon: Settings, 
+  },
+  {
+    title: "Your Profile",
+    url: "/admin/profile",
+    icon: User, 
   },
 ]
+

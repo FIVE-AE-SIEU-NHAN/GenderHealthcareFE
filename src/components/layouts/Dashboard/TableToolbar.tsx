@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { format, isAfter, setYear } from "date-fns"
-import { CalendarIcon, Eye } from "lucide-react"
+import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,14 +26,21 @@ interface TableToolbarProps {
   columns: string[]
   visibleColumns: string[]
   onVisibleColumnsChange: (visibleCols: string[]) => void
+
   statusValue?: string[]
   onStatusChange?: (value: string[]) => void
+
   searchValue?: string
   onSearchChange?: (value: string) => void
+  searchFieldOptions?: { value: string; label: string }[]
+  searchFieldValue?: string
+  onSearchFieldChange?: (value: string) => void
+
   fromDate?: Date
   toDate?: Date
   onDateRangeChange?: (from?: Date, to?: Date) => void
   onResetFilters?: () => void
+
   onCreate?: () => void
   createButtonLabel?: string
   placeholderSearch?: string
@@ -49,6 +56,9 @@ export default function TableToolbar({
   onStatusChange,
   searchValue = "",
   onSearchChange,
+  searchFieldOptions = [],
+  searchFieldValue,
+  onSearchFieldChange,
   fromDate,
   toDate,
   onDateRangeChange,
@@ -64,6 +74,12 @@ export default function TableToolbar({
   const [toYear, setToYear] = React.useState(toDate?.getFullYear() || new Date().getFullYear())
   const currentYear = new Date().getFullYear()
   const years = Array.from({ length: currentYear - 2023 + 1 }, (_, i) => currentYear - i)
+  const [localSearch, setLocalSearch] = React.useState(searchValue)
+
+  React.useEffect(() => {
+    setLocalSearch(searchValue)
+  }, [searchValue])
+
 
   // Date select handlers
   function handleFromDateSelect(date?: Date) {
@@ -92,6 +108,12 @@ export default function TableToolbar({
     }
   }
 
+  const handleSearchSubmit = () => {
+    onSearchChange?.(localSearch);
+  };
+
+  const selectedFieldLabel = searchFieldOptions.find(opt => opt.value === searchFieldValue)?.label
+
   return (
     <div className="flex flex-wrap items-center gap-4 mb-6">
       {/* View (Column Toggle) */}
@@ -117,7 +139,7 @@ export default function TableToolbar({
           ))}
         </PopoverContent>
       </Popover>
-      
+
       {/* Filter */}
       {statusOptions.length > 0 && (
         <Popover>
@@ -162,8 +184,8 @@ export default function TableToolbar({
             {fromDate && toDate
               ? `${format(fromDate, "PPP")} → ${format(toDate, "PPP")}`
               : fromDate
-              ? `${format(fromDate, "PPP")} →`
-              : "Pick a date range"}
+                ? `${format(fromDate, "PPP")} →`
+                : "Pick a date range"}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="flex gap-4 p-4 w-[540px]" align="start">
@@ -238,16 +260,59 @@ export default function TableToolbar({
       </Popover>
 
       {/* Search Input */}
-      <Input
-        placeholder={placeholderSearch}
-        className="w-[300px]"
-        value={searchValue}
-        onChange={(e) => onSearchChange?.(e.target.value)}
-      />
+      <div className="flex items-center">
+        {/* Search Field Dropdown */}
+        {searchFieldOptions.length > 0 && (
+          <Select value={searchFieldValue} onValueChange={onSearchFieldChange}>
+            <SelectTrigger className="w-[120px] rounded-r-none border-r-0 focus:ring-0 focus:ring-offset-0">
+              <SelectValue placeholder="Search in...">
+                {selectedFieldLabel}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {searchFieldOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        {/* Search Input and Button */}
+        <div className="relative flex items-center">
+          <Input
+            placeholder={placeholderSearch}
+            className="w-[300px] pr-10 rounded-l-none focus:ring-0 focus:ring-offset-0"
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearchSubmit()
+              }
+            }}
+          />
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="absolute right-1 h-8 w-8"
+            onClick={handleSearchSubmit}
+          >
+            <SearchIcon className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </div>
+      </div>
 
       {/* Reset button if range or filters selected */}
       {(fromDate || toDate || (statusValue && statusValue.length > 0) || searchValue) && (
-        <Button variant="outline" size="sm" onClick={reset}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={reset}
+          className="group relative hover:border border-dashed border-red-600/50 bg-red-100 text-red-600 hover:text-red-500"
+        >
+          <RotateCcw className=" h-4 w-4 rotate-90 transition-transform group-hover:rotate-[-45deg] duration-300" />
           Reset
         </Button>
       )}
