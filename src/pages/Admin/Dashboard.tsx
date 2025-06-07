@@ -1,20 +1,17 @@
-// import BlogListPage from "@/components/layouts/Dashboard/blog/BlogList"
-// import { adminSidebarItems } from "@/Application/constants/adminSidebarItems"
-// import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"
+import { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
+import { useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 
 
 export default function AdminDashboard() {
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
+  useEffect(() => {
+    setBreadcrumb({
+      title: "Admin Dashboard",
+    });
+  }, [setBreadcrumb]);
+
   return (
-    // <DashboardLayout 
-    //   sidebarItems={adminSidebarItems}
-    //   breadcrumb={{ title: "Admin Dashboard" }}
-    // >
-    //   <div className="p-4">
-    //     <h2 className="text-xl font-bold">Welcome, Admin!</h2>
-    //     <p>Here’s your overview and quick actions.</p>
-    //   </div>
-    // </DashboardLayout>
-    // <BlogListPage />
     <p>test</p>
   )
 }

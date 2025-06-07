@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import type { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
 
-import BlogTableToolbar from "@/components/layouts/Dashboard/TableToolbar";
+import BlogTableToolbar, { FacetFilter } from "@/components/layouts/Dashboard/TableToolbar";
 import { DataTable } from "@/components/layouts/Dashboard/DataTable";
 import type { Blog } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const blogData: Blog[] = [
   {
@@ -123,22 +125,68 @@ const blogData: Blog[] = [
 
 // Column keys you want to support toggling
 const allBlogColumns = [
-  { key: "id", label: "ID", visible: true, sortable: true },
-  { key: "createdAt", label: "Date", visible: true, sortable: true },
-  { key: "author", label: "Author", visible: true, sortable: true },
-  { key: "title", label: "Title", visible: true, sortable: false },
-  { key: "description", label: "Description", visible: true, sortable: false },
-  { key: "status", label: "Status", visible: true, sortable: true },
-]
+  {
+    key: "id",
+    label: "ID",
+    toggleable: false,
+    sortable: true,
+    render: (blog: Blog) => (
+      <Badge
+        variant="outline"
+        className="font-mono bg-emerald-400/15 border-emerald-500/50"
+      >
+        {blog.id}
+      </Badge>
+    ),
+  },
+  { key: "author", label: "Author", sortable: true },
+  { key: "title", label: "Title", sortable: false },
+  {
+    key: "description",
+    label: "Description",
+    sortable: false,
+    cellClassName: "max-w-sm",
+    render: (blog: Blog) => (
+      <p className="truncate text-left">{blog.description}</p>
+    ),
+  },
+  { key: "createdAt", label: "Date Created",  sortable: true },
+  {
+    key: "status",
+    label: "Status",
+    sortable: true,
+    render: (blog: Blog) => (
+      <Badge
+        className={cn(
+          "font-medium text-xs",
+          blog.status === "Published" &&
+            "border-blue-500/50 bg-blue-500/10 text-blue-700",
+          blog.status === "Archived" &&
+            "border-red-500/50 bg-red-500/10 text-red-700",
+          blog.status === "Draft" &&
+            "border-yellow-500/50 bg-yellow-500/10 text-yellow-700"
+        )}
+      >
+        {blog.status}
+      </Badge>
+    ),
+  },
+];
 
-const blogStatusOptions = [
-  { label: "Published", value: "Published" },
-  { label: "Archived", value: "Archived" },
-  { label: "Draft", value: "Draft" },
+const userFacetFilters: FacetFilter[] = [
+  {
+    key: "status",
+    label: "Status",
+    options: [
+      { label: "Published", value: "Published" },
+      { label: "Archived", value: "Archived" },
+      { label: "Draft", value: "Draft" },
+    ],
+  },
 ];
 
 const searchableFields = [
-  // The `value` here MUST match a key in types/...ts 
+  // `value` bắt buộc giống trong file trong folder types/...ts 
   { value: 'all', label: 'All Fields' }, 
   { value: 'title', label: 'Title' },
   { value: 'author', label: 'Author' },
@@ -148,8 +196,9 @@ const searchableFields = [
 export default function BlogListDashboard() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
 
-  const [status, setStatus] = useState<string[]>([]);
-  
+  const [activeFilterKey, setActiveFilterKey] = useState<string>(userFacetFilters[0].key);
+  const [activeFilterValues, setActiveFilterValues] = useState<string[]>([]);
+
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     allBlogColumns.map((col) => col.key)
   );
@@ -164,9 +213,19 @@ export default function BlogListDashboard() {
     setBreadcrumb({
       title: "Blog Management",
       parent: "Admin",
-      parentHref: "",
+      parentHref: "/admin/dashboard",
     });
   }, [setBreadcrumb]);
+
+    const filteredData = useMemo(() => {
+      return blogData.filter(blog => {
+        if (activeFilterValues.length === 0) {
+          return true;
+        }
+        const blogValue = blog[activeFilterKey as keyof Blog];
+        return activeFilterValues.includes(blogValue);
+      });
+    }, [blogData, activeFilterKey, activeFilterValues]);
 
   // Generate column definitions based on visibleColumns
   const columns = allBlogColumns.map((col) => ({
@@ -174,39 +233,47 @@ export default function BlogListDashboard() {
     label: col.label,
     visible: visibleColumns.includes(col.key),
     sortable: col.sortable ?? true,
+    render: col.render,
+    cellClassName: col.cellClassName,
   }));
 
   return (
     <>
       <BlogTableToolbar
-        statusPlaceholder="Status"
-        statusOptions={blogStatusOptions}
-        statusValue={status}
-        onStatusChange={setStatus}
+        facetFilters={userFacetFilters}
+        activeFilterKey={activeFilterKey}
+        onActiveFilterKeyChange={setActiveFilterKey}
+        activeFilterValues={activeFilterValues}
+        onActiveFilterValuesChange={setActiveFilterValues}
 
         searchValue={search}
         onSearchChange={(val) => setSearch(val)}
-        
         searchFieldOptions={searchableFields}
         searchFieldValue={searchField}
         onSearchFieldChange={setSearchField}
 
-        columns={allBlogColumns.map((c) => c.key)}
+        columns={allBlogColumns}
         visibleColumns={visibleColumns}
         onVisibleColumnsChange={setVisibleColumns}
+
         fromDate={fromDate}
         toDate={toDate}
         onDateRangeChange={(from, to) => {
           setFromDate(from);
           setToDate(to);
         }}
+
         onResetFilters={() => {
-          setStatus([]);
+          setActiveFilterKey(userFacetFilters[0].key);
+          setActiveFilterValues([]);
+
           setSearch("");
+          setSearchField(searchableFields[0].value);
+
           setFromDate(undefined);
           setToDate(undefined);
+
           setVisibleColumns(allBlogColumns.map((c) => c.key));
-          setSearchField(searchableFields[0].value);
         }}
         onCreate={() => {
           // Handle blog creation logic here
@@ -215,11 +282,10 @@ export default function BlogListDashboard() {
       />
 
       <DataTable
-        data={blogData}
+        data={filteredData}
         columns={columns}
         search={search}
         searchField={searchField as keyof Blog}
-        statusFilter={status}
         dateRange={{ from: fromDate, to: toDate }}
         rowsPerPage={10}
         onEdit={(item) => {

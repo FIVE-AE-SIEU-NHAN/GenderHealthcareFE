@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { format, isAfter, setYear } from "date-fns"
-import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw } from "lucide-react"
+import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw, ChevronsUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,65 +21,89 @@ import {
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 
+export interface FacetFilter {
+  key: string; 
+  label: string; 
+  options: { label: string; value: string }[];
+}
+
 interface TableToolbarProps {
-  statusOptions?: { label: string; value: string }[]
-  columns: string[]
-  visibleColumns: string[]
-  onVisibleColumnsChange: (visibleCols: string[]) => void
+  // Column Visibility
+  columns: { key: string; label: string; toggleable?: boolean; }[];
+  visibleColumns: string[];
+  onVisibleColumnsChange: (visibleCols: string[]) => void;
 
-  statusValue?: string[]
-  onStatusChange?: (value: string[]) => void
+  // Faceted Filter (the new, generic system)
+  facetFilters?: FacetFilter[];
+  activeFilterKey: string;
+  onActiveFilterKeyChange: (key: string) => void;
+  activeFilterValues: string[];
+  onActiveFilterValuesChange: (values: string[]) => void;
+  
+  // Search
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  searchFieldOptions?: { value: string; label: string }[];
+  searchFieldValue?: string;
+  onSearchFieldChange?: (value: string) => void;
 
-  searchValue?: string
-  onSearchChange?: (value: string) => void
-  searchFieldOptions?: { value: string; label: string }[]
-  searchFieldValue?: string
-  onSearchFieldChange?: (value: string) => void
-
-  fromDate?: Date
-  toDate?: Date
-  onDateRangeChange?: (from?: Date, to?: Date) => void
-  onResetFilters?: () => void
-
-  onCreate?: () => void
-  createButtonLabel?: string
-  placeholderSearch?: string
-  statusPlaceholder?: string
+  // Date Range
+  fromDate?: Date;
+  toDate?: Date;
+  onDateRangeChange?: (from?: Date, to?: Date) => void;
+  
+  // General Actions
+  onResetFilters?: () => void;
+  onCreate?: () => void;
+  createButtonLabel?: string;
+  placeholderSearch?: string;
 }
 
 export default function TableToolbar({
-  statusOptions = [],
   columns,
   visibleColumns,
   onVisibleColumnsChange,
-  statusValue = [],
-  onStatusChange,
+
+  facetFilters = [],
+  activeFilterKey,
+  onActiveFilterKeyChange,
+  activeFilterValues,
+  onActiveFilterValuesChange,
+  
   searchValue = "",
   onSearchChange,
   searchFieldOptions = [],
   searchFieldValue,
   onSearchFieldChange,
+  placeholderSearch = "Search...",
+
   fromDate,
   toDate,
   onDateRangeChange,
   onResetFilters,
   onCreate,
   createButtonLabel = "+ CREATE",
-  placeholderSearch = "Search...",
-  statusPlaceholder = "Filter",
 }: TableToolbarProps) {
   const [fromMonth, setFromMonth] = React.useState(fromDate || new Date())
   const [toMonth, setToMonth] = React.useState(toDate || new Date())
   const [fromYear, setFromYear] = React.useState(fromDate?.getFullYear() || new Date().getFullYear())
   const [toYear, setToYear] = React.useState(toDate?.getFullYear() || new Date().getFullYear())
   const currentYear = new Date().getFullYear()
+  const minDate = new Date(2023, 0, 1);
+  const maxDate = new Date(currentYear, 11, 31);
   const years = Array.from({ length: currentYear - 2023 + 1 }, (_, i) => currentYear - i)
   const [localSearch, setLocalSearch] = React.useState(searchValue)
+
+  const currentFilter = facetFilters.find(f => f.key === activeFilterKey);
 
   React.useEffect(() => {
     setLocalSearch(searchValue)
   }, [searchValue])
 
+  const handleCategoryChange = (newKey: string) => {
+    onActiveFilterKeyChange(newKey);
+    onActiveFilterValuesChange([]); 
+  };
 
   // Date select handlers
   function handleFromDateSelect(date?: Date) {
@@ -96,9 +120,13 @@ export default function TableToolbar({
     setToYear(date?.getFullYear() || currentYear)
   }
 
-  const reset = () => {
-    if (onResetFilters) onResetFilters()
+  function clampMonth(date: Date): Date {
+    if (date < minDate) return new Date(minDate);
+    if (date > maxDate) return new Date(maxDate);
+    return date;
   }
+
+  const reset = () => { onResetFilters?.() };
 
   const toggleColumn = (col: string) => {
     if (visibleColumns.includes(col)) {
@@ -125,55 +153,77 @@ export default function TableToolbar({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-3" align="start">
-          {columns.map((col) => (
-            <div key={col} className="flex items-center space-x-2 mb-1">
-              <Checkbox
-                id={col}
-                checked={visibleColumns.includes(col)}
-                onCheckedChange={() => toggleColumn(col)}
-              />
-              <label htmlFor={col} className="text-sm font-medium leading-none">
-                {col}
-              </label>
-            </div>
-          ))}
+          {columns
+            .filter((col) => col.toggleable !== false) // Only show if toggleable is not explicitly false
+            .map((col) => (
+              <div key={col.key} className="flex items-center space-x-2 mb-1">
+                <Checkbox
+                  id={col.key}
+                  checked={visibleColumns.includes(col.key)}
+                  onCheckedChange={() => toggleColumn(col.key)} // Use the key to toggle
+                />
+                <label
+                  htmlFor={col.key}
+                  className="text-sm font-medium capitalize leading-none"
+                >
+                  {col.label} {/* Use the label for display */}
+                </label>
+              </div>
+            ))}
         </PopoverContent>
       </Popover>
 
       {/* Filter */}
-      {statusOptions.length > 0 && (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="font-medium">
-              {statusValue && statusValue.length > 0
-                ? statusValue.length === statusOptions.length
-                  ? "All"
-                  : statusValue.join(", ")
-                : statusPlaceholder}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-3" align="start">
-            {statusOptions.map(({ label, value }) => (
-              <div key={value} className="flex items-center space-x-2 mb-1">
-                <Checkbox
-                  id={value}
-                  checked={statusValue?.includes(value) ?? false}
-                  onCheckedChange={(checked) => {
-                    if (!onStatusChange) return
-                    if (checked) {
-                      onStatusChange([...(statusValue ?? []), value])
-                    } else {
-                      onStatusChange((statusValue ?? []).filter((v) => v !== value))
-                    }
-                  }}
-                />
-                <label htmlFor={value} className="text-sm font-medium leading-none">
-                  {label}
-                </label>
-              </div>
-            ))}
-          </PopoverContent>
-        </Popover>
+      {facetFilters.length > 0 && currentFilter && (
+        <div className="flex items-center gap-0">
+          {/* Part 1: Select the filter CATEGORY */}
+          <Select value={activeFilterKey} onValueChange={handleCategoryChange}>
+            <SelectTrigger className="w-auto gap-2 font-medium rounded-r-[0] border-r-0">
+              <SelectValue placeholder="Filter by..." />
+            </SelectTrigger>
+            <SelectContent align="center">
+              {facetFilters.map(filter => (
+                <SelectItem key={filter.key} value={filter.key}>
+                  {filter.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Part 2: Popover to select the filter VALUES */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-auto justify-between rounded-l-[0]">
+                <span className="truncate">
+                  {activeFilterValues.length > 0
+                    ? activeFilterValues.join(", ")
+                    : `Select ${currentFilter.label}`}
+                </span>
+                <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="center">
+              {currentFilter.options.map(({ label, value }) => (
+                <div key={value} className="flex items-center space-x-2 p-2 hover:bg-accent rounded-md">
+                  <Checkbox
+                    id={`${currentFilter.key}-${value}`}
+                    checked={activeFilterValues.includes(value)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        onActiveFilterValuesChange([...activeFilterValues, value]);
+                      } else {
+                        onActiveFilterValuesChange(activeFilterValues.filter(v => v !== value));
+                      }
+                    }}
+                  />
+                  <label htmlFor={`${currentFilter.key}-${value}`} className="w-full text-sm font-medium leading-none cursor-pointer">
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </PopoverContent>
+          </Popover>
+        </div>
       )}
 
       {/* Date Range Picker */}
@@ -218,8 +268,13 @@ export default function TableToolbar({
               selected={fromDate}
               onSelect={handleFromDateSelect}
               month={fromMonth}
-              onMonthChange={setFromMonth}
+              onMonthChange={(month) => setFromMonth(clampMonth(month))}
               showOutsideDays
+              disabled={(date) =>
+                date < minDate ||
+                date > maxDate ||
+                (toDate ? date > toDate : false)
+              }
             />
           </div>
 
@@ -252,8 +307,13 @@ export default function TableToolbar({
               selected={toDate}
               onSelect={handleToDateSelect}
               month={toMonth}
-              onMonthChange={setToMonth}
+              onMonthChange={(month) => setToMonth(clampMonth(month))}
               showOutsideDays
+              disabled={(date) =>
+                date < minDate ||
+                date > maxDate ||
+                (fromDate ? date < fromDate : false)
+              }
             />
           </div>
         </PopoverContent>
@@ -264,7 +324,7 @@ export default function TableToolbar({
         {/* Search Field Dropdown */}
         {searchFieldOptions.length > 0 && (
           <Select value={searchFieldValue} onValueChange={onSearchFieldChange}>
-            <SelectTrigger className="w-[120px] rounded-r-none border-r-0 focus:ring-0 focus:ring-offset-0">
+            <SelectTrigger className="w-[120px] rounded-r-none border-r-0 focus:ring-0 focus:ring-offset-0 font-medium">
               <SelectValue placeholder="Search in...">
                 {selectedFieldLabel}
               </SelectValue>
@@ -305,7 +365,7 @@ export default function TableToolbar({
       </div>
 
       {/* Reset button if range or filters selected */}
-      {(fromDate || toDate || (statusValue && statusValue.length > 0) || searchValue) && (
+      {(fromDate || toDate || activeFilterValues.length > 0 || searchValue) && (
         <Button
           variant="ghost"
           size="sm"
