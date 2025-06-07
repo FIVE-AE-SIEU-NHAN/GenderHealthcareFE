@@ -56,10 +56,15 @@ const BlogPage: React.FC = () => {
     <div className="font-inter text-gray-800">
       <section
         className="py-12 text-center bg-cover bg-center h-[350px] relative flex flex-col items-center justify-center"
-        style={{ backgroundImage: "url('/images/blog1.jpg')" }}
+        style={{ backgroundImage: "url('/images/Banner.png')" }}
       >
-        <h2 className="text-5xl text-white font-bold">Our Blogs</h2>
-        <p className="text-sm mt-2">
+        <div 
+          className="absolute inset-0" 
+          style={{ backgroundColor: "#1A2159", opacity: 0.7 }}
+        ></div>
+        
+        <h2 className="text-5xl text-white font-bold relative z-10">Our Blogs</h2>
+        <p className="text-sm mt-2 relative z-10">
           <span className="text-white">Home</span>
           <span style={{ color: "#55AEFF" }}> / Blog List</span>
         </p>

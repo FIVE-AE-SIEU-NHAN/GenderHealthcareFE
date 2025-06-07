@@ -19,7 +19,8 @@ import Unauthorized from '@/pages/Common/Unauthorized';
 import ResetPassword from '@/pages/Auth/ForgotPassword/ResetPassword';
 import ForgotPassword from '@/pages/Auth/ForgotPassword/ForgotPassword';
 import NotFound from '@/pages/Common/NotFound';
-
+import BlogPage from "@/pages/Content/Blog/BlogList"
+import BlogDetails from "@/pages/Content/Blog/BlogDetails"
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -31,6 +32,8 @@ export default function AppRouter() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/services" element={<ServiceDetail />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:id" element={<BlogDetails />} />
         </Route>
 
         {/* Auth Routes */}
