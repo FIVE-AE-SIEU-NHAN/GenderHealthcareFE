@@ -32,6 +32,28 @@ body {
   --animate-floating: floating 2.45s infinite;
   --animate-fade-in-scale: fadeInScale .5s ease forwards;
   --animate-shine: shine .5s ease-in-out;
+  --animate-accordion-down: accordion-down 0.3s ease-out;
+  --animate-accordion-up: accordion-up 0.3s ease-in;
+  --animate-fade-in-zoom: fadeInScale 0.3s ease-out;
+  --animate-fade-out-zoom: fadeOutScale 0.3s ease-in;
+
+  @keyframes accordion-down {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    0% {
+      height: var(--radix-accordion-content-height);
+    }
+    100% {
+      height: 0;
+    }
+  }
 
   @keyframes fade-in-up {
     0% {
@@ -52,6 +74,17 @@ body {
     100% {
       opacity: 1;
       transform: scale(1);
+    }
+  }
+
+  @keyframes fadeOutScale {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.95);
     }
   }
 

@@ -18,6 +18,7 @@ import {
 import type { NavMainProps } from "@/components/nav-main";
 import { UserNav } from "@/components/layouts/Dashboard/user-nav";
 import WebLogo from "@/assets/images/logo1.png"
+import { Toaster } from "@/components/ui/sonner";
 
 
 // 1. Define breadcrumb type and outlet context type
@@ -92,6 +93,7 @@ export default function DashboardLayout({
             </div>
           </SidebarInset>
         </SidebarProvider>
+        <Toaster richColors position="bottom-right" />
       </div>
     </>
   );

@@ -56,15 +56,14 @@ const allUserColumns = [
     key: "id",
     label: "ID",
     toggleable: false,
-    sortable: true,
     render: (user: User) => (
       <Badge variant="outline" className="font-mono bg-emerald-400/15">
         {user.id}
       </Badge>
     )
   },
-  { key: "fullName", label: "Full Name", sortable: true },
-  { key: "email", label: "Email", sortable: true },
+  { key: "fullName", label: "Full Name" },
+  { key: "email", label: "Email" },
   {
     key: "role",
     label: "Role",
@@ -81,11 +80,10 @@ const allUserColumns = [
       </Badge>
     ),
   },
-  { key: "createdAt", label: "Date Created", sortable: true },
+  { key: "createdAt", label: "Date Created" },
   {
     key: "status",
     label: "Status",
-    sortable: true,
     render: (user: User) => (
       <Badge className={cn(
         "font-medium text-xs",

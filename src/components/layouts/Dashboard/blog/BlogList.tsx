@@ -8,6 +8,16 @@ import type { Blog } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CreateBlogForm } from "./CreateBlogForm";
+import { FilePlus2 } from "lucide-react";
+
 const blogData: Blog[] = [
   {
     id: "85",
@@ -129,7 +139,6 @@ const allBlogColumns = [
     key: "id",
     label: "ID",
     toggleable: false,
-    sortable: true,
     render: (blog: Blog) => (
       <Badge
         variant="outline"
@@ -139,7 +148,7 @@ const allBlogColumns = [
       </Badge>
     ),
   },
-  { key: "author", label: "Author", sortable: true },
+  { key: "author", label: "Author" },
   { key: "title", label: "Title", sortable: false },
   {
     key: "description",
@@ -150,21 +159,20 @@ const allBlogColumns = [
       <p className="truncate text-left">{blog.description}</p>
     ),
   },
-  { key: "createdAt", label: "Date Created",  sortable: true },
+  { key: "createdAt", label: "Date Created" },
   {
     key: "status",
     label: "Status",
-    sortable: true,
     render: (blog: Blog) => (
       <Badge
         className={cn(
           "font-medium text-xs",
           blog.status === "Published" &&
-            "border-blue-500/50 bg-blue-500/10 text-blue-700",
+          "border-blue-500/50 bg-blue-500/10 text-blue-700",
           blog.status === "Archived" &&
-            "border-red-500/50 bg-red-500/10 text-red-700",
+          "border-red-500/50 bg-red-500/10 text-red-700",
           blog.status === "Draft" &&
-            "border-yellow-500/50 bg-yellow-500/10 text-yellow-700"
+          "border-yellow-500/50 bg-yellow-500/10 text-yellow-700"
         )}
       >
         {blog.status}
@@ -187,7 +195,7 @@ const userFacetFilters: FacetFilter[] = [
 
 const searchableFields = [
   // `value` bắt buộc giống trong file trong folder types/...ts 
-  { value: 'all', label: 'All Fields' }, 
+  { value: 'all', label: 'All Fields' },
   { value: 'title', label: 'Title' },
   { value: 'author', label: 'Author' },
   { value: 'description', label: 'Description' },
@@ -205,9 +213,11 @@ export default function BlogListDashboard() {
 
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
-  
+
   const [searchField, setSearchField] = useState(searchableFields[0].value);
   const [search, setSearch] = useState("");
+
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   useEffect(() => {
     setBreadcrumb({
@@ -217,15 +227,15 @@ export default function BlogListDashboard() {
     });
   }, [setBreadcrumb]);
 
-    const filteredData = useMemo(() => {
-      return blogData.filter(blog => {
-        if (activeFilterValues.length === 0) {
-          return true;
-        }
-        const blogValue = blog[activeFilterKey as keyof Blog];
-        return activeFilterValues.includes(blogValue);
-      });
-    }, [blogData, activeFilterKey, activeFilterValues]);
+  const filteredData = useMemo(() => {
+    return blogData.filter(blog => {
+      if (activeFilterValues.length === 0) {
+        return true;
+      }
+      const blogValue = blog[activeFilterKey as keyof Blog];
+      return activeFilterValues.includes(blogValue);
+    });
+  }, [blogData, activeFilterKey, activeFilterValues]);
 
   // Generate column definitions based on visibleColumns
   const columns = allBlogColumns.map((col) => ({
@@ -275,9 +285,7 @@ export default function BlogListDashboard() {
 
           setVisibleColumns(allBlogColumns.map((c) => c.key));
         }}
-        onCreate={() => {
-          // Handle blog creation logic here
-        }}
+        onCreate={() => setIsCreateDialogOpen(true)}
         createButtonLabel="+ CREATE BLOG"
       />
 
@@ -295,6 +303,35 @@ export default function BlogListDashboard() {
           console.log("Delete Blog:", item);
         }}
       />
+
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent
+          className="sm:max-w-none w-[95vw] h-[90vh] md:w-[80vw] lg:w-[70vw] flex flex-col p-0 data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out"
+        >
+          {/* === NEW STUNNING HEADER === */}
+          <DialogHeader className="rounded-t-md border-b-slate-300 border-b-1 p-6 pb-4 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800/50">
+            <div className="flex items-center gap-4">
+              {/* Eye-catching Icon with Gradient Background */}
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-blue-700 flex items-center justify-center shrink-0">
+                <FilePlus2 className="h-8 w-8 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <DialogTitle className="text-3xl font-bold tracking-tight text-foreground">
+                  Create a New Masterpiece
+                </DialogTitle>
+                <DialogDescription className="text-base text-muted-foreground mt-1">
+                  Fill out the details below to publish a new article for our community.
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+
+          {/* Form Content Area */}
+          <div className="flex-1 overflow-y-auto px-6 py-4">
+            <CreateBlogForm onSuccess={() => setIsCreateDialogOpen(false)} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

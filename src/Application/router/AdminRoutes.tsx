@@ -20,8 +20,6 @@ export const AdminRoutes = (
   >
     <Route index element={<AdminDashboard />} />
     <Route path="blog/list" element={<BlogListDashboard />} />
-    <Route path="blog/create" element={<BlogListDashboard />} />
-
     <Route path="users/list" element={<UserListDashboard />} />
     {/* Add more nested admin routes here */}
   </Route>
