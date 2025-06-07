@@ -8,8 +8,8 @@ export const adminSidebarItems: NavMainProps["items"] = [
     icon: FileText, 
   },
   {
-    title: "Users Management",
-    url: "/admin/users",
+    title: "User Management",
+    url: "/admin/dashboard/users/list",
     icon: Users, 
   },
   {
