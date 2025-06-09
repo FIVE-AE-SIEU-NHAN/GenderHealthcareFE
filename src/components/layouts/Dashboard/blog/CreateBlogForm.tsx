@@ -76,8 +76,7 @@ export function CreateBlogForm({ onSuccess }: CreateBlogFormProps) {
       >
         {/* === SECTION 1: CORE DETAILS === */}
         <Card
-          className="animate-fade-in-up [animation-fill-mode:backwards] pt-7 pb-7"
-          style={{ animationDelay: "100ms" }}
+          className="animate-fade-in-up [animation-delay:100ms] [animation-fill-mode:backwards] pt-7 pb-7"
         >
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-semi-dark-blue text-lg text-shadow-md">
@@ -108,8 +107,7 @@ export function CreateBlogForm({ onSuccess }: CreateBlogFormProps) {
 
         {/* === SECTION 2: CONTENT === */}
         <Card
-          className="animate-fade-in-up [animation-fill-mode:backwards] pt-7 pb-7"
-          style={{ animationDelay: "300ms" }}
+          className="animate-fade-in-up [animation-delay:300ms] [animation-fill-mode:backwards] pt-7 pb-7"
         >
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-semi-dark-blue text-lg text-shadow-md">
@@ -144,8 +142,7 @@ export function CreateBlogForm({ onSuccess }: CreateBlogFormProps) {
         
         {/* === SECTION 3: MEDIA === */}
         <Card
-          className="animate-fade-in-up [animation-fill-mode:backwards] pt-7 pb-2"
-          style={{ animationDelay: "500ms" }}
+          className="animate-fade-in-up [animation-delay:500ms] [animation-fill-mode:backwards] pt-7 pb-2"
         >
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-semi-dark-blue text-lg text-shadow-md">
@@ -196,8 +193,7 @@ export function CreateBlogForm({ onSuccess }: CreateBlogFormProps) {
         
         {/* === SUBMIT BUTTON === */}
         <div
-          className="flex justify-end animate-fade-in-up [animation-fill-mode:backwards]"
-          style={{ animationDelay: "600ms" }}
+          className="flex justify-end animate-fade-in-up [animation-delay:600ms] [animation-fill-mode:backwards]"
         >
           <Button type="submit" size="lg" className="font-bold text-lg bg-gradient-to-br from-primary to-blue-700 text-white shadow-md hover:shadow-md/20 hover:scale-101 transition-all duration-200">
             <SendHorizonal className="mr-2 h-5 w-5" />

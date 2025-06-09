@@ -43,6 +43,7 @@
     "react-hook-form": "^7.57.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.0",
+    "recharts": "^2.15.3",
     "sal.js": "^0.8.5",
     "sonner": "^2.0.5",
     "swiper": "^11.2.6",
@@ -66,5 +67,8 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite": "^6.3.5"
+  },
+  "overrides": {
+    "react-is": "^19.1.0"
   }
 }
