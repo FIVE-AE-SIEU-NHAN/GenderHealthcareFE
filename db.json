@@ -1,0 +1,27 @@
+{
+  "users": [
+    { "id": "1", "fullName": "Alice Johnson", "email": "alice@example.com", "role": "Admin", "createdAt": "15/07/2024", "status": "Active" },
+    { "id": "2", "fullName": "Bob Williams", "email": "bob@example.com", "role": "Customer", "createdAt": "14/07/2024", "status": "Active" },
+    { "id": "3", "fullName": "Charlie Brown", "email": "charlie@example.com", "role": "Doctor", "createdAt": "13/07/2024", "status": "Banned" },
+    { "id": "4", "fullName": "Diana Miller", "email": "diana@example.com", "role": "Manager", "createdAt": "12/07/2024", "status": "Active" },
+    { "id": "5", "fullName": "Ethan Davis", "email": "ethan@example.com", "role": "Customer", "createdAt": "11/07/2024", "status": "Suspended" },
+    { "id": "6", "fullName": "Fiona Taylor", "email": "fiona@example.com", "role": "Doctor", "createdAt": "10/07/2024", "status": "Active" },
+    { "id": "7", "fullName": "George Harris", "email": "george@example.com", "role": "Manager", "createdAt": "09/07/2024", "status": "Banned" },
+    { "id": "8", "fullName": "Hannah Moore", "email": "hannah@example.com", "role": "Customer", "createdAt": "08/07/2024", "status": "Active" },
+    { "id": "9", "fullName": "Ian Thompson", "email": "ian@example.com", "role": "Admin", "createdAt": "07/07/2024", "status": "Suspended" },
+    { "id": "10", "fullName": "Jane Clark", "email": "jane@example.com", "role": "Customer", "createdAt": "06/07/2024", "status": "Active" },
+    { "id": "11", "fullName": "Kevin Lewis", "email": "kevin@example.com", "role": "Doctor", "createdAt": "05/07/2024", "status": "Active" },
+    { "id": "12", "fullName": "Lily Walker", "email": "lily@example.com", "role": "Manager", "createdAt": "04/07/2024", "status": "Suspended" },
+    { "id": "13", "fullName": "Michael Hall", "email": "michael@example.com", "role": "Admin", "createdAt": "03/07/2024", "status": "Active" },
+    { "id": "14", "fullName": "Nora Young", "email": "nora@example.com", "role": "Customer", "createdAt": "02/07/2024", "status": "Banned" },
+    { "id": "15", "fullName": "Owen King", "email": "owen@example.com", "role": "Doctor", "createdAt": "01/07/2024", "status": "Active" },
+    { "id": "16", "fullName": "Paula Scott", "email": "paula@example.com", "role": "Manager", "createdAt": "30/06/2024", "status": "Suspended" },
+    { "id": "17", "fullName": "Quinn Green", "email": "quinn@example.com", "role": "Customer", "createdAt": "29/06/2024", "status": "Active" },
+    { "id": "18", "fullName": "Ryan Adams", "email": "ryan@example.com", "role": "Doctor", "createdAt": "28/06/2024", "status": "Banned" },
+    { "id": "19", "fullName": "Sophie Baker", "email": "sophie@example.com", "role": "Admin", "createdAt": "27/06/2024", "status": "Active" },
+    { "id": "20", "fullName": "Thomas Carter", "email": "thomas@example.com", "role": "Customer", "createdAt": "26/06/2024", "status": "Active" },
+    { "id": "21", "fullName": "Uma Nelson", "email": "uma@example.com", "role": "Manager", "createdAt": "25/06/2024", "status": "Suspended" },
+    { "id": "22", "fullName": "Victor Allen", "email": "victor@example.com", "role": "Doctor", "createdAt": "24/06/2024", "status": "Banned" },
+    { "id": "23", "fullName": "Wendy Evans", "email": "wendy@example.com", "role": "Customer", "createdAt": "23/06/2024", "status": "Active" }
+  ]
+}
