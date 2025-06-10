@@ -6,8 +6,9 @@ import AdminDashboard from "@/pages/Admin/Dashboard";
 import DashboardBlogList from "@/pages/Admin/DashboardBlogList"; 
 import BlogCreate from "@/pages/Admin/BlogCreate"; 
 import BlogEdit from "@/pages/Admin/BlogEdit"; 
+import DashboardHome from "@/pages/Admin/DashboardMain"; 
 import { adminSidebarItems } from "@/Application/constants/adminSidebarItems";
-
+import Cycle from "@/pages/Admin/CycleHistory"; 
 export const AdminRoutes = (
   <Route
     path="/admin/dashboard"
@@ -21,7 +22,7 @@ export const AdminRoutes = (
     <Route path="blog/list" element={<DashboardBlogList />} />
     <Route path="blog/create" element={<BlogCreate />} />
     <Route path="blog/edit/:id" element={<BlogEdit />} />
-    {/* Nếu bạn có component riêng cho tạo blog, thay DashboardBlogList bằng component đó */}
-    {/* Thêm các route con admin khác nếu cần */}
+    <Route path="home" element={<DashboardHome />} />
+    <Route path="cycle" element={<Cycle />} />
   </Route>
 );
