@@ -5,7 +5,7 @@ import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout";
 import AdminDashboard from "@/pages/Admin/Dashboard";
 import BlogListDashboard from "@/components/layouts/Dashboard/blog/BlogList";
 import { adminSidebarItems } from "@/Application/constants/adminSidebarItems";
-import UserListDashboard from "@/components/layouts/Dashboard/user/UserList";
+import UserListDashboard from "@/components/layouts/Dashboard/user/UserListAPI";
 
 export const AdminRoutes = (
   <Route

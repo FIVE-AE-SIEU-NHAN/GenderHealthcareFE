@@ -51,7 +51,7 @@ export default function LoginForm() {
     try {
       const res = await authApi.login(data);
       if (res.status === 200) {
-        navigate('/dashboard');
+        navigate('/');
       }
 
     } catch (err: unknown) {
@@ -83,7 +83,6 @@ export default function LoginForm() {
       } else {
         setBackendError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập");
       }
-
     };
   }
 
@@ -108,11 +107,11 @@ export default function LoginForm() {
               <AtSign className="form-icon" />
               <Input
                 id="email"
-                type="email"
+                type="text"
                 placeholder="care4gender@example.com"
                 {...register("email")}
                 disabled={isSubmitting}
-                className="pl-8"
+                className= {errors.email ? 'border-red-500 pl-8' : 'pl-8'} 
               />
             </div>
             {errors.email && (
@@ -131,7 +130,7 @@ export default function LoginForm() {
                 placeholder="••••••••"
                 {...register("password")}
                 disabled={isSubmitting}
-                className="pl-8 pr-10"
+                className= {errors.password ? 'border-red-500 pl-8 pr-10' : 'pl-8 pr-10'} 
               />
               <button
                 type="button"

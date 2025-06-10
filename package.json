@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node server.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.0",
@@ -26,6 +27,7 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "@react-oauth/google": "^0.12.2",
     "@tailwindcss/vite": "^4.1.7",
+    "@tanstack/react-query": "^5.80.6",
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -62,6 +64,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "json-server": "^0.17.4",
     "prettier": "^3.5.3",
     "tw-animate-css": "^1.3.0",
     "typescript": "~5.8.3",

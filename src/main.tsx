@@ -12,13 +12,18 @@ import './index.css'
 // import ENV from './utils/environment';
 import { RoleProvider } from './contexts/RoleContext';
 import AppRouter from './Application/router/AppRouter';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 {/* <GoogleOAuthProvider clientId={ENV.GG_CLIENT_ID}>
     <App />
   </GoogleOAuthProvider> */}
+
+const queryClient = new QueryClient()
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RoleProvider>
-      <AppRouter />
-    </RoleProvider>
+    <QueryClientProvider client={queryClient}>
+      <RoleProvider>
+        <AppRouter />
+      </RoleProvider>
+    </QueryClientProvider>
   </StrictMode>
 )

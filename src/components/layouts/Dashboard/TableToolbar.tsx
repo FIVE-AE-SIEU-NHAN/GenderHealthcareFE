@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { format, isAfter, setYear } from "date-fns"
-import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw, ChevronsUpDown } from "lucide-react"
+import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw, ChevronsUpDown, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -57,6 +57,8 @@ interface TableToolbarProps {
   onCreate?: () => void;
   createButtonLabel?: string;
   placeholderSearch?: string;
+
+  isFetching?: boolean;
 }
 
 export default function TableToolbar({
@@ -83,6 +85,7 @@ export default function TableToolbar({
   onResetFilters,
   onCreate,
   createButtonLabel = "+ CREATE",
+  isFetching,
 }: TableToolbarProps) {
   const [fromMonth, setFromMonth] = React.useState(fromDate || new Date())
   const [toMonth, setToMonth] = React.useState(toDate || new Date())
@@ -377,7 +380,13 @@ export default function TableToolbar({
         </Button>
       )}
 
-      <div className="ml-auto">
+      <div className="flex items-center gap-2 ml-auto">
+        {isFetching && (
+          <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Loading...</span>
+          </div>
+        )}
         {onCreate && (
           <Button onClick={onCreate}>
             {createButtonLabel}

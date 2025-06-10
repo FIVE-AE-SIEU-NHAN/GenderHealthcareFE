@@ -1,8 +1,10 @@
+import { register } from 'module';
 import axiosInstance from './axiosConfig';
+import { get } from 'axios';
 
 export const authApi = {
-  login: async (credentials: { email: string; password: string }) => {
-    const response = await axiosInstance.post('/user/login', credentials);
+  login: async (data: { email: string; password: string }) => {
+    const response = await axiosInstance.post('/user/login', data);
 
     const { access_token, refresh_token } = response.data;
 
@@ -12,4 +14,23 @@ export const authApi = {
 
     return response;
   },
+
+  getOtp: async (data: { email: string }) => {
+    const response = await axiosInstance.post('/user/get-otp', data);
+    return response;
+  },
+
+  register: async (data: { 
+    fullName: string;
+    gender: string;
+    dob: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    otp: string;
+  }) => {
+    const response = await axiosInstance.post('/user/register', data);
+    return response;
+  },
+
 };

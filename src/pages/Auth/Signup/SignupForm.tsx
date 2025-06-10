@@ -17,6 +17,8 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
+import { authApi } from "@/apis/authApi";
+import { toast } from "sonner";
 // import GoogleLoginButton from "../GoogleLogin";
 
 
@@ -30,18 +32,34 @@ type FormData = {
   otp: string;
 };
 
+interface OtpError {
+  response?: {
+    data?: {
+      message?: string;
+      errors?: {
+        [key: string]: string;
+      };
+    };
+  };
+}
+
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [backendError, setBackendError] = useState("");
+
 
   const {
     register,
     handleSubmit,
     control,
+    watch,
+    setError,
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
+    setBackendError(""); 
     const formatted = {
       ...data,
       dob: data.dob
@@ -49,6 +67,80 @@ export default function SignupForm() {
         : "",
     };
     console.log("Signup data:", formatted);
+
+    try {
+      const res = await authApi.register(data);
+      if (res.status === 200) {
+        // navigate('/');
+        // toast("Registration successful", {
+        //   description: "Sunday, December 03, 2023 at 9:00 AM",
+        //   action: {
+        //     label: "Undo",
+        //     onClick: () => console.log("Undo"),
+        //   },
+        // })
+        alert("Registration successful");
+      }
+    } catch (err: unknown) {
+      const error = err as OtpError;
+      // Set lỗi cho các field cụ thể
+      if (error.response?.data?.errors) {
+        const serverErrors = error.response.data.errors;
+
+        if (serverErrors.date_of_birth) {
+          setError("dob", {
+            type: "server",
+            message: "Date of birth is required"
+          });
+        }
+        // Set lỗi email từ server
+        if (serverErrors.email) {
+          setError("email", {
+            type: "server",
+            message: serverErrors.email
+          });
+        }
+
+        if (serverErrors.name) {
+          setError("fullName", {
+            type: "server",
+            message: serverErrors.name
+          });
+        }
+        if (serverErrors.gender) {
+          setError("gender", {
+            type: "server",
+            message: serverErrors.gender
+          });
+        }
+
+        // Set lỗi password từ server
+        if (serverErrors.password) {
+          setError("password", {
+            type: "server",
+            message: serverErrors.password
+          });
+        }
+
+        // Set lỗi confirmPassword từ server
+        if (serverErrors.confirm_password) {
+          setError("confirmPassword", {
+            type: "server",
+            message: serverErrors.confirm_password
+          });
+        }
+
+        // Set lỗi otp từ server
+        if (serverErrors.email_verify_token) {
+          setError("otp", {
+            type: "server",
+            message: serverErrors.email_verify_token
+          });
+        }
+      } else {
+        toast.error("Registration failed. Please try again.");
+      }
+    }
   };
 
   const [otpCountdown, setOtpCountdown] = useState(0);
@@ -63,11 +155,38 @@ export default function SignupForm() {
     return () => clearInterval(interval);
   }, [otpCountdown]);
 
-  const handleGetOtp = () => {
+  const handleGetOtp = async () => {
     if (otpCountdown === 0) {
       // Trigger OTP logic (e.g. send OTP to email)
       console.log("Send OTP");
-      setOtpCountdown(120); // 2 minutes
+
+      const emailValue = watch("email");
+      console.log("Email for OTP:", emailValue);
+      try {
+        const res = await authApi.getOtp({ email: emailValue });
+        if (res.status === 200) {
+          // navigate('/');
+          // toast("OTP sent successfully", {
+          //   description: "Sunday, December 03, 2023 at 9:00 AM",
+          //   action: {
+          //     label: "Undo",
+          //     onClick: () => console.log("Undo"),
+          //   },
+          // })
+          alert("OTP sent successfully");
+          setOtpCountdown(120);
+        }
+      } catch (err: unknown) {
+        const error = err as OtpError;
+        if (error.response?.data?.errors) {
+          const serverErrors = error.response.data.errors;
+          if (serverErrors.email) {
+            alert(serverErrors.email);
+          } else {
+            toast.error("Failed to send OTP. Please try again.");
+          }
+        }
+      }
     }
   };
 
@@ -107,6 +226,9 @@ export default function SignupForm() {
                 className="pl-8"
               />
             </div>
+            {errors.fullName && (
+              <p className="text-red-500 text-sm">{errors.fullName.message}</p>
+            )}
           </div>
 
           {/* Gender & Date of Birth */}
@@ -118,6 +240,9 @@ export default function SignupForm() {
                 name="dob"
                 render={({ field }) => <DatePicker field={field} />}
               />
+              {errors.dob && (
+                <p className="text-red-500 text-sm">{errors.dob.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -138,6 +263,9 @@ export default function SignupForm() {
                   </Select>
                 )}
               />
+              {errors.gender && (
+                <p className="text-red-500 text-sm">{errors.gender.message}</p>
+              )}
             </div>
           </div>
 
@@ -154,6 +282,9 @@ export default function SignupForm() {
                 className="pl-8"
               />
             </div>
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
           </div>
 
           {/* Password + Confirm Password */}
@@ -178,6 +309,9 @@ export default function SignupForm() {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -200,6 +334,9 @@ export default function SignupForm() {
                   {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
+              )}
             </div>
           </div>
 
@@ -228,6 +365,9 @@ export default function SignupForm() {
                 {otpCountdown > 0 ? formatTime(otpCountdown) : "Get OTP"}
               </Button>
             </div>
+            {errors.otp && (
+              <p className="text-red-500 text-sm">{errors.otp.message}</p>
+            )}
           </div>
 
           {/* Submit */}

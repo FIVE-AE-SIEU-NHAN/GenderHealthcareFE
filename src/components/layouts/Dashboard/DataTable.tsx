@@ -1,100 +1,69 @@
-// components/tables/DataTable.tsx
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronUp, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { Pagination } from "@/components/layouts/pagin/Pagination";
+import { EmptyState } from "./EmptyState";
 
+// The Column type definition remains a generic contract for how to display data.
 type Column<T> = {
   key: keyof T;
   label: string;
   visible: boolean;
   sortable?: boolean;
   render?: (item: T) => React.ReactNode;
-  cellClassName?: string; 
+  cellClassName?: string;
 };
 
-type DataTableProps<T extends { id: string; createdAt: string; status?: string }> = {
+// --- PROPS ARE NOW FOR DISPLAY AND REPORTING ACTIONS ---
+// The component is now generic for any data type that has an `id`.
+type DataTableProps<T extends { id: string }> = {
   data: T[];
   columns: Column<T>[];
-  search?: string;
-  searchField?: keyof T | "all";
-  statusFilter?: string[];
-  dateRange?: { from?: Date; to?: Date };
-  rowsPerPage?: number;
+
+  // Pagination props received from the parent component
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+
+  // Sorting props received from the parent component
+  sortField: keyof T;
+  sortDirection: 'asc' | 'desc';
+  onSortChange: (field: keyof T, direction: 'asc' | 'desc') => void;
+
+  // Action handlers, passed down from the parent
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
   renderActions?: (item: T) => React.ReactNode;
 };
 
-export function DataTable<T extends { id: string; createdAt: string; status?: string }>({
+export function DataTable<T extends { id: string }>({
   data,
   columns,
-  search = "",
-  searchField = "all",
-  statusFilter = [],
-  dateRange,
-  rowsPerPage = 10,
+  currentPage,
+  totalPages,
+  onPageChange,
+  sortField,
+  sortDirection,
+  onSortChange,
   onEdit,
   onDelete,
   renderActions,
 }: DataTableProps<T>) {
-  const [sortField, setSortField] = useState<keyof T>("id");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const [currentPage, setCurrentPage] = useState(1);
-  
-  const parseDDMMYYYY = (str: string): Date => { const [day, month, year] = str.split("/").map(Number); return new Date(year, month - 1, day); };
-  const isDateFormat = (val: unknown): val is string => typeof val === "string" && /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val);
-  const isNumericString = (val: unknown): val is string => typeof val === "string" && !isNaN(Number(val));
+
+  // --- ALL INTERNAL STATE AND LOGIC FOR DATA MANIPULATION IS GONE ---
+  // No more useState for sort, currentPage.
+  // No more filteredData, sortedData, or paginatedData calculations.
+  // No more helper functions like parseDDMMYYYY. The component just displays what it's given.
 
   const handleSort = (field: keyof T) => {
-    if (field === sortField) {
-      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
-    } else {
-      setSortField(field);
-      setSortDirection("asc");
-    }
+    // When a sortable header is clicked, it doesn't set its own state.
+    // It calls the onSortChange function provided by its parent to report the interaction.
+    const newDirection = sortField === field && sortDirection === 'asc' ? 'desc' : 'asc';
+    onSortChange(field, newDirection);
   };
-  
-  const filteredData = data.filter((item) => {
-    const createdAt = parseDDMMYYYY(item.createdAt);
-    const matchesStatus = !statusFilter.length || !item.status || statusFilter.includes(item.status);
-    const matchesSearch = !search ||
-      (searchField === "all"
-        ? Object.values(item).map((val) => String(val).toLowerCase()).join(" ").includes(search.toLowerCase())
-        : String(item[searchField]).toLowerCase().includes(search.toLowerCase()));
-    const inDateRange = (!dateRange?.from || createdAt >= dateRange.from) && (!dateRange?.to || createdAt <= dateRange.to);
-    return matchesStatus && matchesSearch && inDateRange;
-  });
 
-  
-  const sortedData = [...filteredData].sort((a, b) => {
-    const aVal = a[sortField as keyof typeof a];
-    const bVal = b[sortField as keyof typeof b];
-    if (isDateFormat(aVal) && isDateFormat(bVal)) {
-      const aDate = parseDDMMYYYY(aVal);
-      const bDate = parseDDMMYYYY(bVal);
-      return sortDirection === "asc" ? aDate.getTime() - bDate.getTime() : bDate.getTime() - aDate.getTime();
-    }
-    if (isNumericString(aVal) && isNumericString(bVal)) {
-      const aNum = Number(aVal);
-      const bNum = Number(bVal);
-      return sortDirection === "asc" ? aNum - bNum : bNum - aNum;
-    }
-    if (typeof aVal === "number" && typeof bVal === "number") {
-      return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
-    }
-    if (typeof aVal === "string" && typeof bVal === "string") {
-      return sortDirection === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-    }
-    return 0;
-  });
-
-  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
-  const paginatedData = sortedData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+  // The number of visible columns, used for the "No results" message colspan.
+  const visibleColumnCount = columns.filter(c => c.visible).length;
 
   return (
     <div className="min-h-[calc(77vh)] rounded-xl border bg-white shadow-sm relative">
@@ -107,12 +76,15 @@ export function DataTable<T extends { id: string; createdAt: string; status?: st
                   col.visible && (
                     <th
                       key={String(col.key)}
-                      onClick={() => col.sortable && handleSort(col.key)}
-                      className={cn("px-4 py-3", col.sortable && "cursor-pointer select-none")}
+                      onClick={() => col.sortable !== false && handleSort(col.key)}
+                      className={cn(
+                        "px-4 py-3",
+                        col.sortable !== false && "cursor-pointer select-none"
+                      )}
                     >
                       {col.label}{" "}
                       {sortField === col.key &&
-                        (sortDirection === "asc" ? (
+                        (sortDirection === 'asc' ? (
                           <ChevronUp className="inline h-4 w-4" />
                         ) : (
                           <ChevronDown className="inline h-4 w-4" />
@@ -120,61 +92,68 @@ export function DataTable<T extends { id: string; createdAt: string; status?: st
                     </th>
                   )
               )}
-              {(onEdit || onDelete || renderActions) && (
-                <th className="px-4 py-3">Actions</th>
-              )}
+              {renderActions && <th className="px-4 py-3">Actions</th>}
             </tr>
           </thead>
           <tbody className="text-center">
-            {paginatedData.map((item) => (
-              <tr key={item.id} className="border-t hover:bg-blue-50/70 transition-colors">
-
-                {/* Render Cột (Cho phép chọn cái nào chuyển thành Badge được, bú)  */}
-                {columns.map((col) => {
-                  if (!col.visible) return null;
-
-                  return (
-                    <td key={String(col.key)} 
-                      className={cn(
-                        "px-4 py-3 align-middle",
-                        col.cellClassName 
-                      )}>
-                      {col.render ? col.render(item) : String(item[col.key])}
+            {data.length > 0 ? (
+              // We now map directly over the `data` prop. No more `paginatedData`.
+              data.map((item) => (
+                <tr key={item.id} className="border-t hover:bg-blue-50/70 transition-colors">
+                  {columns.map((col) => {
+                    if (!col.visible) return null;
+                    return (
+                      <td
+                        key={String(col.key)}
+                        className={cn("px-4 py-3 align-middle", col.cellClassName)}
+                      >
+                        {/* Use a nullish coalescing operator for safety in case a value is null/undefined */}
+                        {col.render ? col.render(item) : String(item[col.key] ?? '')}
+                      </td>
+                    );
+                  })}
+                  {/* The renderActions prop handles custom actions, like a DropdownMenu */}
+                  {renderActions && (
+                    <td className="px-4 py-3 align-middle max-w-[30px]">
+                      {renderActions(item)}
                     </td>
-                  );
-                })}
-
-                {/* Actions ở đây */}
-                {(onEdit || onDelete || renderActions) && (
-                  <td className="px-4 py-3 align-middle max-w-[30px]">
-                    <div className="flex items-center justify-center gap-5">
-                      {onEdit && (
-                        <Button className="bg-blue-100 hover:bg-blue-200" size="sm" variant="ghost" onClick={() => onEdit(item)}>
-                          <Pencil className="w-4 h-4 text-blue-600 " />
-                        </Button>
-                      )}
-                      {renderActions ? (
-                        renderActions(item)
-                      ) : (
-                        onDelete && (
+                  )}
+                  {/* Fallback for simple onEdit/onDelete if renderActions is not provided */}
+                  {!renderActions && (onEdit || onDelete) && (
+                    <td className="px-4 py-3 align-middle max-w-[30px]">
+                      <div className="flex items-center justify-center gap-5">
+                        {onEdit && (
+                          <Button className="bg-blue-100 hover:bg-blue-200" size="sm" variant="ghost" onClick={() => onEdit(item)}>
+                            <Pencil className="w-4 h-4 text-blue-600 " />
+                          </Button>
+                        )}
+                        {onDelete && (
                           <Button className="bg-red-100 hover:bg-red-200" size="sm" variant="ghost" onClick={() => onDelete(item)}>
                             <Trash2 className="w-4 h-4 text-destructive" />
                           </Button>
-                        )
-                      )}
-                    </div>
-                  </td>
-                )}
+                        )}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))
+            ) : (
+              // A helpful message for when the data array is empty.
+              <tr>
+                <td colSpan={visibleColumnCount + (renderActions ? 1 : 0)}>
+                  <EmptyState />
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
 
+      {/* The Pagination component is also now a "dumb" component, controlled by the props passed from above. */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={onPageChange}
         className="absolute -bottom-2 lg:bottom-4 md:-bottom-1 flex justify-between items-center px-4 w-full"
       />
     </div>
