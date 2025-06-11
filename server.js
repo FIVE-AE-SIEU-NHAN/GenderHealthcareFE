@@ -6,44 +6,52 @@ const middlewares = jsonServer.defaults();
 
 server.use(middlewares);
 
-// Simulate network delay
 server.use((req, res, next) => {
   setTimeout(next, 500);
 });
 
-// --- FORCEFUL OVERRIDE of the /users GET route ---
-// We place this BEFORE server.use(router) to ensure it takes precedence.
 server.get('/users', (req, res) => {
   try {
-    // 1. Get all users from the database
-    const db = router.db; // Get a reference to the low-level database
+    const db = router.db;
     let allUsers = db.get('users').value();
 
-    // 2. Apply Filters (e.g., ?status=Active, ?role=Admin)
+    // --- NEW, MORE ROBUST FILTERING LOGIC ---
     const filters = { ...req.query };
-    // These keys are for special handling, not simple filtering
     const reservedKeys = ['_page', '_limit', '_sort', '_order', 'q'];
     reservedKeys.forEach(key => delete filters[key]);
 
     let filteredUsers = allUsers.filter(user => {
       for (const key in filters) {
         const filterValue = filters[key];
-        const userValue = user[key];
-
-        if (Array.isArray(filterValue)) {
-          if (!filterValue.includes(String(userValue))) {
+        
+        // Check for the '_like' suffix
+        if (key.endsWith('_like')) {
+          // Get the actual field name by removing '_like'
+          const actualKey = key.slice(0, -5); 
+          const userValue = user[actualKey];
+          
+          // Perform a case-insensitive "contains" search
+          if (!String(userValue).toLowerCase().includes(String(filterValue).toLowerCase())) {
             return false;
           }
         } else {
-          if (String(userValue) !== String(filterValue)) {
-            return false;
+          // This is for exact matches (e.g., ?status=Active)
+          const userValue = user[key];
+          if (Array.isArray(filterValue)) {
+            if (!filterValue.includes(String(userValue))) {
+              return false;
+            }
+          } else {
+            if (String(userValue) !== String(filterValue)) {
+              return false;
+            }
           }
         }
       }
       return true;
     });
 
-    // 3. Apply Full-Text Search (e.g., ?q=Alice)
+    // Full-Text Search (q=) remains the same
     const searchTerm = req.query.q;
     if (searchTerm) {
       filteredUsers = filteredUsers.filter(user =>
@@ -54,30 +62,31 @@ server.get('/users', (req, res) => {
       );
     }
 
-    // 4. Apply Sorting (e.g., ?_sort=fullName&_order=asc)
+    // Sorting logic (with numeric ID fix) remains the same
     const sortField = req.query._sort;
     const sortOrder = req.query._order || 'asc';
     if (sortField) {
       filteredUsers.sort((a, b) => {
-        const valA = a[sortField];
-        const valB = b[sortField];
+        let valA = a[sortField];
+        let valB = b[sortField];
+        if (sortField === 'id') {
+          valA = parseInt(valA, 10);
+          valB = parseInt(valB, 10);
+        }
         if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
         if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
         return 0;
       });
     }
-
-    // 5. GET THE TOTAL COUNT - This is the crucial step!
+    
     const total = filteredUsers.length;
 
-    // 6. Apply Pagination (e.g., ?_page=1&_limit=10)
     const page = parseInt(req.query._page || '1', 10);
     const limit = parseInt(req.query._limit || '10', 10);
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
 
-    // 7. Send the final, wrapped response
     res.jsonp({
       data: paginatedUsers,
       total: total,
@@ -88,7 +97,6 @@ server.get('/users', (req, res) => {
   }
 });
 
-// Use the default router for all other routes (POST, PUT, DELETE, etc.)
 server.use(router);
 
 server.listen(3001, () => {

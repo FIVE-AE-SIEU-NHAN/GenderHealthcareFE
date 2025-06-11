@@ -13,7 +13,10 @@ export interface UseUsersOptions {
   page: number;
   limit: number;
   filters: Record<string, any>; // e.g., { status: 'Active', role: 'Admin' }
-  search: string;
+  search: {
+    field: string; // e.g., 'fullName', 'email', or 'all'
+    value: string;
+  };
   sort: {
     field: keyof User | 'id';
     direction: 'asc' | 'desc';
@@ -38,9 +41,16 @@ export function useUsers({ page, limit, filters, search, sort }: UseUsersOptions
       };
 
       // Only add the 'q' parameter if a search term exists
-      if (search) {
-        params.q = search;
+      if (search.value) {
+        if (search.field === 'all') {
+          // If 'all', use the global 'q' parameter.
+          params.q = search.value;
+        } else {
+          // If a specific field, use the '_like' parameter for a "contains" search.
+          params[`${search.field}_like`] = search.value;
+        }
       }
+
 
       const response = await api.get<PaginatedUsersResponse>('/users', { params });
       return response.data;

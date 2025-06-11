@@ -128,9 +128,9 @@ export default function UserListDashboard() {
   const [activeFilterValues, setActiveFilterValues] = useState<string[]>([]);
 
   const [search, setSearch] = useState("");
+  const [searchField, setSearchField] = useState('all');
   const debouncedSearch = useDebounce(search, 300);
 
-  const [searchField, setSearchField] = useState(searchableFields[0].value);
   const [visibleColumns, setVisibleColumns] = useState<string[]>(allUserColumns.map((col) => col.key));
   const visibleColumnCount = allUserColumns.filter(c => visibleColumns.includes(c.key)).length;
 
@@ -167,7 +167,7 @@ export default function UserListDashboard() {
     page,
     limit: ROWS_PER_PAGE,
     filters: apiFilters,
-    search: debouncedSearch,
+    search: { field: searchField, value: debouncedSearch },
     sort,
   });
 
