@@ -33,7 +33,7 @@ interface TableToolbarProps {
   visibleColumns: string[];
   onVisibleColumnsChange: (visibleCols: string[]) => void;
 
-  // Faceted Filter (the new, generic system)
+  // Faceted Filter 
   facetFilters?: FacetFilter[];
   activeFilterKey: string;
   onActiveFilterKeyChange: (key: string) => void;
@@ -169,7 +169,7 @@ export default function TableToolbar({
                   htmlFor={col.key}
                   className="text-sm font-medium capitalize leading-none"
                 >
-                  {col.label} {/* Use the label for display */}
+                  {col.label} 
                 </label>
               </div>
             ))}
@@ -322,7 +322,7 @@ export default function TableToolbar({
         </PopoverContent>
       </Popover>
 
-      {/* Search Input */}
+      {/* Search */}
       <div className="flex items-center">
         {/* Search Field Dropdown */}
         {searchFieldOptions.length > 0 && (
@@ -367,7 +367,7 @@ export default function TableToolbar({
         </div>
       </div>
 
-      {/* Reset button if range or filters selected */}
+      {/* Reset button */}
       {(fromDate || toDate || activeFilterValues.length > 0 || searchValue) && (
         <Button
           variant="ghost"

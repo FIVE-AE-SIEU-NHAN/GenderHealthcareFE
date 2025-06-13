@@ -4,7 +4,6 @@ import { ChevronUp, ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { Pagination } from "@/components/layouts/pagin/Pagination";
 import { EmptyState } from "./EmptyState";
 
-// The Column type definition remains a generic contract for how to display data.
 type Column<T> = {
   key: keyof T;
   label: string;
@@ -14,23 +13,21 @@ type Column<T> = {
   cellClassName?: string;
 };
 
-// --- PROPS ARE NOW FOR DISPLAY AND REPORTING ACTIONS ---
-// The component is now generic for any data type that has an `id`.
 type DataTableProps<T extends { id: string }> = {
   data: T[];
   columns: Column<T>[];
 
-  // Pagination props received from the parent component
+  // Pagin
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 
-  // Sorting props received from the parent component
+  // Sort
   sortField: keyof T;
   sortDirection: 'asc' | 'desc';
   onSortChange: (field: keyof T, direction: 'asc' | 'desc') => void;
 
-  // Action handlers, passed down from the parent
+  // Action handlers
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
   renderActions?: (item: T) => React.ReactNode;
@@ -39,25 +36,20 @@ type DataTableProps<T extends { id: string }> = {
 export function DataTable<T extends { id: string }>({
   data,
   columns,
+
   currentPage,
   totalPages,
   onPageChange,
+  
   sortField,
   sortDirection,
   onSortChange,
+  
   onEdit,
   onDelete,
   renderActions,
 }: DataTableProps<T>) {
-
-  // --- ALL INTERNAL STATE AND LOGIC FOR DATA MANIPULATION IS GONE ---
-  // No more useState for sort, currentPage.
-  // No more filteredData, sortedData, or paginatedData calculations.
-  // No more helper functions like parseDDMMYYYY. The component just displays what it's given.
-
   const handleSort = (field: keyof T) => {
-    // When a sortable header is clicked, it doesn't set its own state.
-    // It calls the onSortChange function provided by its parent to report the interaction.
     const newDirection = sortField === field && sortDirection === 'asc' ? 'desc' : 'asc';
     onSortChange(field, newDirection);
   };
@@ -97,7 +89,6 @@ export function DataTable<T extends { id: string }>({
           </thead>
           <tbody className="text-center">
             {data.length > 0 ? (
-              // We now map directly over the `data` prop. No more `paginatedData`.
               data.map((item) => (
                 <tr key={item.id} className="border-t hover:bg-blue-50/70 transition-colors">
                   {columns.map((col) => {
@@ -107,11 +98,12 @@ export function DataTable<T extends { id: string }>({
                         key={String(col.key)}
                         className={cn("px-4 py-3 align-middle", col.cellClassName)}
                       >
-                        {/* Use a nullish coalescing operator for safety in case a value is null/undefined */}
                         {col.render ? col.render(item) : String(item[col.key] ?? '')}
                       </td>
                     );
                   })}
+
+                  
                   {/* The renderActions prop handles custom actions, like a DropdownMenu */}
                   {renderActions && (
                     <td className="px-4 py-3 align-middle max-w-[30px]">
@@ -138,7 +130,7 @@ export function DataTable<T extends { id: string }>({
                 </tr>
               ))
             ) : (
-              // A helpful message for when the data array is empty.
+              // A message for when the data array is empty.
               <tr>
                 <td colSpan={visibleColumnCount + (renderActions ? 1 : 0)}>
                   <EmptyState />
@@ -149,7 +141,6 @@ export function DataTable<T extends { id: string }>({
         </table>
       </div>
 
-      {/* The Pagination component is also now a "dumb" component, controlled by the props passed from above. */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

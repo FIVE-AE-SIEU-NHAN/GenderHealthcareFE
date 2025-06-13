@@ -15,7 +15,6 @@ server.get('/users', (req, res) => {
     const db = router.db;
     let allUsers = db.get('users').value();
 
-    // --- NEW, MORE ROBUST FILTERING LOGIC ---
     const filters = { ...req.query };
     const reservedKeys = ['_page', '_limit', '_sort', '_order', 'q'];
     reservedKeys.forEach(key => delete filters[key]);
@@ -51,7 +50,7 @@ server.get('/users', (req, res) => {
       return true;
     });
 
-    // Full-Text Search (q=) remains the same
+    // Full-Text Search (q=)
     const searchTerm = req.query.q;
     if (searchTerm) {
       filteredUsers = filteredUsers.filter(user =>
@@ -62,7 +61,7 @@ server.get('/users', (req, res) => {
       );
     }
 
-    // Sorting logic (with numeric ID fix) remains the same
+    // Sorting logic
     const sortField = req.query._sort;
     const sortOrder = req.query._order || 'asc';
     if (sortField) {

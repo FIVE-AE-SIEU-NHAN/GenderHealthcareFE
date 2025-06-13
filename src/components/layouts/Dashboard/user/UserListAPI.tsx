@@ -23,7 +23,7 @@ import type { User } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-import { useUsers } from '@/hooks/useUsers';
+import { useUsers } from '@/hooks/useUsersDashboard';
 import { DataTableSkeleton } from "../DataTableSkeleton";
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -121,7 +121,8 @@ export default function UserListDashboard() {
   const ROWS_PER_PAGE = 10;
 
   const [sort, setSort] = useState<{
-    field: keyof User; direction: 'asc' | 'desc'
+    field: keyof User;
+    direction: 'asc' | 'desc'
   }>({ field: 'id', direction: 'asc' });
 
   const [activeFilterKey, setActiveFilterKey] = useState<string>('status');
@@ -149,7 +150,6 @@ export default function UserListDashboard() {
   const apiFilters = useMemo(() => {
     if (activeFilterValues.length === 0) return {};
     // json-server handles multiple values for the same key like: ?status=Active&status=Banned
-    // So we just pass the key and the array of values.
     return { [activeFilterKey]: activeFilterValues };
   }, [activeFilterKey, activeFilterValues]);
 
@@ -162,7 +162,7 @@ export default function UserListDashboard() {
     isLoading,
     isError,
     error,
-    isFetching, 
+    isFetching,
   } = useUsers({
     page,
     limit: ROWS_PER_PAGE,
@@ -175,7 +175,6 @@ export default function UserListDashboard() {
   const totalUsers = data?.total ?? 0;
   const totalPages = Math.ceil(totalUsers / ROWS_PER_PAGE);
 
-  // Generate column definitions based on visibility state
   const columns = allUserColumns.map((col) => ({
     key: col.key as keyof User,
     label: col.label,
@@ -184,7 +183,6 @@ export default function UserListDashboard() {
     render: col.render,
   }));
 
-  // --- 5. Define the JSX for the custom actions column ---
   const renderUserActions = (user: User) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -219,6 +217,7 @@ export default function UserListDashboard() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
+
 
   return (
     <>
@@ -266,19 +265,18 @@ export default function UserListDashboard() {
         createButtonLabel="+ ADD USER"
       />
 
-      {/* Show a loading overlay or indicator while fetching in the background */}
+      {/* Loading overlay while fetching */}
       {isFetching && (
         <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
-          {/* You can add a spinner component here */}
         </div>
       )}
 
       {isLoading ? (
-        <DataTableSkeleton columnCount={visibleColumnCount + 1} />
+        <DataTableSkeleton columnCount={ visibleColumnCount + 1 } />
       ) : isError ? (
-        <div className="flex flex-col items-center justify-center text-center py-10 border rounded-xl bg-white shadow-sm">
+        <div className="min-h-[calc(77vh)] flex flex-col items-center justify-center text-center py-10 border rounded-xl bg-white shadow-sm">
           <div className="bg-red-100 p-3 rounded-full">
-            <XCircle className="h-8 w-8 text-red-500" /> 
+            <XCircle className="h-8 w-8 text-red-500" />
           </div>
           <h3 className="mt-4 text-lg font-semibold">Failed to Load Users</h3>
           <p className="text-muted-foreground mt-1">{error.message}</p>
@@ -287,10 +285,11 @@ export default function UserListDashboard() {
         <DataTable
           data={users}
           columns={columns}
-          // Pass all pagination and sort state and setters
+
           currentPage={page}
           totalPages={totalPages}
           onPageChange={setPage}
+
           sortField={sort.field}
           sortDirection={sort.direction}
           onSortChange={(field, direction) => setSort({ field: field as keyof User, direction })}
