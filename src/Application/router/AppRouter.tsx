@@ -19,6 +19,7 @@ import Unauthorized from '@/pages/Common/Unauthorized';
 import ResetPassword from '@/pages/Auth/ForgotPassword/ResetPassword';
 import ForgotPassword from '@/pages/Auth/ForgotPassword/ForgotPassword';
 import NotFound from '@/pages/Common/NotFound';
+import BlogPage from '@/pages/Content/Blog/BlogList';
 
 export default function AppRouter() {
   return (
@@ -31,6 +32,7 @@ export default function AppRouter() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/services" element={<ServiceDetail />} />
+          <Route path="/blog" element={<BlogPage />} />
         </Route>
 
         {/* Auth Routes */}

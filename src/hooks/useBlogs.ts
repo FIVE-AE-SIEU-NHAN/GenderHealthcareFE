@@ -1,28 +1,28 @@
-// import { useQuery } from "@tanstack/react-query";
-// import { axiosInstance } from "@/lib/axios";
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 
-// type ReqresUser = {
-//   id: number;
-//   email: string;
-//   first_name: string;
-//   last_name: string;
-//   avatar: string;
-// };
+export interface Blog {
+  id: number
+  userId: string
+  title: string
+  summary: string
+  content: string
+  section1: string
+  section2: string
+  mainImage: string
+  subImage: string
+  image: string
+  createdAt: string
+}
 
-// type ReqresResponse = {
-//   data: ReqresUser[];
-// };
+const fetchBlogs = async (): Promise<Blog[]> => {
+  const response = await axios.get<Blog[]>('http://localhost:3001/blogs')
+  return response.data.data
+}
 
-// export function useBlogs() {
-//   return useQuery(["blogs"], async () => {
-//     const res = await axiosInstance.get<ReqresResponse>("/users?per_page=12");
-//     return res.data.data.map((user): Blog => ({
-//       id: String(user.id),
-//       createdAt: new Date().toLocaleDateString("en-GB"),
-//       author: `${user.first_name} ${user.last_name}`,
-//       title: `Blog by ${user.first_name}`,
-//       description: `This is a placeholder blog post for ${user.first_name}.`,
-//       status: "Published",
-//     }));
-//   });
-// }
+export const useBlogs = () => {
+  return useQuery<Blog[]>({
+    queryKey: ['blogs'],
+    queryFn: fetchBlogs,
+  })
+}
