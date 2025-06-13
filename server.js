@@ -97,6 +97,19 @@ server.get('/users', (req, res) => {
   }
 });
 
+server.get('/blogs', (req, res) => {
+  try {
+    const db = router.db;
+    const blogs = db.get('blogs').value();
+
+    res.jsonp({ data: blogs });
+  } catch (e) {
+    console.error("Error in /blogs handler:", e);
+    res.status(500).jsonp({ error: "An internal server error occurred" });
+  }
+});
+
+
 server.use(router);
 
 server.listen(3001, () => {

@@ -183,6 +183,589 @@
       "role": "Customer",
       "createdAt": "23/06/2024",
       "status": "Active"
+    },
+    {
+      "id": "24",
+      "fullName": "Oliver Nelson",
+      "email": "oliver.nelson55@example.com",
+      "role": "Manager",
+      "createdAt": "24/06/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "25",
+      "fullName": "Mia Morgan",
+      "email": "mia.morgan58@example.com",
+      "role": "Admin",
+      "createdAt": "23/06/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "26",
+      "fullName": "Hailey Quinn",
+      "email": "hailey.quinn33@example.com",
+      "role": "Doctor",
+      "createdAt": "22/06/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "27",
+      "fullName": "Kyle Edwards",
+      "email": "kyle.edwards84@example.com",
+      "role": "Admin",
+      "createdAt": "21/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "28",
+      "fullName": "Walter Jackson",
+      "email": "walter.jackson41@example.com",
+      "role": "Manager",
+      "createdAt": "20/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "29",
+      "fullName": "Faith Garcia",
+      "email": "faith.garcia7@example.com",
+      "role": "Customer",
+      "createdAt": "19/06/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "30",
+      "fullName": "Amelia Turner",
+      "email": "amelia.turner53@example.com",
+      "role": "Admin",
+      "createdAt": "18/06/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "31",
+      "fullName": "Lucas Brooks",
+      "email": "lucas.brooks72@example.com",
+      "role": "Doctor",
+      "createdAt": "17/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "32",
+      "fullName": "Nina Zimmerman",
+      "email": "nina.zimmerman11@example.com",
+      "role": "Customer",
+      "createdAt": "16/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "33",
+      "fullName": "Gavin White",
+      "email": "gavin.white36@example.com",
+      "role": "Doctor",
+      "createdAt": "15/06/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "34",
+      "fullName": "Harper Norris",
+      "email": "harper.norris89@example.com",
+      "role": "Manager",
+      "createdAt": "14/06/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "35",
+      "fullName": "Isaac Jackson",
+      "email": "isaac.jackson42@example.com",
+      "role": "Customer",
+      "createdAt": "13/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "36",
+      "fullName": "Emma Diaz",
+      "email": "emma.diaz68@example.com",
+      "role": "Admin",
+      "createdAt": "12/06/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "37",
+      "fullName": "Quincy Foster",
+      "email": "quincy.foster98@example.com",
+      "role": "Doctor",
+      "createdAt": "11/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "38",
+      "fullName": "Ava Brown",
+      "email": "ava.brown87@example.com",
+      "role": "Customer",
+      "createdAt": "10/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "39",
+      "fullName": "Logan Cook",
+      "email": "logan.cook79@example.com",
+      "role": "Manager",
+      "createdAt": "09/06/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "40",
+      "fullName": "Elijah Lee",
+      "email": "elijah.lee28@example.com",
+      "role": "Admin",
+      "createdAt": "08/06/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "41",
+      "fullName": "Sophia Gibson",
+      "email": "sophia.gibson6@example.com",
+      "role": "Customer",
+      "createdAt": "07/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "42",
+      "fullName": "Martin Irvine",
+      "email": "martin.irvine59@example.com",
+      "role": "Doctor",
+      "createdAt": "06/06/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "43",
+      "fullName": "Xena Price",
+      "email": "xena.price64@example.com",
+      "role": "Manager",
+      "createdAt": "05/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "44",
+      "fullName": "Elijah Harris",
+      "email": "elijah.harris38@example.com",
+      "role": "Admin",
+      "createdAt": "04/06/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "45",
+      "fullName": "Yusuf Davis",
+      "email": "yusuf.davis20@example.com",
+      "role": "Customer",
+      "createdAt": "03/06/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "46",
+      "fullName": "Brenda Young",
+      "email": "brenda.young17@example.com",
+      "role": "Manager",
+      "createdAt": "02/06/2024",
+      "status": "Active"
+    },
+    {
+      "id": "47",
+      "fullName": "James Ortiz",
+      "email": "james.ortiz31@example.com",
+      "role": "Doctor",
+      "createdAt": "01/06/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "48",
+      "fullName": "Caleb Anderson",
+      "email": "caleb.anderson12@example.com",
+      "role": "Customer",
+      "createdAt": "31/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "49",
+      "fullName": "Zara Franklin",
+      "email": "zara.franklin26@example.com",
+      "role": "Admin",
+      "createdAt": "30/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "50",
+      "fullName": "Oscar Nelson",
+      "email": "oscar.nelson60@example.com",
+      "role": "Doctor",
+      "createdAt": "29/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "51",
+      "fullName": "Tina Howard",
+      "email": "tina.howard44@example.com",
+      "role": "Customer",
+      "createdAt": "28/05/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "52",
+      "fullName": "Penny Lewis",
+      "email": "penny.lewis82@example.com",
+      "role": "Manager",
+      "createdAt": "27/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "53",
+      "fullName": "Liam Stewart",
+      "email": "liam.stewart39@example.com",
+      "role": "Admin",
+      "createdAt": "26/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "54",
+      "fullName": "Evelyn Parker",
+      "email": "evelyn.parker71@example.com",
+      "role": "Customer",
+      "createdAt": "25/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "55",
+      "fullName": "Noah Keller",
+      "email": "noah.keller63@example.com",
+      "role": "Doctor",
+      "createdAt": "24/05/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "56",
+      "fullName": "Jenna Klein",
+      "email": "jenna.klein75@example.com",
+      "role": "Manager",
+      "createdAt": "23/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "57",
+      "fullName": "Alex Underwood",
+      "email": "alex.underwood46@example.com",
+      "role": "Admin",
+      "createdAt": "22/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "58",
+      "fullName": "Brooks Vargas",
+      "email": "brooks.vargas30@example.com",
+      "role": "Customer",
+      "createdAt": "21/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "59",
+      "fullName": "Dana Reed",
+      "email": "dana.reed90@example.com",
+      "role": "Doctor",
+      "createdAt": "20/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "60",
+      "fullName": "Gavin Anderson",
+      "email": "gavin.anderson36@example.com",
+      "role": "Manager",
+      "createdAt": "19/05/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "61",
+      "fullName": "Hailey Martinez",
+      "email": "hailey.martinez91@example.com",
+      "role": "Admin",
+      "createdAt": "18/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "62",
+      "fullName": "Kevin Franklin",
+      "email": "kevin.franklin85@example.com",
+      "role": "Customer",
+      "createdAt": "17/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "63",
+      "fullName": "Laura White",
+      "email": "laura.white28@example.com",
+      "role": "Doctor",
+      "createdAt": "16/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "64",
+      "fullName": "Nina Brooks",
+      "email": "nina.brooks19@example.com",
+      "role": "Manager",
+      "createdAt": "15/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "65",
+      "fullName": "Steven Lee",
+      "email": "steven.lee24@example.com",
+      "role": "Admin",
+      "createdAt": "14/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "66",
+      "fullName": "Vera Morris",
+      "email": "vera.morris80@example.com",
+      "role": "Customer",
+      "createdAt": "13/05/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "67",
+      "fullName": "Lucas Diaz",
+      "email": "lucas.diaz78@example.com",
+      "role": "Doctor",
+      "createdAt": "12/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "68",
+      "fullName": "Amelia Stewart",
+      "email": "amelia.stewart62@example.com",
+      "role": "Manager",
+      "createdAt": "11/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "69",
+      "fullName": "Oliver Brown",
+      "email": "oliver.brown50@example.com",
+      "role": "Customer",
+      "createdAt": "10/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "70",
+      "fullName": "Sophia Johnson",
+      "email": "sophia.johnson73@example.com",
+      "role": "Admin",
+      "createdAt": "09/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "71",
+      "fullName": "Ryan Cook",
+      "email": "ryan.cook14@example.com",
+      "role": "Doctor",
+      "createdAt": "08/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "72",
+      "fullName": "Tina Hall",
+      "email": "tina.hall40@example.com",
+      "role": "Customer",
+      "createdAt": "07/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "73",
+      "fullName": "Walter Evans",
+      "email": "walter.evans52@example.com",
+      "role": "Manager",
+      "createdAt": "06/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "74",
+      "fullName": "Xena Martin",
+      "email": "xena.martin23@example.com",
+      "role": "Admin",
+      "createdAt": "05/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "75",
+      "fullName": "Yusuf Klein",
+      "email": "yusuf.klein11@example.com",
+      "role": "Customer",
+      "createdAt": "04/05/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "76",
+      "fullName": "Zara Lewis",
+      "email": "zara.lewis66@example.com",
+      "role": "Doctor",
+      "createdAt": "03/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "77",
+      "fullName": "Ava Nelson",
+      "email": "ava.nelson57@example.com",
+      "role": "Manager",
+      "createdAt": "02/05/2024",
+      "status": "Active"
+    },
+    {
+      "id": "78",
+      "fullName": "Brenda Thompson",
+      "email": "brenda.thompson15@example.com",
+      "role": "Admin",
+      "createdAt": "01/05/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "79",
+      "fullName": "Caleb Harris",
+      "email": "caleb.harris46@example.com",
+      "role": "Customer",
+      "createdAt": "30/04/2024",
+      "status": "Active"
+    },
+    {
+      "id": "80",
+      "fullName": "Dana Jackson",
+      "email": "dana.jackson95@example.com",
+      "role": "Doctor",
+      "createdAt": "29/04/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "81",
+      "fullName": "Edward Moore",
+      "email": "edward.moore38@example.com",
+      "role": "Manager",
+      "createdAt": "28/04/2024",
+      "status": "Active"
+    },
+    {
+      "id": "82",
+      "fullName": "Faith Irvine",
+      "email": "faith.irvine21@example.com",
+      "role": "Admin",
+      "createdAt": "27/04/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "83",
+      "fullName": "Gavin Adams",
+      "email": "gavin.adams89@example.com",
+      "role": "Customer",
+      "createdAt": "26/04/2024",
+      "status": "Active"
+    },
+    {
+      "id": "84",
+      "fullName": "Hailey Young",
+      "email": "hailey.young73@example.com",
+      "role": "Doctor",
+      "createdAt": "25/04/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "85",
+      "fullName": "Isaac Hall",
+      "email": "isaac.hall70@example.com",
+      "role": "Manager",
+      "createdAt": "24/04/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "86",
+      "fullName": "Jenna Scott",
+      "email": "jenna.scott54@example.com",
+      "role": "Admin",
+      "createdAt": "23/04/2024",
+      "status": "Active"
+    },
+    {
+      "id": "87",
+      "fullName": "Kevin Allen",
+      "email": "kevin.allen40@example.com",
+      "role": "Customer",
+      "createdAt": "22/04/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "88",
+      "fullName": "Laura Garcia",
+      "email": "laura.garcia90@example.com",
+      "role": "Doctor",
+      "createdAt": "21/04/2024",
+      "status": "Active"
+    },
+    {
+      "id": "89",
+      "fullName": "Martin Davis",
+      "email": "martin.davis18@example.com",
+      "role": "Manager",
+      "createdAt": "20/04/2024",
+      "status": "Suspended"
+    },
+    {
+      "id": "90",
+      "fullName": "Nina Edwards",
+      "email": "nina.edwards25@example.com",
+      "role": "Admin",
+      "createdAt": "19/04/2024",
+      "status": "Active"
+    },
+    {
+      "id": "91",
+      "fullName": "Oscar Foster",
+      "email": "oscar.foster12@example.com",
+      "role": "Customer",
+      "createdAt": "18/04/2024",
+      "status": "Active"
+    },
+    {
+      "id": "92",
+      "fullName": "Penny Gibson",
+      "email": "penny.gibson38@example.com",
+      "role": "Doctor",
+      "createdAt": "17/04/2024",
+      "status": "Banned"
+    },
+    {
+      "id": "93",
+      "fullName": "Quincy Howard",
+      "email": "quincy.howard83@example.com",
+      "role": "Manager",
+      "createdAt": "16/04/2024",
+      "status": "Active"
+    }
+  ],
+  "blogs": [
+    {
+      "id": "1",
+      "title": "Understanding User Roles in Healthcare",
+      "content": "This blog post explains the different user roles in healthcare systems and their importance.",
+      "author": "Alice Johnson",
+      "createdAt": "15/07/2024"
+    },
+    {
+      "id": "2",
+      "title": "Best Practices for Patient Management",
+      "content": "A comprehensive guide on managing patient information effectively.",
+      "author": "Bob Williams",
+      "createdAt": "14/07/2024"
+    },
+    {
+      "id": "3",
+      "title": "The Future of Telemedicine",
+      "content": "Exploring the advancements and future trends in telemedicine.",
+      "author": "Charlie Brown",
+      "createdAt": "13/07/2024"
     }
   ]
 }

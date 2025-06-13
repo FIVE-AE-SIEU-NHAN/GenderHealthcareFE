@@ -17,7 +17,7 @@ export function Pagination({
   totalPages,
   onPageChange,
   className = "",
-  maxPageButtons = 5,
+  maxPageButtons = 3,
 }: PaginationProps) {
   const [jumpPage, setJumpPage] = useState("")
 
