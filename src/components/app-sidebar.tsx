@@ -138,7 +138,7 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ items, ...props }: AppSidebarProps) {
   return (
     <Sidebar variant="floating" collapsible="icon" {...props}>
-      <SidebarContent className="mt-2 -ml-1">
+      <SidebarContent className="mt-3">
         <NavMain items={items} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
