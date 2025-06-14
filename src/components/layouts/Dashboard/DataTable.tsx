@@ -58,7 +58,7 @@ export function DataTable<T extends { id: string }>({
   const visibleColumnCount = columns.filter(c => c.visible).length;
 
   return (
-    <div className="min-h-[calc(77vh)] rounded-xl border bg-white shadow-sm relative">
+    <div className="min-h-[calc(77vh)] rounded-xl border bg-white shadow-sm relative animate-fade-in-up">
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
           <thead className="bg-gray-50 text-muted-foreground text-center">
