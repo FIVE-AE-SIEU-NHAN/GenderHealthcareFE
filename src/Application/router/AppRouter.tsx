@@ -21,6 +21,7 @@ import ForgotPassword from '@/pages/Auth/ForgotPassword/ForgotPassword';
 import NotFound from '@/pages/Common/NotFound';
 import BlogPage from "@/pages/Content/Blog/BlogList"
 import BlogDetails from "@/pages/Content/Blog/BlogDetails"
+import ServiceList from '@/pages/Content/Services/ServiceList';
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -31,7 +32,8 @@ export default function AppRouter() {
         {/* Public Routes */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/services" element={<ServiceDetail />} />
+          <Route path="/services-detail" element={<ServiceDetail />} />
+          <Route path="/services" element={<ServiceList />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:id" element={<BlogDetails />} />
         </Route>
