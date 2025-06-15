@@ -22,8 +22,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 
 export interface FacetFilter {
-  key: string; 
-  label: string; 
+  key: string;
+  label: string;
   options: { label: string; value: string }[];
 }
 
@@ -39,19 +39,20 @@ interface TableToolbarProps {
   onActiveFilterKeyChange: (key: string) => void;
   activeFilterValues: string[];
   onActiveFilterValuesChange: (values: string[]) => void;
-  
+
   // Search
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   searchFieldOptions?: { value: string; label: string }[];
   searchFieldValue?: string;
   onSearchFieldChange?: (value: string) => void;
+  onSearchSubmit?: () => void;
 
   // Date Range
   fromDate?: Date;
   toDate?: Date;
   onDateRangeChange?: (from?: Date, to?: Date) => void;
-  
+
   // General Actions
   onResetFilters?: () => void;
   onCreate?: () => void;
@@ -71,13 +72,14 @@ export default function TableToolbar({
   onActiveFilterKeyChange,
   activeFilterValues,
   onActiveFilterValuesChange,
-  
+
   searchValue = "",
   onSearchChange,
   searchFieldOptions = [],
   searchFieldValue,
   onSearchFieldChange,
   placeholderSearch = "Search...",
+  onSearchSubmit,
 
   fromDate,
   toDate,
@@ -95,17 +97,17 @@ export default function TableToolbar({
   const minDate = new Date(2023, 0, 1);
   const maxDate = new Date(currentYear, 11, 31);
   const years = Array.from({ length: currentYear - 2023 + 1 }, (_, i) => currentYear - i)
-  const [localSearch, setLocalSearch] = React.useState(searchValue)
+  // const [localSearch, setLocalSearch] = React.useState(searchValue)
 
   const currentFilter = facetFilters.find(f => f.key === activeFilterKey);
 
-  React.useEffect(() => {
-    setLocalSearch(searchValue)
-  }, [searchValue])
+  // React.useEffect(() => {
+  //   setLocalSearch(searchValue)
+  // }, [searchValue])
 
   const handleCategoryChange = (newKey: string) => {
     onActiveFilterKeyChange(newKey);
-    onActiveFilterValuesChange([]); 
+    onActiveFilterValuesChange([]);
   };
 
   // Date select handlers
@@ -139,8 +141,8 @@ export default function TableToolbar({
     }
   }
 
-  const handleSearchSubmit = () => {
-    onSearchChange?.(localSearch);
+  const triggerSearch = () => {
+    onSearchSubmit?.();
   };
 
   const selectedFieldLabel = searchFieldOptions.find(opt => opt.value === searchFieldValue)?.label
@@ -169,7 +171,7 @@ export default function TableToolbar({
                   htmlFor={col.key}
                   className="text-sm font-medium capitalize leading-none"
                 >
-                  {col.label} 
+                  {col.label}
                 </label>
               </div>
             ))}
@@ -235,9 +237,9 @@ export default function TableToolbar({
           <Button variant="outline" className="justify-start text-left">
             <CalendarIcon className="w-4 h-4 mr-2" />
             {fromDate && toDate
-              ? `${format(fromDate, "PPP")} → ${format(toDate, "PPP")}`
+              ? `${format(fromDate, "yyyy/MM/dd")} → ${format(toDate, "yyyy/MM/dd")}`
               : fromDate
-                ? `${format(fromDate, "PPP")} →`
+                ? `${format(fromDate, "yyyy/MM/dd")} →`
                 : "Pick a date range"}
           </Button>
         </PopoverTrigger>
@@ -345,13 +347,14 @@ export default function TableToolbar({
         {/* Search Input and Button */}
         <div className="relative flex items-center">
           <Input
+            id="search-input"
             placeholder={placeholderSearch}
             className="w-[300px] pr-10 rounded-l-none focus:ring-0 focus:ring-offset-0"
-            value={localSearch}
-            onChange={(e) => setLocalSearch(e.target.value)}
+            value={searchValue}
+            onChange={(e) => onSearchChange?.(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleSearchSubmit()
+                triggerSearch()
               }
             }}
           />
@@ -360,7 +363,7 @@ export default function TableToolbar({
             size="icon"
             variant="ghost"
             className="absolute right-1 h-8 w-8"
-            onClick={handleSearchSubmit}
+            onClick={triggerSearch}
           >
             <SearchIcon className="h-4 w-4 text-muted-foreground" />
           </Button>

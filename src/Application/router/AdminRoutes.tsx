@@ -4,8 +4,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout";
 import AdminDashboard from "@/pages/Admin/Dashboard";
 import BlogListDashboard from "@/components/layouts/Dashboard/blog/BlogList";
-import { adminSidebarItems } from "@/Application/constants/adminSidebarItems";
-import UserListDashboard from "@/components/layouts/Dashboard/user/UserListAPI";
+import { adminSidebarItems } from "@/Application/constants/admin/adminSidebarItems";
+import UserListDashboard from "@/components/layouts/Dashboard/user/UserList";
 
 export const AdminRoutes = (
   <Route

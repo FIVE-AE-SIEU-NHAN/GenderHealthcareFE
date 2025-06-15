@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
   DropdownMenu,
@@ -9,10 +9,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
+  Loader2,
   MoreHorizontal,
   ShieldBan,
   ShieldCheck,
-  UserX,
+  UserPlus2,
+  // UserX,
+  XCircle,
 } from "lucide-react";
 
 import type { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
@@ -22,124 +25,154 @@ import type { User } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+import { useUsers } from '@/hooks/admin/useUsers';
+import { DataTableSkeleton } from "../DataTableSkeleton";
+import { useUserMutations } from "@/hooks/admin/useUserMutations";
+import { formatDate } from "@/utils/formatDate";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { CreateUserForm } from "./CreateUserForm";
+import { USER_STATUS, USER_ROLE } from "@/Application/constants/admin/admin.userConstants";
 
-// 2. Create mock user data
-const userData: User[] = [
-  { id: "1", fullName: "Alice Johnson", email: "alice@example.com", role: "Admin", createdAt: "15/07/2024", status: "Active" },
-  { id: "2", fullName: "Bob Williams", email: "bob@example.com", role: "Customer", createdAt: "14/07/2024", status: "Active" },
-  { id: "3", fullName: "Charlie Brown", email: "charlie@example.com", role: "Doctor", createdAt: "13/07/2024", status: "Banned" },
-  { id: "4", fullName: "Diana Miller", email: "diana@example.com", role: "Manager", createdAt: "12/07/2024", status: "Active" },
-  { id: "5", fullName: "Ethan Davis", email: "ethan@example.com", role: "Customer", createdAt: "11/07/2024", status: "Suspended" },
-  { id: "6", fullName: "Fiona Taylor", email: "fiona@example.com", role: "Doctor", createdAt: "10/07/2024", status: "Active" },
-  { id: "7", fullName: "George Harris", email: "george@example.com", role: "Manager", createdAt: "09/07/2024", status: "Banned" },
-  { id: "8", fullName: "Hannah Moore", email: "hannah@example.com", role: "Customer", createdAt: "08/07/2024", status: "Active" },
-  { id: "9", fullName: "Ian Thompson", email: "ian@example.com", role: "Admin", createdAt: "07/07/2024", status: "Suspended" },
-  { id: "10", fullName: "Jane Clark", email: "jane@example.com", role: "Customer", createdAt: "06/07/2024", status: "Active" },
-  { id: "11", fullName: "Kevin Lewis", email: "kevin@example.com", role: "Doctor", createdAt: "05/07/2024", status: "Active" },
-  { id: "12", fullName: "Lily Walker", email: "lily@example.com", role: "Manager", createdAt: "04/07/2024", status: "Suspended" },
-  { id: "13", fullName: "Michael Hall", email: "michael@example.com", role: "Admin", createdAt: "03/07/2024", status: "Active" },
-  { id: "14", fullName: "Nora Young", email: "nora@example.com", role: "Customer", createdAt: "02/07/2024", status: "Banned" },
-  { id: "15", fullName: "Owen King", email: "owen@example.com", role: "Doctor", createdAt: "01/07/2024", status: "Active" },
-  { id: "16", fullName: "Paula Scott", email: "paula@example.com", role: "Manager", createdAt: "30/06/2024", status: "Suspended" },
-  { id: "17", fullName: "Quinn Green", email: "quinn@example.com", role: "Customer", createdAt: "29/06/2024", status: "Active" },
-  { id: "18", fullName: "Ryan Adams", email: "ryan@example.com", role: "Doctor", createdAt: "28/06/2024", status: "Banned" },
-  { id: "19", fullName: "Sophie Baker", email: "sophie@example.com", role: "Admin", createdAt: "27/06/2024", status: "Active" },
-  { id: "20", fullName: "Thomas Carter", email: "thomas@example.com", role: "Customer", createdAt: "26/06/2024", status: "Active" },
-  { id: "21", fullName: "Uma Nelson", email: "uma@example.com", role: "Manager", createdAt: "25/06/2024", status: "Suspended" },
-  { id: "22", fullName: "Victor Allen", email: "victor@example.com", role: "Doctor", createdAt: "24/06/2024", status: "Banned" },
-  { id: "23", fullName: "Wendy Evans", email: "wendy@example.com", role: "Customer", createdAt: "23/06/2024", status: "Active" },
-];
 
-// 3. Define the column configuration for Users
+// =============== COLUMNS FORMAT ===============
 const allUserColumns = [
   {
     key: "id",
     label: "ID",
     toggleable: false,
+    cellclassName: "2xl:max-w-[220px]",
     render: (user: User) => (
-      <Badge variant="outline" className="font-mono bg-emerald-400/15">
+      <Badge variant="outline" className="font-black font-mono bg-pink-600/15">
         {user.id}
       </Badge>
     )
   },
-  { key: "fullName", label: "Full Name" },
-  { key: "email", label: "Email" },
+  {
+    key: "name",
+    label: "Full Name",
+    render: (user: User) => {
+      return (
+        <p className="line-clamp-2">
+          {user.name}
+        </p>
+      );
+    },
+  },
+  { key: "gender", label: "Gender" },
+  {
+    key: "date_of_birth",
+    label: "Date of Birth",
+    render: (user: User) => {
+      return formatDate(user.date_of_birth);
+    }
+  },
+  { key: "email", label: "Email", sortable: false },
   {
     key: "role",
     label: "Role",
     sortable: false,
-    render: (user: User) => (
-      <Badge className={cn(
-        "font-medium text-xs",
-        user.role === "Admin" && "border-amber-500/50 bg-amber-500/10 text-amber-700",
-        user.role === "Manager" && "border-blue-500/50 bg-blue-500/10 text-blue-700",
-        user.role === "Customer" && "border-slate-500/50 bg-slate-500/10 text-slate-700",
-        user.role === "Doctor" && "border-purple-500/50 bg-purple-500/10 text-purple-700",
-      )}>
-        {user.role}
-      </Badge>
-    ),
+    render: (user: User) => {
+      const roleString = USER_ROLE.UI_MAP[user.role] || 'Unknown';
+      return (
+        <Badge className={cn(
+          "font-medium text-xs",
+          roleString === "Admin" && "border-amber-500/50 bg-amber-500/10 text-amber-700",
+          roleString === "Manager" && "border-blue-500/50 bg-blue-500/10 text-blue-700",
+          roleString === "Customer" && "border-slate-500/50 bg-slate-500/10 text-slate-700",
+          roleString === "Consultant" && "border-purple-500/50 bg-purple-500/10 text-purple-700",
+        )}>
+          {roleString}
+        </Badge>
+      );
+    },
   },
-  { key: "createdAt", label: "Date Created" },
   {
-    key: "status",
+    key: "created_at",
+    label: "Date Created",
+    render: (user: User) => {
+      return formatDate(user.created_at);
+    }
+  },
+  {
+    key: "verify",
     label: "Status",
-    render: (user: User) => (
-      <Badge className={cn(
-        "font-medium text-xs",
-        user.status === "Active" && "border-green-500/50 bg-green-500/10 text-green-700",
-        user.status === "Banned" && "border-red-500/50 bg-red-500/10 text-red-700",
-        user.status === "Suspended" && "border-orange-500/50 bg-orange-500/10 text-orange-700"
-      )}>
-        {user.status}
-      </Badge>
-    )
+    render: (user: User) => {
+      const statusString = USER_STATUS.UI_MAP[user.verify] || 'Unknown';
+      return (
+        <Badge className={cn(
+          "font-medium text-xs",
+          statusString === "Active" && "border-green-500/50 bg-green-500/10 text-green-700",
+          statusString === "Banned" && "border-red-500/50 bg-red-500/10 text-red-700",
+          statusString === "Suspended" && "border-orange-500/50 bg-orange-500/10 text-orange-700"
+        )}>
+          {statusString}
+        </Badge>
+      );
+    }
   },
 ];
 
-// 4. Define filter and search options for Users
+
+// ========== FILTERS ==========
 const userFacetFilters: FacetFilter[] = [
   {
     key: "status",
     label: "Status",
-    options: [
-      { label: "Active", value: "Active" },
-      { label: "Banned", value: "Banned" },
-      { label: "Suspended", value: "Suspended" },
-    ],
+    options: USER_STATUS.FILTER_OPTIONS,
   },
   {
     key: "role",
     label: "Role",
+    options: USER_ROLE.FILTER_OPTIONS,
+  },
+  {
+    key: "gender",
+    label: "Gender",
     options: [
-      { label: "Admin", value: "Admin" },
-      { label: "Manager", value: "Manager" },
-      { label: "Doctor", value: "Doctor" },
-      { label: "Customer", value: "Customer" },
+      { label: "Male", value: "male" },
+      { label: "Female", value: "female" },
+      { label: "Other", value: "other" },
     ],
   },
 ];
 
+
+// ========== SEARCHABLE FIELDS ==========
 const searchableFields = [
   { value: 'all', label: 'All Fields' },
-  { value: 'fullName', label: 'Full Name' },
+  { value: 'name', label: 'Full Name' },
   { value: 'email', label: 'Email' },
-  { value: 'role', label: 'Role' },
 ];
 
 export default function UserListDashboard() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
 
-  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const ROWS_PER_PAGE = 10;
 
-  const [activeFilterKey, setActiveFilterKey] = useState<string>(userFacetFilters[0].key);
+  const [sort, setSort] = useState<{
+    field: keyof User;
+    direction: 'asc' | 'desc'
+  }>({ field: 'created_at', direction: 'desc' });
+
+  const [activeFilterKey, setActiveFilterKey] = useState<string>('status');
   const [activeFilterValues, setActiveFilterValues] = useState<string[]>([]);
 
-  const [searchField, setSearchField] = useState(searchableFields[0].value);
+  const [uiSearchConfig, setUiSearchConfig] = useState({ field: 'all', value: '' });
+
+  // 2. `apiSearchConfig`: For the API query. Updates only on submit.
+  const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'all', value: '' });
+
   const [visibleColumns, setVisibleColumns] = useState<string[]>(allUserColumns.map((col) => col.key));
+  const visibleColumnCount = allUserColumns.filter(c => visibleColumns.includes(c.key)).length;
+
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
 
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const { editStatus: editUserStatusMutation } = useUserMutations();
+
+  // ========== SET BREADCRUMB ==========
   useEffect(() => {
     setBreadcrumb({
       title: "User Management",
@@ -148,75 +181,138 @@ export default function UserListDashboard() {
     });
   }, [setBreadcrumb]);
 
-  const filteredData = useMemo(() => {
-    return userData.filter(user => {
-      if (activeFilterValues.length === 0) {
-        return true;
-      }
-      const userValue = user[activeFilterKey as keyof User];
-      return activeFilterValues.includes(userValue);
-    });
-  }, [userData, activeFilterKey, activeFilterValues]);
 
-  // Generate column definitions based on visibility state
-  const columns = allUserColumns.map((col) => ({
-    key: col.key as keyof User,
-    label: col.label,
-    visible: visibleColumns.includes(col.key),
-    sortable: col.sortable ?? true,
-    render: col.render,
-  }));
 
-  // --- 5. Define the JSX for the custom actions column ---
-  const renderUserActions = (user: User) => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => alert(`Viewing profile for ${user.fullName}`)}>
-          View Profile
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {user.status !== "Active" && (
-          <DropdownMenuItem className="text-green-600 focus:bg-green-50 focus:text-green-700" onClick={() => alert(`Activating ${user.fullName}`)}>
-            <ShieldCheck className="mr-2 h-4 w-4" />
-            Activate User
+
+  // ========== UPDATED: API Filter Structuring ==========
+  // This now creates a simple object that our useUsers hook can easily translate.
+  // Note: Your backend currently only supports one value per filter type (e.g., one status, not multiple).
+  // This logic takes the *first* selected value to accommodate this.
+  const apiFilters = useMemo(() => {
+    if (activeFilterValues.length === 0) return {};
+    return { [activeFilterKey]: activeFilterValues[0] };
+  }, [activeFilterKey, activeFilterValues]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [apiFilters, apiSearchConfig, sort]);
+
+  const handleSearchSubmit = () => {
+    setApiSearchConfig(uiSearchConfig);
+  };
+
+  // ========== USE USERS HOOK ==========
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    isFetching,
+  } = useUsers({
+    page,
+    limit: ROWS_PER_PAGE,
+    filters: apiFilters,
+    search: apiSearchConfig,
+    sort,
+  });
+
+  const users = data?.data ?? [];
+  const totalUsers = data?.total ?? 0;
+  const totalPages = Math.ceil(totalUsers / ROWS_PER_PAGE);
+
+
+
+
+
+  // ========== COLUMNS SETUP ==========
+  // Map all user columns to the format expected by DataTable
+  const columns = useMemo(() => {
+    return allUserColumns.map((col) => ({
+      key: col.key as keyof User,
+      label: col.label,
+      visible: visibleColumns.includes(col.key),
+      sortable: col.sortable,
+      cellClassName: col.cellclassName,
+      render: col.render,
+    }));
+  }, [visibleColumns]);
+
+
+
+  // ========== ACTIONS ==========
+  const renderUserActions = useCallback((user: User) => {
+    const statusString = USER_STATUS.UI_MAP[user.verify] || 'Unknown';
+    const isMutatingThisUser =
+      editUserStatusMutation.isPending &&
+      editUserStatusMutation.variables?.userId === user.id;
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild disabled={isMutatingThisUser}>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            {isMutatingThisUser ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <MoreHorizontal className="h-4 w-4" />
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => alert(`Viewing profile for ${user.name}`)}>
+            View Profile
           </DropdownMenuItem>
-        )}
-        {user.status !== "Suspended" && (
-          <DropdownMenuItem className="text-orange-600 focus:bg-orange-50 focus:text-orange-700" onClick={() => alert(`Suspending ${user.fullName}`)}>
-            <UserX className="mr-2 h-4 w-4" />
-            Suspend User
-          </DropdownMenuItem>
-        )}
-        {user.status !== "Banned" && (
-          <DropdownMenuItem className="text-red-600 focus:bg-red-50 focus:text-red-700" onClick={() => alert(`Banning ${user.fullName}`)}>
-            <ShieldBan className="mr-2 h-4 w-4" />
-            Ban User
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+          <DropdownMenuSeparator />
+
+          {statusString === 'Banned' && (
+            <DropdownMenuItem
+              className="text-green-600 focus:bg-green-50 focus:text-green-700"
+              onClick={() => editUserStatusMutation.mutate({ userId: user.id, status: 0 })}
+            >
+              <ShieldCheck className="mr-2 h-4 w-4" />
+              Activate User
+            </DropdownMenuItem>
+          )}
+
+          {statusString === 'Active' && (
+            <DropdownMenuItem
+              className="text-red-600 focus:bg-red-50 focus:text-red-700"
+              onClick={() => editUserStatusMutation.mutate({ userId: user.id, status: 1 })}
+            >
+              <ShieldBan className="mr-2 h-4 w-4" />
+              Ban User
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }, [editUserStatusMutation]);
+
+
+
 
   return (
     <>
       <TableToolbar
+        isFetching={isFetching && !isLoading}
+
         facetFilters={userFacetFilters}
         activeFilterKey={activeFilterKey}
         onActiveFilterKeyChange={setActiveFilterKey}
         activeFilterValues={activeFilterValues}
         onActiveFilterValuesChange={setActiveFilterValues}
 
-        searchValue={search}
-        onSearchChange={setSearch}
+        searchValue={uiSearchConfig.value}
+        onSearchChange={(newValue) =>
+          setUiSearchConfig(current => ({ ...current, value: newValue }))
+        }
         searchFieldOptions={searchableFields}
-        searchFieldValue={searchField}
-        onSearchFieldChange={setSearchField}
+        searchFieldValue={uiSearchConfig.field}
+        onSearchFieldChange={(newField) =>
+          setUiSearchConfig(current => ({ ...current, field: newField }))
+        }
+        // 4. Pass the new submit handler to the toolbar.
+        onSearchSubmit={handleSearchSubmit}
 
         columns={allUserColumns}
         visibleColumns={visibleColumns}
@@ -230,31 +326,88 @@ export default function UserListDashboard() {
         }}
 
         onResetFilters={() => {
-          setActiveFilterKey(userFacetFilters[0].key);
+          setPage(1);
+          setSort({ field: 'created_at', direction: 'desc' });
+
+          setActiveFilterKey('status');
           setActiveFilterValues([]);
 
-          setSearch("");
-          setSearchField(searchableFields[0].value);
+          setUiSearchConfig({ field: 'all', value: '' });
+          setApiSearchConfig({ field: 'all', value: '' });
 
           setFromDate(undefined);
           setToDate(undefined);
-
           setVisibleColumns(allUserColumns.map((c) => c.key));
         }}
-        onCreate={() => alert("Opening form to add a new user...")}
+        onCreate={() => setIsCreateDialogOpen(true)}
         createButtonLabel="+ ADD USER"
       />
 
-      <DataTable
-        data={filteredData}
-        columns={columns}
-        search={search}
-        searchField={searchField as keyof User}
-        dateRange={{ from: fromDate, to: toDate }}
-        rowsPerPage={10}
-        // onEdit={(item) => alert(`Editing user: ${item.fullName}`)}
-        renderActions={renderUserActions}
-      />
+
+      {/* ========== FETCHING OVERLAY ========== */}
+      {isFetching && (
+        <div className="absolute inset-0 bg-white/50 z-10"></div>
+      )}
+
+
+      {/* ========== HANDLE DATA RENDERING ========== */}
+      {isLoading ? (
+        <DataTableSkeleton columnCount={visibleColumnCount + 1} />
+      ) : isError ? (
+        <div className="min-h-[calc(77vh)] flex flex-col items-center justify-center text-center py-10 border rounded-xl bg-white shadow-sm">
+          <div className="bg-red-100 p-3 rounded-full">
+            <XCircle className="h-8 w-8 text-red-500" />
+          </div>
+          <h3 className="mt-4 text-lg font-semibold">Failed to Load Users</h3>
+          <p className="text-muted-foreground mt-1">{error.message}</p>
+        </div>
+      ) : (
+        <DataTable
+          data={users}
+          columns={columns}
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          sortField={sort.field}
+          sortDirection={sort.direction}
+          onSortChange={(field, direction) => setSort({ field: field as keyof User, direction })}
+          renderActions={renderUserActions}
+        />
+      )}
+
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent
+          className="sm:max-w-none w-[95vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex flex-col p-0 data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out"
+          onInteractOutside={(e) => {
+            // Prevent closing when clicking outside if the mutation is running
+            if (editUserStatusMutation.isPending) {
+              e.preventDefault();
+            }
+          }}
+        >
+          {/* Dialog Header */}
+          <DialogHeader className="rounded-t-lg border-b p-6 pb-4 bg-gradient-to-br from-slate-50 to-slate-100">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-blue-700 flex items-center justify-center shrink-0">
+                <UserPlus2 className="h-8 w-8 text-white" />
+              </div>
+              <div className="flex flex-col">
+                <DialogTitle className="text-3xl font-bold tracking-tight text-foreground">
+                  Add New User
+                </DialogTitle>
+                <DialogDescription className="text-base text-muted-foreground mt-1">
+                  Fill out the form below to create a new user account.
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+
+          {/* Form Content Area */}
+          <div className="flex-1 overflow-y-auto px-6 py-4">
+            <CreateUserForm onSuccess={() => setIsCreateDialogOpen(false)} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -58,7 +58,7 @@ export function DataTable<T extends { id: string }>({
   const visibleColumnCount = columns.filter(c => c.visible).length;
 
   return (
-    <div className="min-h-[calc(77vh)] rounded-xl border bg-white shadow-sm relative animate-fade-in-up">
+    <div className="max-[1125px]:min-h-[calc(82vh)] min-[1125px]:min-h-[calc(77vh)] rounded-xl border bg-white shadow-sm relative animate-fade-in-up">
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
           <thead className="bg-gray-50 text-muted-foreground text-center">
@@ -96,7 +96,7 @@ export function DataTable<T extends { id: string }>({
                     return (
                       <td
                         key={String(col.key)}
-                        className={cn("px-4 py-3 align-middle", col.cellClassName)}
+                        className={cn("px-4 py-3 align-middle font-medium", col.cellClassName)}
                       >
                         {col.render ? col.render(item) : String(item[col.key] ?? '')}
                       </td>
@@ -145,7 +145,7 @@ export function DataTable<T extends { id: string }>({
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={onPageChange}
-        className="absolute -bottom-2 lg:bottom-4 md:-bottom-1 flex justify-between items-center px-4 w-full"
+        className="absolute -bottom-2 lg:bottom-0 xl:bottom-4 md:-bottom-1 flex justify-between items-center px-16 w-full"
       />
     </div>
   );

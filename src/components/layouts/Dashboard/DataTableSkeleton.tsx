@@ -12,14 +12,14 @@ export function DataTableSkeleton({ columnCount, rowCount = 10 }: DataTableSkele
         {/* Table Header */}
         <div className="grid grid-cols-14 gap-4">
           {Array.from({ length: columnCount }).map((_, i) => (
-            <Skeleton key={i} className="h-9 col-span-2 bg-gray-200" />
+            <Skeleton key={i} className="h-9 col-span-2 bg-gray-300" />
           ))}
         </div>
         {/* Table Body */}
         {Array.from({ length: rowCount }).map((_, i) => (
           <div key={i} className="grid grid-cols-14 gap-4 border-t pt-3">
             {/* {Array.from({ length: columnCount }).map((_, j) => ( */}
-              <Skeleton className="h-11 col-span-14" />
+              <Skeleton className="h-11 col-span-14 bg-gray-200" />
             {/* ))} */}
           </div>
         ))}
