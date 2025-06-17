@@ -30,6 +30,10 @@ export interface UseUsersOptions {
     field: keyof User;
     direction: 'asc' | 'desc';
   };
+  dateRange?: {
+    from?: Date;
+    to?: Date;
+  };
 }
 
 

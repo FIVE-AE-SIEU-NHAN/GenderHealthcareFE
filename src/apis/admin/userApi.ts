@@ -1,9 +1,10 @@
 import api from '@/apis/axiosConfig';
 import { USER_ROLE, USER_SEARCH_FIELDS, USER_STATUS } from '@/Application/constants/admin/admin.userConstants';
 import { BackendUserResponse, CreateUserPayload, CreateUserResponse, EditUserStatusPayload, EditUserStatusResponse, PaginatedUsersResponse, UseUsersOptions } from '@/types/admin/userTypes';
+import { format } from 'date-fns';
 
 // =============== USER FETCHING ===============
-export const fetchUsers = async ({ page, limit, filters, search, sort }: UseUsersOptions): Promise<PaginatedUsersResponse> => {
+export const fetchUsers = async ({ page, limit, filters, search, sort, dateRange }: UseUsersOptions): Promise<PaginatedUsersResponse> => {
   const params: Record<string, string | number | number[] | string[]> = {
     _page: page,
     _limit: limit,
@@ -27,6 +28,26 @@ if (search.value && USER_SEARCH_FIELDS[search.field as keyof typeof USER_SEARCH_
       params._role = valuesAsArray.map(v => USER_ROLE.API_MAP[String(v)]);
     } else if (key === 'gender') {
       params._gender = valuesAsArray as string[];
+    }
+  }
+
+if (dateRange) {
+    const dates: string[] = [];
+
+    // If a "from" date exists, format it and add it to our dates array
+    if (dateRange.from) {
+      dates.push(format(dateRange.from, 'yyyy-MM-dd'));
+    }
+
+    // If a "to" date exists, format it and add it to our dates array
+    if (dateRange.to) {
+      dates.push(format(dateRange.to, 'yyyy-MM-dd'));
+    }
+
+    // If the dates array has any items, assign it to the `_created_at` parameter.
+    // Axios will serialize this into `&_created_at=2025-06-14&_created_at=2025-06-20`
+    if (dates.length > 0) {
+      params._created_at = dates;
     }
   }
   

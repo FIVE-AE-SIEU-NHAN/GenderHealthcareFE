@@ -199,7 +199,7 @@ export default function UserListDashboard() {
 
   useEffect(() => {
     setPage(1);
-  }, [apiFilters, apiSearchConfig, sort]);
+  }, [apiFilters, apiSearchConfig, sort, fromDate, toDate]);
 
   const handleSearchSubmit = () => {
     setApiSearchConfig(uiSearchConfig);
@@ -218,6 +218,7 @@ export default function UserListDashboard() {
     filters: apiFilters,
     search: apiSearchConfig,
     sort,
+    dateRange: { from: fromDate, to: toDate },
   });
 
   const users = data?.data ?? [];
