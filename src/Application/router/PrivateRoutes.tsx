@@ -2,7 +2,6 @@
 
 import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import { UserRole } from "@/types/UserRole";
 
 import BookingForm from "@/pages/Content/Services/BookingForm";
 import NavFootLayout from "@/components/layouts/NavFoot/NavFootLayout";
@@ -11,12 +10,7 @@ export const PrivateRoutes = (
   <Route
     element={
       <ProtectedRoute
-        allowedRoles={[
-          UserRole.Admin,
-          UserRole.Customer,
-          UserRole.Manager,
-          UserRole.Doctor,
-        ]}
+        allowedRoles={['Admin', 'Consultant', 'Manager', 'Customer']}
       >
         {/* Add a layout wrapper here if needed */}
       </ProtectedRoute>

@@ -1,16 +1,26 @@
-import { register } from 'module';
+// import { register } from 'module';
 import axiosInstance from './axiosConfig';
-import { get } from 'axios';
+// import { get } from 'axios';
+
+
+interface LoginApiResponse {
+  result: {
+    access_token: string;
+    refresh_token: string;
+  };
+}
 
 export const authApi = {
-  login: async (data: { email: string; password: string }) => {
-    const response = await axiosInstance.post('/user/login', data);
+  login: async (data: { email: string; password: string })=> {
+    const response = await axiosInstance.post<LoginApiResponse>('/user/login', data);
+    if (response.status === 200) {
+      const { access_token, refresh_token } = response.data.result;
 
-    const { access_token, refresh_token } = response.data;
-
-    // Lưu access_token và refresh_token vào localStorage (hoặc memory nếu muốn an toàn hơn)
-    localStorage.setItem('access_token', access_token);
-    localStorage.setItem('refresh_token', refresh_token);
+      // Lưu access_token và refresh_token vào localStorage (hoặc memory nếu muốn an toàn hơn)
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
+    }
+    
 
     return response;
   },
@@ -32,5 +42,18 @@ export const authApi = {
     const response = await axiosInstance.post('/user/register', data);
     return response;
   },
+
+  loginWithGoogle: async (data: { id_token: string }) => {
+    const response = await axiosInstance.post<LoginApiResponse>('/user/login-google', data);
+    if ([200,201].includes(response.status)) {
+      const { access_token, refresh_token } = response.data.result;
+
+      // Lưu access_token và refresh_token vào localStorage (hoặc memory nếu muốn an toàn hơn)
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
+    }
+    
+    return response;
+  }
 
 };

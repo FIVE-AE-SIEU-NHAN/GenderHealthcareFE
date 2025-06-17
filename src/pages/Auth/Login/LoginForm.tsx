@@ -10,24 +10,26 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, AtSign, Lock } from "lucide-react";
-// import { GoogleCredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import { authApi } from "@/apis/authApi";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils"; // A utility for cleaner class names
 
-import logo from "@/assets/images/logo1.png"; 
+import { authApi } from "@/apis/authApi";
+import { useAuth } from "@/contexts/AuthContext";
 import GoogleLoginButton from "../GoogleLogin";
-// import googleLogo from "@/assets/images/google.png";
+import logo from "@/assets/images/logo1.png";
 
 type FormData = {
   email: string;
   password: string;
 };
-interface LoginError {
+
+interface ApiError {
   response?: {
     data?: {
       message?: string;
       errors?: {
-        [key: string]: string;
+        [key in keyof FormData]?: string;
       };
     };
   };
@@ -35,8 +37,8 @@ interface LoginError {
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [backendError, setBackendError] = useState("");
   const navigate = useNavigate();
+  const { login: loginContext } = useAuth();
 
   const {
     register,
@@ -46,45 +48,66 @@ export default function LoginForm() {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    setBackendError(""); // Reset lỗi trước khi gọi API
-
     try {
       const res = await authApi.login(data);
-      if (res.status === 200) {
+      const accessToken = res?.data?.result?.access_token;
+
+      if (accessToken) {
+        loginContext(accessToken);
+        toast.success("Login Successful", {
+          description: "Welcome back!",
+        });
         navigate('/');
+      } else {
+        toast.error("Login Failed", { description: "Could not retrieve login credentials." });
       }
 
     } catch (err: unknown) {
-      const error = err as LoginError;
-      // Đặt lỗi cho các field cụ thể
-      if (error.response?.data?.errors) {
-        const serverErrors = error.response.data.errors;
-
-        // Set lỗi email từ server
-        if (serverErrors.email) {
-          setError("email", {
-            type: "server",
-            message: serverErrors.email
-          });
+      const error = err as ApiError;
+      /* KietMN code trả về cái API kiểu.... :D
+      Trả về 2 dạng:
+       
+      1. Field-specific errors
+        "message": "Validation error",
+        "errors": {
+            "password": "Password length must be from 8 to 50"
         }
 
-        // Set lỗi password từ server
-        if (serverErrors.password) {
-          setError("password", {
-            type: "server",
-            message: serverErrors.password
-          });
-        }
 
-        // Nếu có lỗi khác không map được vào field nào
-        if (!serverErrors.email && !serverErrors.password && error.response?.data?.message) {
-          setBackendError(error.response.data.message);
+      2. Error NHƯNG LẠI LÀ DƯỚI DẠNG message :v
+        {
+          "message": "Email or password is incorrect"
         }
-      } else {
-        setBackendError(error.response?.data?.message || "Đã xảy ra lỗi khi đăng nhập");
+      */
+
+      const serverFieldErrors = error.response?.data?.errors;
+      const generalMessage = error.response?.data?.message;
+
+      // 1. Check for FIELD-SPECIFIC errors first.
+      // Example: { "errors": { "password": "Password is too short" } }
+      if (serverFieldErrors) {
+        Object.entries(serverFieldErrors).forEach(([field, message]) => {
+          // Attach the error message directly to the corresponding form field.
+          if (field === 'email' || field === 'password') {
+             setError(field, { type: "server", message });
+          }
+        });
       }
-    };
-  }
+      // 2. If no field errors, check for a GENERAL error message.
+      // Example: { "message": "Email or password is incorrect" }
+      else if (generalMessage) {
+        toast.error("Login Failed", {
+          description: generalMessage,
+        });
+      }
+      // 3. Fallback for any other kind of error (e.g., network failure).
+      else {
+        toast.error("An Error Occurred", {
+          description: "Could not connect to the server. Please try again.",
+        });
+      }
+    }
+  };
 
   return (
     <Card className="w-full max-w-lg shadow-2xl animate-fade-in-up z-10 mt-8 mb-8">
@@ -111,7 +134,7 @@ export default function LoginForm() {
                 placeholder="care4gender@example.com"
                 {...register("email")}
                 disabled={isSubmitting}
-                className= {errors.email ? 'border-red-500 pl-8' : 'pl-8'} 
+                className={cn("pl-8", { "border-red-500": errors.email })}
               />
             </div>
             {errors.email && (
@@ -130,11 +153,11 @@ export default function LoginForm() {
                 placeholder="••••••••"
                 {...register("password")}
                 disabled={isSubmitting}
-                className= {errors.password ? 'border-red-500 pl-8 pr-10' : 'pl-8 pr-10'} 
+                className={cn("pl-8 pr-10", { "border-red-500": errors.password })}
               />
               <button
                 type="button"
-                className="absolute right-2 top-3 text-gray-600 hover:drop-shadow-[0_1px_1px_rgba(0,0,0,.25)] cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
                 onClick={() => setShowPassword((prev) => !prev)}
                 tabIndex={-1}
               >
@@ -146,15 +169,10 @@ export default function LoginForm() {
             )}
           </div>
 
-          {/* General Backend Error */}
-          {backendError && (
-            <p className="text-red-500 text-sm text-center">{backendError}</p>
-          )}
-
           {/* Forgot password? */}
           <div className="flex justify-end">
             <a
-              href="#"
+              href="/forgot-password"
               className="text-sm text-[#0066ff] hover:underline"
             >
               Forgot password?
@@ -167,7 +185,7 @@ export default function LoginForm() {
             {isSubmitting ? "Logging in..." : "Log In"}
           </Button>
 
-          {/* Or Login with Google */}
+          {/* ------- Or ------- */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t"></span>
@@ -178,7 +196,7 @@ export default function LoginForm() {
           </div>
 
           {/* Google Login Button */}
-          {/* <GoogleLoginButton /> */}
+          <GoogleLoginButton />
         </form>
       </CardContent>
     </Card>

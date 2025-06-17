@@ -58,7 +58,14 @@ const allUserColumns = [
       );
     },
   },
-  { key: "gender", label: "Gender" },
+  { key: "gender", 
+    label: "Gender",
+    render: (user: User) => {
+      return (
+        <p className="capitalize"> {user.gender}</p>
+      )
+   },
+  },
   {
     key: "date_of_birth",
     label: "Date of Birth",
@@ -184,18 +191,15 @@ export default function UserListDashboard() {
 
 
 
-  // ========== UPDATED: API Filter Structuring ==========
-  // This now creates a simple object that our useUsers hook can easily translate.
-  // Note: Your backend currently only supports one value per filter type (e.g., one status, not multiple).
-  // This logic takes the *first* selected value to accommodate this.
+  // ========== API FILTERS ==========
   const apiFilters = useMemo(() => {
     if (activeFilterValues.length === 0) return {};
-    return { [activeFilterKey]: activeFilterValues[0] };
+    return { [activeFilterKey]: activeFilterValues };
   }, [activeFilterKey, activeFilterValues]);
 
   useEffect(() => {
     setPage(1);
-  }, [apiFilters, apiSearchConfig, sort]);
+  }, [apiFilters, apiSearchConfig, sort, fromDate, toDate]);
 
   const handleSearchSubmit = () => {
     setApiSearchConfig(uiSearchConfig);
@@ -214,6 +218,7 @@ export default function UserListDashboard() {
     filters: apiFilters,
     search: apiSearchConfig,
     sort,
+    dateRange: { from: fromDate, to: toDate },
   });
 
   const users = data?.data ?? [];

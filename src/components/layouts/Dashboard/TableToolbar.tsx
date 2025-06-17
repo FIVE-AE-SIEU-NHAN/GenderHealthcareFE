@@ -97,13 +97,8 @@ export default function TableToolbar({
   const minDate = new Date(2023, 0, 1);
   const maxDate = new Date(currentYear, 11, 31);
   const years = Array.from({ length: currentYear - 2023 + 1 }, (_, i) => currentYear - i)
-  // const [localSearch, setLocalSearch] = React.useState(searchValue)
 
   const currentFilter = facetFilters.find(f => f.key === activeFilterKey);
-
-  // React.useEffect(() => {
-  //   setLocalSearch(searchValue)
-  // }, [searchValue])
 
   const handleCategoryChange = (newKey: string) => {
     onActiveFilterKeyChange(newKey);
@@ -199,7 +194,7 @@ export default function TableToolbar({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-auto justify-between rounded-l-[0]">
-                <span className="truncate">
+                <span className="truncate capitalize">
                   {activeFilterValues.length > 0
                     ? activeFilterValues.join(", ")
                     : `Select ${currentFilter.label}`}
@@ -237,9 +232,9 @@ export default function TableToolbar({
           <Button variant="outline" className="justify-start text-left">
             <CalendarIcon className="w-4 h-4 mr-2" />
             {fromDate && toDate
-              ? `${format(fromDate, "yyyy/MM/dd")} → ${format(toDate, "yyyy/MM/dd")}`
+              ? `${format(fromDate, "dd/MM/yyyy")} → ${format(toDate, "dd/MM/yyyy")}`
               : fromDate
-                ? `${format(fromDate, "yyyy/MM/dd")} →`
+                ? `${format(fromDate, "dd/MM/yyyy")} →`
                 : "Pick a date range"}
           </Button>
         </PopoverTrigger>
