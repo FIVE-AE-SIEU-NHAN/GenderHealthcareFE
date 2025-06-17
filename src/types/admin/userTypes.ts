@@ -21,7 +21,7 @@ export interface PaginatedUsersResponse {
 export interface UseUsersOptions {
   page: number;
   limit: number;
-  filters: Record<string, string | number>; 
+  filters: Record<string, ( string | number ) | ( string | number )[] >; 
   search: {
     field: string; 
     value: string;

@@ -4,7 +4,7 @@ import { BackendUserResponse, CreateUserPayload, CreateUserResponse, EditUserSta
 
 // =============== USER FETCHING ===============
 export const fetchUsers = async ({ page, limit, filters, search, sort }: UseUsersOptions): Promise<PaginatedUsersResponse> => {
-  const params: Record<string, string | number> = {
+  const params: Record<string, string | number | number[] | string[]> = {
     _page: page,
     _limit: limit,
     _sort: sort.field,
@@ -20,12 +20,13 @@ if (search.value && USER_SEARCH_FIELDS[search.field as keyof typeof USER_SEARCH_
   // Filters
   for (const key in filters) {
     const value = filters[key];
-    if (key === 'status' && typeof value === 'string') {
-      params._verify = USER_STATUS.API_MAP[value];
-    } else if (key === 'role' && typeof value === 'string') {
-      params._role = USER_ROLE.API_MAP[value];
-    } else if (key === 'gender' && typeof value === 'string') {
-      params._gender = value;
+    const valuesAsArray = Array.isArray(value) ? value : [value];
+    if (key === 'status') {
+      params._verify = valuesAsArray.map(v => USER_STATUS.API_MAP[String(v)]);
+    } else if (key === 'role') {
+      params._role = valuesAsArray.map(v => USER_ROLE.API_MAP[String(v)]);
+    } else if (key === 'gender') {
+      params._gender = valuesAsArray as string[];
     }
   }
   
