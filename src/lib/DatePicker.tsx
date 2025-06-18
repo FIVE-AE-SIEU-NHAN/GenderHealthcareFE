@@ -91,7 +91,7 @@ function DatePicker({ field }: DatePickerProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[240px] justify-start text-left font-normal p-5",
+            "w-[213px] min-[541px]:w-[230px] sm:w-[250px] justify-start text-left font-normal p-5",
             !field.value && "text-muted-foreground"
           )}
         >

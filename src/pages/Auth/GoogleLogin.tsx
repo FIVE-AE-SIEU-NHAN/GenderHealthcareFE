@@ -7,27 +7,52 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+      errors?: {
+        [key in keyof FormData]?: string;
+      };
+    };
+  };
+}
 
 export default function GoogleLoginButton() {
   const { login: loginContext } = useAuth();
   const navigate = useNavigate();
   const handleSuccess = async (credentialResponse: GoogleCredentialResponse) => {
-    console.log("Google login success:", credentialResponse);
-    const data = {
-      id_token: credentialResponse.credential,
-    } as { id_token: string };
-    
-    if (credentialResponse.credential) {
-      const res = await authApi.loginWithGoogle(data);
-      const accessToken = res?.data?.result?.access_token;
+    try{
+      const data = { id_token: credentialResponse.credential } as { id_token: string };
+      
+      if (credentialResponse.credential) {
+        const res = await authApi.loginWithGoogle(data);
+        const accessToken = res?.data?.result?.access_token;
 
-      if ([200,201].includes(res.status)) {
-        loginContext(accessToken);
-        toast.success("Login with Google", 
-          {
-            description: res.status === 200 ? "Welcome back!" : "Account created successfully!",
-          });
-        navigate('/');
+        if ([200,201].includes(res.status)) {
+          loginContext(accessToken);
+          toast.success("Login with Google", 
+            {
+              description: res.status === 200 ? "Welcome back!" : "Account created successfully!",
+            });
+          navigate('/');
+        } 
+      }
+    } catch (err : unknown) {
+      const error = err as ApiError;
+
+      const generalMessage = error.response?.data?.message;
+
+      if (generalMessage) {
+        toast.error("Login Failed", {
+          description: generalMessage,
+        });
+      }
+      // 3. Fallback for any other kind of error (e.g., network failure).
+      else {
+        toast.error("An Error Occurred", {
+          description: "Could not connect to the server. Please try again.",
+        });
       }
     }
   }

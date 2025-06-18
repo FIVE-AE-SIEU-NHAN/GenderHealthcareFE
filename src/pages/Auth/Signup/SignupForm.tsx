@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Lock, User, Eye, EyeOff, KeyRound, AtSign } from "lucide-react";
+import { Lock, User, Eye, EyeOff, KeyRound, AtSign, Phone, Loader2 } from "lucide-react";
 import { DatePicker } from "@/lib/DatePicker";
 import { format } from "date-fns"
 import logo from "@/assets/images/logo1.png";
@@ -19,20 +19,23 @@ import {
 } from "@/components/ui/input-otp"
 import { authApi } from "@/apis/authApi";
 import { toast } from "sonner";
-// import GoogleLoginButton from "../GoogleLogin";
+import GoogleLoginButton from "../GoogleLogin";
+import { useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 
 type FormData = {
-  fullName: string;
+  name: string;
   gender: string;
-  dob: string;
+  date_of_birth: string | null; 
   email: string;
+  phone_number: string;
   password: string;
-  confirmPassword: string;
-  otp: string;
+  confirm_password: string;
+  email_verify_token: string;
 };
 
-interface OtpError {
+interface ApiError {
   response?: {
     data?: {
       message?: string;
@@ -46,104 +49,71 @@ interface OtpError {
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [backendError, setBackendError] = useState("");
+  const navigate = useNavigate();
 
 
   const {
     register,
     handleSubmit,
     control,
-    watch,
+    getValues,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    setBackendError(""); 
-    const formatted = {
-      ...data,
-      dob: data.dob
-        ? format(new Date(data.dob), "dd/MM/yyyy")
-        : "",
-    };
-    console.log("Signup data:", formatted);
-
+    setOtpCountdown(0);
     try {
-      const res = await authApi.register(data);
-      if (res.status === 200) {
-        // navigate('/');
-        // toast("Registration successful", {
-        //   description: "Sunday, December 03, 2023 at 9:00 AM",
-        //   action: {
-        //     label: "Undo",
-        //     onClick: () => console.log("Undo"),
-        //   },
-        // })
-        alert("Registration successful");
+      const payload = {
+        ...data,
+        date_of_birth: data.date_of_birth
+          ? format(new Date(data.date_of_birth), "yyyy-MM-dd")
+          : "",
+        email_verify_token: data.email_verify_token ? data.email_verify_token.toUpperCase() : '',
+      };
+      console.log(payload)
+
+      const res = await authApi.register(payload);
+      const accessToken = res?.data?.result?.access_token;
+
+      if (accessToken) {
+        toast.success("Signup Successful", {
+          description: "Redirecting to login...",
+        });
+        navigate("/login");
+      } else {
+        toast.error("Signup Failed", {
+          description: "Something went wrong. Please try again.",
+        });
       }
     } catch (err: unknown) {
-      const error = err as OtpError;
-      // Set lỗi cho các field cụ thể
-      if (error.response?.data?.errors) {
-        const serverErrors = error.response.data.errors;
+      const error = err as ApiError;
+      const serverFieldErrors = error.response?.data?.errors;
+      const generalMessage = error.response?.data?.message;
 
-        if (serverErrors.date_of_birth) {
-          setError("dob", {
+      if (serverFieldErrors) {
+        Object.entries(serverFieldErrors).forEach(([field, message]) => {
+          setError(field as keyof FormData, {
             type: "server",
-            message: "Date of birth is required"
+            message,
           });
-        }
-        // Set lỗi email từ server
-        if (serverErrors.email) {
-          setError("email", {
-            type: "server",
-            message: serverErrors.email
-          });
-        }
-
-        if (serverErrors.name) {
-          setError("fullName", {
-            type: "server",
-            message: serverErrors.name
-          });
-        }
-        if (serverErrors.gender) {
-          setError("gender", {
-            type: "server",
-            message: serverErrors.gender
-          });
-        }
-
-        // Set lỗi password từ server
-        if (serverErrors.password) {
-          setError("password", {
-            type: "server",
-            message: serverErrors.password
-          });
-        }
-
-        // Set lỗi confirmPassword từ server
-        if (serverErrors.confirm_password) {
-          setError("confirmPassword", {
-            type: "server",
-            message: serverErrors.confirm_password
-          });
-        }
-
-        // Set lỗi otp từ server
-        if (serverErrors.email_verify_token) {
-          setError("otp", {
-            type: "server",
-            message: serverErrors.email_verify_token
-          });
-        }
+        });
+      } else if (generalMessage) {
+        toast.error("Signup Failed", {
+          description: generalMessage,
+        });
       } else {
-        toast.error("Registration failed. Please try again.");
+        toast.error("An Error Occurred", {
+          description: "Could not connect to the server. Please try again.",
+        });
       }
     }
   };
 
+
+  // =========================== OTP =========================== 
   const [otpCountdown, setOtpCountdown] = useState(0);
+  const [isOtpLoading, setIsOtpLoading] = useState(false);
 
   useEffect(() => {
     if (otpCountdown === 0) return;
@@ -156,37 +126,27 @@ export default function SignupForm() {
   }, [otpCountdown]);
 
   const handleGetOtp = async () => {
-    if (otpCountdown === 0) {
-      // Trigger OTP logic (e.g. send OTP to email)
-      console.log("Send OTP");
+    if (otpCountdown > 0 || isOtpLoading) return; // Prevent clicks while loading or counting down
 
-      const emailValue = watch("email");
-      console.log("Email for OTP:", emailValue);
-      try {
-        const res = await authApi.getOtp({ email: emailValue });
-        if (res.status === 200) {
-          // navigate('/');
-          // toast("OTP sent successfully", {
-          //   description: "Sunday, December 03, 2023 at 9:00 AM",
-          //   action: {
-          //     label: "Undo",
-          //     onClick: () => console.log("Undo"),
-          //   },
-          // })
-          alert("OTP sent successfully");
-          setOtpCountdown(120);
-        }
-      } catch (err: unknown) {
-        const error = err as OtpError;
-        if (error.response?.data?.errors) {
-          const serverErrors = error.response.data.errors;
-          if (serverErrors.email) {
-            alert(serverErrors.email);
-          } else {
-            toast.error("Failed to send OTP. Please try again.");
-          }
-        }
+    setIsOtpLoading(true); 
+    try {
+      const emailValue = getValues("email");
+      const res = await authApi.getOtp({ email: emailValue });
+      if (res.status === 200) {
+        toast.success("OTP sent successfully", { description: "Please check your email!" });
+        setOtpCountdown(120);
       }
+    } catch (err: unknown) {
+      const error = err as ApiError;
+      const emailError = error.response?.data?.errors?.email;
+      if (emailError) {
+        // setError("email", { type: "server", message: emailError });
+        toast.error("Failed to send OTP", { description: emailError });
+      } else {
+        toast.error("Failed to send OTP", { description: error.response?.data?.message || "Please try again." });
+      }
+    } finally {
+      setIsOtpLoading(false); 
     }
   };
 
@@ -216,32 +176,74 @@ export default function SignupForm() {
 
           {/* Full Name */}
           <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
+            <Label htmlFor="name">Full Name</Label>
             <div className="relative">
               <User className="form-icon" />
               <Input
-                id="fullName"
+                id="name"
                 placeholder="John Doe"
-                {...register("fullName")}
-                className="pl-8"
+                {...register("name")}
+                disabled={isSubmitting}
+                className={cn("pl-8", { "border-red-500": errors.name })}
               />
             </div>
-            {errors.fullName && (
-              <p className="text-red-500 text-sm">{errors.fullName.message}</p>
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name.message}</p>
             )}
           </div>
+
+          {/* Phone number */}
+          <div className="grid grid-cols-2">
+            <div className="space-y-2 mr-3">
+              <Label htmlFor="phone_number">Phone Number</Label>
+              <div className="relative">
+                <Phone className="form-icon" />
+                <Input
+                  id="phone_number"
+                  placeholder="0912345678"
+                  {...register("phone_number")}
+                  disabled={isSubmitting}
+                  className={cn("pl-8", { "border-red-500": errors.phone_number })}
+
+                />
+              </div>
+              {errors.phone_number && (
+                <p className="text-red-500 text-sm">{errors.phone_number.message}</p>
+              )}
+            </div>
+
+            {/* Email */}
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <div className="relative">
+                <AtSign className="form-icon" />
+                <Input
+                  id="email"
+                  type="text"
+                  placeholder="care4gender@example.com"
+                  {...register("email")}
+                  disabled={isSubmitting}
+                  className={cn("pl-8", { "border-red-500": errors.email })}
+                />
+              </div>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+            </div>
+          </div>
+
 
           {/* Gender & Date of Birth */}
           <div className="grid grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="dob">Date of Birth</Label>
+              <Label htmlFor="date_of_birth">Date of Birth</Label>
               <Controller
                 control={control}
-                name="dob"
+                name="date_of_birth"
                 render={({ field }) => <DatePicker field={field} />}
               />
-              {errors.dob && (
-                <p className="text-red-500 text-sm">{errors.dob.message}</p>
+              {errors.date_of_birth && (
+                <p className="text-red-500 text-sm">{errors.date_of_birth.message}</p>
               )}
             </div>
 
@@ -269,27 +271,9 @@ export default function SignupForm() {
             </div>
           </div>
 
-          {/* Email */}
-          <div className="space-y-2 -mt-2.5">
-            <Label htmlFor="email">Email Address</Label>
-            <div className="relative">
-              <AtSign className="form-icon" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="care4gender@example.com"
-                {...register("email")}
-                className="pl-8"
-              />
-            </div>
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-
           {/* Password + Confirm Password */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+          <div className="grid grid-cols-2">
+            <div className="space-y-2 mr-3">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Lock className="form-icon" />
@@ -298,7 +282,8 @@ export default function SignupForm() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   {...register("password")}
-                  className="pl-8 pr-10"
+                  disabled={isSubmitting}
+                  className={cn("pl-8", { "border-red-500": errors.password })}
                 />
                 <button
                   type="button"
@@ -315,15 +300,16 @@ export default function SignupForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirm_password">Confirm Password</Label>
               <div className="relative">
                 <KeyRound className="form-icon" />
                 <Input
-                  id="confirmPassword"
+                  id="confirm_password"
                   type={showConfirm ? "text" : "password"}
                   placeholder="••••••••"
-                  {...register("confirmPassword")}
-                  className="pl-8 pr-10"
+                  {...register("confirm_password")}
+                  disabled={isSubmitting}
+                  className={cn("pl-8 pr-10", { "border-red-500": errors.confirm_password })}
                 />
                 <button
                   type="button"
@@ -334,47 +320,59 @@ export default function SignupForm() {
                   {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
+              {errors.confirm_password && (
+                <p className="text-red-500 text-sm">{errors.confirm_password.message}</p>
               )}
             </div>
           </div>
 
           {/* OTP Field + Button */}
           <div className="space-y-2">
-            <Label htmlFor="otp">Verification Code</Label>
+            <Label htmlFor="email_verify_token">Email Verification Code</Label>
             <div className="flex gap-2 ">
-              <InputOTP maxLength={6} >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                  <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
-                  <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
-                </InputOTPGroup>
-              </InputOTP>
-
+              <Controller control={control} name="email_verify_token" render={({ field }) => (
+                <InputOTP maxLength={6} {...field} disabled={isSubmitting} >
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+              )} />
               <Button
                 type="button"
                 variant="outline"
-                className="shadow-sm w-[75px] h-11 bg-[#00b3b6] text-white font-semibold"
+                className="
+                  shadow-sm w-[120px] shrink-0 h-11 bg-[#00b3b6]
+                  text-white font-semibold cursor-pointer
+                  hover:bg-[#00b3b6] hover:text-white active:scale-[0.97] 
+                  transition-all duration-200 ease-in-out"
                 onClick={handleGetOtp}
-                disabled={otpCountdown > 0}
+                disabled={otpCountdown > 0 || isOtpLoading} // Disable button when loading OR counting down
               >
-                {otpCountdown > 0 ? formatTime(otpCountdown) : "Get OTP"}
+                {isOtpLoading ? (
+                  <Loader2 className="animate-spin" size={18} />
+                ) : otpCountdown > 0 ? (
+                  formatTime(otpCountdown)
+                ) : (
+                  "Get OTP"
+                )}
               </Button>
             </div>
-            {errors.otp && (
-              <p className="text-red-500 text-sm">{errors.otp.message}</p>
+            {errors.email_verify_token && (
+              <p className="text-red-500 text-sm">{errors.email_verify_token.message}</p>
             )}
           </div>
 
           {/* Submit */}
           <Button type="submit"
             className="h-[45px] w-full bg-dark-blue active:bg-[#131045] active:scale-[0.99] 
-              shadow-sm hover:bg-dark-blue text-lg cursor-pointer transition-all duration-200 ease-in-out">
-            Create Account
+              shadow-sm hover:bg-dark-blue text-lg cursor-pointer transition-all duration-200 ease-in-out"
+            disabled={isSubmitting}>
+            {isSubmitting ? "Creating account..." : "Create Account"}
           </Button>
 
           {/* Or Login with Google */}
@@ -387,7 +385,7 @@ export default function SignupForm() {
             </div>
           </div>
 
-          {/* <GoogleLoginButton /> */}
+          <GoogleLoginButton />
         </form>
       </CardContent>
     </Card>

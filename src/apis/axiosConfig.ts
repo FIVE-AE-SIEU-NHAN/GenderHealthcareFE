@@ -9,39 +9,34 @@ const axiosInstance = axios.create({
   },
 });
 
-// axiosInstance.interceptors.request.use((config) => {
-//   const accessToken = localStorage.getItem('access_token');
 
-//   if (accessToken) {
-//     config.headers['Authorization'] = `Bearer ${accessToken}`; 
-//     config.timeout = 30000;
-//   }
+axiosInstance.interceptors.request.use((config) => {
+  const accessToken = localStorage.getItem('access_token');
+  config.headers = config.headers || {};
+  if (accessToken) {
+    config.headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+  return config;
+});
 
-//   return config;
-// }, (error) => Promise.reject(error));
+axiosInstance.interceptors.response.use(
+  response => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Gọi API refresh
+      console.log(error.response.message);
+      // Lay refresh token tu localStorage
+      // xoa 2 token khoi localStorage
+      // Call API login voi refresh token
+      // Nhan 2 token moi tu API
+      // Luu 2 token moi vao localStorage
+      // Tiep tuc request ban dau voi token moi
+      // Tim hieu cach duy tri dang nhap khi refresh token het han
 
-// axiosInstance.interceptors.response.use(
-//   response => response,
-//   async (error) => {
-//     if (error.response?.status === 401) {
-//       // Gọi API refresh
-//       try {
-//         const res = await axios.post('/user/refresh-token', {}, { withCredentials: true });
-//         const newAccessToken = res.data.access_token;
-//         localStorage.setItem('access_token', newAccessToken);
-
-//         // Retry lại request cũ
-//         error.config.headers.Authorization = `Bearer ${newAccessToken}`;
-//         return axiosInstance(error.config);
-//       } catch (err) {
-//         // Redirect login nếu refresh cũng lỗi
-//         window.location.href = '/login';
-//         return Promise.reject(err);
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+    }
+    return Promise.reject(error);
+  }
+);
 
 
 export default axiosInstance;

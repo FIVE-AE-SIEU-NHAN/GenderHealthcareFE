@@ -3,20 +3,22 @@ import axiosInstance from './axiosConfig';
 // import { get } from 'axios';
 
 
-interface LoginApiResponse {
+interface AuthApiResponse {
   result: {
     access_token: string;
     refresh_token: string;
+  };
+  errors?: {
+    [key: string]: string;
   };
 }
 
 export const authApi = {
   login: async (data: { email: string; password: string })=> {
-    const response = await axiosInstance.post<LoginApiResponse>('/user/login', data);
+    const response = await axiosInstance.post<AuthApiResponse>('/user/login', data);
     if (response.status === 200) {
       const { access_token, refresh_token } = response.data.result;
 
-      // Lưu access_token và refresh_token vào localStorage (hoặc memory nếu muốn an toàn hơn)
       localStorage.setItem('access_token', access_token);
       localStorage.setItem('refresh_token', refresh_token);
     }
@@ -31,24 +33,30 @@ export const authApi = {
   },
 
   register: async (data: { 
-    fullName: string;
+    name: string;
     gender: string;
-    dob: string;
+    date_of_birth: string;
+    phone_number: string;
     email: string;
     password: string;
-    confirmPassword: string;
-    otp: string;
+    confirm_password: string;
+    email_verify_token: string;
   }) => {
-    const response = await axiosInstance.post('/user/register', data);
+    const response = await axiosInstance.post<AuthApiResponse>('/user/register', data);
+    if ([200,201].includes(response.status)) {
+      const { access_token, refresh_token } = response.data.result;
+
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
+    }
     return response;
   },
 
   loginWithGoogle: async (data: { id_token: string }) => {
-    const response = await axiosInstance.post<LoginApiResponse>('/user/login-google', data);
+    const response = await axiosInstance.post<AuthApiResponse>('/user/login-google', data);
     if ([200,201].includes(response.status)) {
       const { access_token, refresh_token } = response.data.result;
 
-      // Lưu access_token và refresh_token vào localStorage (hoặc memory nếu muốn an toàn hơn)
       localStorage.setItem('access_token', access_token);
       localStorage.setItem('refresh_token', refresh_token);
     }
