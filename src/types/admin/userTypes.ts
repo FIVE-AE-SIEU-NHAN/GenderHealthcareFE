@@ -31,6 +31,7 @@ export interface UseUsersOptions {
     direction: 'asc' | 'desc';
   };
   dateRange?: {
+    field?: string; 
     from?: Date;
     to?: Date;
   };

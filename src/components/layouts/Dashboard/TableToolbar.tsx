@@ -1,12 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { format, isAfter, setYear } from "date-fns"
+import { format, isAfter } from "date-fns"
 import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw, ChevronsUpDown, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Calendar } from "@/components/ui/calendar"
+// import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverTrigger,
@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Calendar22 } from "@/lib/DatePickerv2"
 
 export interface FacetFilter {
   key: string;
@@ -49,6 +50,9 @@ interface TableToolbarProps {
   onSearchSubmit?: () => void;
 
   // Date Range
+  dateFilterOptions?: { value: string; label: string }[];
+  activeDateFilterKey?: string;
+  onActiveDateFilterKeyChange?: (value: string) => void;
   fromDate?: Date;
   toDate?: Date;
   onDateRangeChange?: (from?: Date, to?: Date) => void;
@@ -81,22 +85,27 @@ export default function TableToolbar({
   placeholderSearch = "Search...",
   onSearchSubmit,
 
+
+  dateFilterOptions = [],
+  activeDateFilterKey,
+  onActiveDateFilterKeyChange,
   fromDate,
   toDate,
   onDateRangeChange,
+
   onResetFilters,
   onCreate,
   createButtonLabel = "+ CREATE",
   isFetching,
 }: TableToolbarProps) {
-  const [fromMonth, setFromMonth] = React.useState(fromDate || new Date())
-  const [toMonth, setToMonth] = React.useState(toDate || new Date())
-  const [fromYear, setFromYear] = React.useState(fromDate?.getFullYear() || new Date().getFullYear())
-  const [toYear, setToYear] = React.useState(toDate?.getFullYear() || new Date().getFullYear())
-  const currentYear = new Date().getFullYear()
-  const minDate = new Date(2023, 0, 1);
-  const maxDate = new Date(currentYear, 11, 31);
-  const years = Array.from({ length: currentYear - 2023 + 1 }, (_, i) => currentYear - i)
+  // const [fromMonth, setFromMonth] = React.useState(fromDate || new Date())
+  // const [toMonth, setToMonth] = React.useState(toDate || new Date())
+  // const [fromYear, setFromYear] = React.useState(fromDate?.getFullYear() || new Date().getFullYear())
+  // const [toYear, setToYear] = React.useState(toDate?.getFullYear() || new Date().getFullYear())
+  // const currentYear = new Date().getFullYear()
+  // const minDate = new Date(2023, 0, 1);
+  // const maxDate = new Date(currentYear, 11, 31);
+  // const years = Array.from({ length: currentYear - 2023 + 1 }, (_, i) => currentYear - i)
 
   const currentFilter = facetFilters.find(f => f.key === activeFilterKey);
 
@@ -106,25 +115,25 @@ export default function TableToolbar({
   };
 
   // Date select handlers
-  function handleFromDateSelect(date?: Date) {
-    if (toDate && date && isAfter(date, toDate)) return
-    if (onDateRangeChange) onDateRangeChange(date, toDate)
-    setFromMonth(date || new Date())
-    setFromYear(date?.getFullYear() || currentYear)
-  }
+  // function handleFromDateSelect(date?: Date) {
+  //   if (toDate && date && isAfter(date, toDate)) return
+  //   if (onDateRangeChange) onDateRangeChange(date, toDate)
+  //   setFromMonth(date || new Date())
+  //   setFromYear(date?.getFullYear() || currentYear)
+  // }
 
-  function handleToDateSelect(date?: Date) {
-    if (fromDate && date && isAfter(fromDate, date)) return
-    if (onDateRangeChange) onDateRangeChange(fromDate, date)
-    setToMonth(date || new Date())
-    setToYear(date?.getFullYear() || currentYear)
-  }
+  // function handleToDateSelect(date?: Date) {
+  //   if (fromDate && date && isAfter(fromDate, date)) return
+  //   if (onDateRangeChange) onDateRangeChange(fromDate, date)
+  //   setToMonth(date || new Date())
+  //   setToYear(date?.getFullYear() || currentYear)
+  // }
 
-  function clampMonth(date: Date): Date {
-    if (date < minDate) return new Date(minDate);
-    if (date > maxDate) return new Date(maxDate);
-    return date;
-  }
+  // function clampMonth(date: Date): Date {
+  //   if (date < minDate) return new Date(minDate);
+  //   if (date > maxDate) return new Date(maxDate);
+  //   return date;
+  // }
 
   const reset = () => { onResetFilters?.() };
 
@@ -141,6 +150,7 @@ export default function TableToolbar({
   };
 
   const selectedFieldLabel = searchFieldOptions.find(opt => opt.value === searchFieldValue)?.label
+  const selectedDateFilterLabel = dateFilterOptions.find(opt => opt.value === activeDateFilterKey)?.label;
 
   return (
     <div className="flex flex-wrap items-center gap-4 mb-6">
@@ -227,97 +237,54 @@ export default function TableToolbar({
       )}
 
       {/* Date Range Picker */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className="justify-start text-left">
-            <CalendarIcon className="w-4 h-4 mr-2" />
-            {fromDate && toDate
-              ? `${format(fromDate, "dd/MM/yyyy")} → ${format(toDate, "dd/MM/yyyy")}`
-              : fromDate
-                ? `${format(fromDate, "dd/MM/yyyy")} →`
-                : "Pick a date range"}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="flex gap-4 p-4 w-[540px]" align="start">
-          {/* FROM Calendar */}
-          <div>
-            <div className="flex items-center mb-2 gap-2">
-              <span className="font-medium">From</span>
-              <Select
-                value={fromYear.toString()}
-                onValueChange={(val) => {
-                  const year = parseInt(val)
-                  setFromYear(year)
-                  setFromMonth(setYear(fromMonth, year))
-                }}
-              >
-                <SelectTrigger className="w-[100px] h-8">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent className="max-h-64 overflow-y-auto">
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Calendar
-              mode="single"
-              selected={fromDate}
-              onSelect={handleFromDateSelect}
-              month={fromMonth}
-              onMonthChange={(month) => setFromMonth(clampMonth(month))}
-              showOutsideDays
-              disabled={(date) =>
-                date < minDate ||
-                date > maxDate ||
-                (toDate ? date > toDate : false)
-              }
-            />
-          </div>
+      <div className="flex items-center gap-0">
+        {/* The new dropdown to select the date field */}
+        <Select value={activeDateFilterKey} onValueChange={onActiveDateFilterKeyChange}>
+          <SelectTrigger className="w-auto gap-2 font-medium rounded-r-none border-r-0">
+            <SelectValue placeholder="Filter by date...">
+              {selectedDateFilterLabel}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {dateFilterOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-          {/* TO Calendar */}
-          <div>
-            <div className="flex items-center mb-2 gap-2">
-              <span className="font-medium">To</span>
-              <Select
-                value={toYear.toString()}
-                onValueChange={(val) => {
-                  const year = parseInt(val)
-                  setToYear(year)
-                  setToMonth(setYear(toMonth, year))
-                }}
-              >
-                <SelectTrigger className="w-[100px] h-8">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent className="max-h-64 overflow-y-auto">
-                  {years.map((y) => (
-                    <SelectItem key={y} value={y.toString()}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Calendar
-              mode="single"
-              selected={toDate}
-              onSelect={handleToDateSelect}
-              month={toMonth}
-              onMonthChange={(month) => setToMonth(clampMonth(month))}
-              showOutsideDays
-              disabled={(date) =>
-                date < minDate ||
-                date > maxDate ||
-                (fromDate ? date < fromDate : false)
-              }
+        {/* The existing Popover and Button, now with rounded-l-none style */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="justify-start text-left rounded-l-none">
+              <CalendarIcon className="w-4 h-4 mr-2" />
+              {fromDate && toDate
+                ? `${format(fromDate, "dd/MM/yyyy")} → ${format(toDate, "dd/MM/yyyy")}`
+                : fromDate
+                  ? `${format(fromDate, "dd/MM/yyyy")} →`
+                  : "Pick a date range"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="flex gap-4 p-4 w-auto" align="center">
+            {/* FROM Calendar */}
+            <Calendar22
+              placeholder="From date"
+              value={fromDate}
+              onChange={(date) => onDateRangeChange?.(date, toDate)}
+              disabled={(date) => toDate ? isAfter(date, toDate) : false}
             />
-          </div>
-        </PopoverContent>
-      </Popover>
+
+            {/* TO Calendar */}
+            <Calendar22
+              placeholder="To date"
+              value={toDate}
+              onChange={(date) => onDateRangeChange?.(fromDate, date)}
+              disabled={(date) => fromDate ? isAfter(fromDate, date) : false}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
 
       {/* Search */}
       <div className="flex items-center">

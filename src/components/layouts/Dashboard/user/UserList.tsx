@@ -120,7 +120,7 @@ const allUserColumns = [
 ];
 
 
-// ========== FILTERS ==========
+// ========== FACET FILTERS ==========
 const userFacetFilters: FacetFilter[] = [
   {
     key: "status",
@@ -143,6 +143,11 @@ const userFacetFilters: FacetFilter[] = [
   },
 ];
 
+// ========== DATE FILTERS ==========
+const dateFilterOptions = [
+  { value: 'created_at', label: 'Date Created' },
+  { value: 'date_of_birth', label: 'Date of Birth' },
+];
 
 // ========== SEARCHABLE FIELDS ==========
 const searchableFields = [
@@ -173,6 +178,7 @@ export default function UserListDashboard() {
   const [visibleColumns, setVisibleColumns] = useState<string[]>(allUserColumns.map((col) => col.key));
   const visibleColumnCount = allUserColumns.filter(c => visibleColumns.includes(c.key)).length;
 
+  const [activeDateFilterKey, setActiveDateFilterKey] = useState('created_at');
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
 
@@ -199,7 +205,7 @@ export default function UserListDashboard() {
 
   useEffect(() => {
     setPage(1);
-  }, [apiFilters, apiSearchConfig, sort, fromDate, toDate]);
+  }, [apiFilters, apiSearchConfig, sort, fromDate, toDate, activeDateFilterKey]);
 
   const handleSearchSubmit = () => {
     setApiSearchConfig(uiSearchConfig);
@@ -218,7 +224,7 @@ export default function UserListDashboard() {
     filters: apiFilters,
     search: apiSearchConfig,
     sort,
-    dateRange: { from: fromDate, to: toDate },
+    dateRange: { field: activeDateFilterKey, from: fromDate, to: toDate },
   });
 
   const users = data?.data ?? [];
@@ -323,6 +329,10 @@ export default function UserListDashboard() {
         visibleColumns={visibleColumns}
         onVisibleColumnsChange={setVisibleColumns}
 
+
+        dateFilterOptions={dateFilterOptions}
+        activeDateFilterKey={activeDateFilterKey}
+        onActiveDateFilterKeyChange={setActiveDateFilterKey}
         fromDate={fromDate}
         toDate={toDate}
         onDateRangeChange={(from, to) => {
@@ -339,9 +349,11 @@ export default function UserListDashboard() {
 
           setUiSearchConfig({ field: 'all', value: '' });
           setApiSearchConfig({ field: 'all', value: '' });
-
+          
+          setActiveDateFilterKey('created_at');
           setFromDate(undefined);
           setToDate(undefined);
+          
           setVisibleColumns(allUserColumns.map((c) => c.key));
         }}
         onCreate={() => setIsCreateDialogOpen(true)}

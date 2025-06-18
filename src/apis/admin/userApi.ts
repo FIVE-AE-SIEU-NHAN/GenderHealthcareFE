@@ -13,7 +13,7 @@ export const fetchUsers = async ({ page, limit, filters, search, sort, dateRange
   };
 
   // Search 
-if (search.value && USER_SEARCH_FIELDS[search.field as keyof typeof USER_SEARCH_FIELDS]) {
+  if (search.value && USER_SEARCH_FIELDS[search.field as keyof typeof USER_SEARCH_FIELDS]) {
     const backendKey = USER_SEARCH_FIELDS[search.field as keyof typeof USER_SEARCH_FIELDS];
     params[backendKey] = search.value;
   }
@@ -31,23 +31,22 @@ if (search.value && USER_SEARCH_FIELDS[search.field as keyof typeof USER_SEARCH_
     }
   }
 
-if (dateRange) {
-    const dates: string[] = [];
 
-    // If a "from" date exists, format it and add it to our dates array
+  // Date Filter 
+   if (dateRange && (dateRange.from || dateRange.to)) {
+    const dates: string[] = [];
+    
     if (dateRange.from) {
       dates.push(format(dateRange.from, 'yyyy-MM-dd'));
     }
-
-    // If a "to" date exists, format it and add it to our dates array
     if (dateRange.to) {
       dates.push(format(dateRange.to, 'yyyy-MM-dd'));
     }
 
-    // If the dates array has any items, assign it to the `_created_at` parameter.
-    // Axios will serialize this into `&_created_at=2025-06-14&_created_at=2025-06-20`
     if (dates.length > 0) {
-      params._created_at = dates;
+      // Use the dynamic field key from the dateRange object to create the param name
+      const dateKey = `_${dateRange.field}`; 
+      params[dateKey] = dates;
     }
   }
   
