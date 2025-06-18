@@ -77,7 +77,7 @@ export function Pagination({
   if (safeTotalPages <= 1) return null
 
   return (
-    <div className={`flex flex-wrap items-center justify-between gap-4 py-4 ${className}`}>
+    <div className={`flex flex-wrap items-center justify-between gap-4 py-4 max-[548px]:w-130 ${className}`}>
       <div className="text-sm text-muted-foreground">
         Page <span className="font-medium">{safeCurrentPage}</span> of{" "}
         <span className="font-medium">{safeTotalPages}</span>
@@ -125,9 +125,10 @@ export function Pagination({
       </div>
 
       {showJump && (
-        <div className="hidden sm:flex items-center gap-2 text-sm">
+        <div className="hidden min-[825px]:flex items-center gap-2 text-sm">
           <span>Jump to:</span>
           <Input
+            id="jump-page"
             type="number"
             value={jumpPage}
             onChange={(e) => {

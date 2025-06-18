@@ -4,17 +4,17 @@ import type { NavMainProps } from "@/components/nav-main"
 export const adminSidebarItems: NavMainProps["items"] = [
   {
     title: "Blog Management",
-    url: "/admin/dashboard/blog/list",
+    url: "/dashboard/blogs",
     icon: FileText, 
   },
   {
     title: "User Management",
-    url: "/admin/dashboard/users/list",
+    url: "/dashboard/users",
     icon: Users, 
   },
   {
     title: "Services Management",
-    url: "/admin/services",
+    url: "/dashboard/services",
     icon: ClipboardList, 
   },
   {
@@ -24,17 +24,17 @@ export const adminSidebarItems: NavMainProps["items"] = [
   },
   {
     title: "Báo Cáo Thống Kê",
-    url: "/admin/reports",
+    url: "/dashboard/reports",
     icon: BarChart2, 
   },
   {
     title: "Cấu Hình Tham Số",
-    url: "/admin/settings",
+    url: "/dashboard/settings",
     icon: Settings, 
   },
   {
     title: "Your Profile",
-    url: "/admin/profile",
+    url: "/dashboard/profile",
     icon: User, 
   },
 ]

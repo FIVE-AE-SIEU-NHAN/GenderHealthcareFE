@@ -1,23 +1,37 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { UserRole } from "@/types/UserRole";
-import { useRole } from "@/contexts/RoleContext";
+import { Navigate, Outlet, useOutletContext } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { USER_ROLE } from "@/Application/constants/admin/admin.userConstants";
+import { Loader2 } from 'lucide-react';
+
+type AllowedRoleString = keyof typeof USER_ROLE.API_MAP;
 
 interface ProtectedRouteProps {
-  allowedRoles: UserRole[];
-  children?: React.ReactNode;
+  allowedRoles: AllowedRoleString[];
 }
 
-const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
-  const { role } = useRole();
-  console.log("Current role from context:", role);
-  console.log("Allowed roles:", allowedRoles);
+const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
+  const { user, isLoading } = useAuth();
+  const context = useOutletContext(); 
 
-
-  if (!allowedRoles.includes(role)) {
-    return <Navigate to="/unauth" replace />;
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin" />
+      </div>
+    );
   }
 
-  return children ? <>{children}</> : <Outlet />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const userRoleName = USER_ROLE.UI_MAP[user.role as keyof typeof USER_ROLE.UI_MAP];
+
+  if (!userRoleName || !allowedRoles.includes(userRoleName as AllowedRoleString)) {
+    return <Navigate to="/unauth" replace />;
+  }
+  
+  return <Outlet context={context} />;
 };
 
 export default ProtectedRoute;

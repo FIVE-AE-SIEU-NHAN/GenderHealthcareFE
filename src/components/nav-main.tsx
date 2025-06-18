@@ -41,7 +41,7 @@ export function NavMain({ items }: NavMainProps) {
                 size="lg"
                 className={cn(
                   "font-medium",
-                  isActive && "bg-blue-500/90 font-semibold hover:text-white hover:bg-blue-500/90 text-white"
+                  isActive && "pl-7 bg-dark-blue font-semibold hover:text-white hover:bg-dark-blue text-white group-data-[collapsible=icon]:bg-transparent!"
                 )}
                 tooltip={item.title}
               >
@@ -52,8 +52,8 @@ export function NavMain({ items }: NavMainProps) {
                   {item.icon && (
                     <item.icon
                       className={cn(
-                        // "h-5 w-5",
-                        isActive ? "text-white" : "text-semi-dark-blue"
+                        "transition-colors duration-400",
+                        isActive ? "text-white group-data-[collapsible=icon]:text-semi-dark-blue! drop-shadow-md/20" : "text-slate-400"
                       )}
                     />
                   )}
