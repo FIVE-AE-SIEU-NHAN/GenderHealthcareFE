@@ -6,7 +6,6 @@ import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw, ChevronsUpDown, Loa
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-// import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverTrigger,
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Calendar22 } from "@/lib/DatePickerv2"
+import { cn } from "@/lib/utils"
 
 export interface FacetFilter {
   key: string;
@@ -98,14 +98,9 @@ export default function TableToolbar({
   createButtonLabel = "+ CREATE",
   isFetching,
 }: TableToolbarProps) {
-  // const [fromMonth, setFromMonth] = React.useState(fromDate || new Date())
-  // const [toMonth, setToMonth] = React.useState(toDate || new Date())
-  // const [fromYear, setFromYear] = React.useState(fromDate?.getFullYear() || new Date().getFullYear())
-  // const [toYear, setToYear] = React.useState(toDate?.getFullYear() || new Date().getFullYear())
-  // const currentYear = new Date().getFullYear()
-  // const minDate = new Date(2023, 0, 1);
-  // const maxDate = new Date(currentYear, 11, 31);
-  // const years = Array.from({ length: currentYear - 2023 + 1 }, (_, i) => currentYear - i)
+  const [draftFromDate, setDraftFromDate] = React.useState<Date | undefined>(fromDate);
+  const [draftToDate, setDraftToDate] = React.useState<Date | undefined>(toDate);
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
 
   const currentFilter = facetFilters.find(f => f.key === activeFilterKey);
 
@@ -114,26 +109,21 @@ export default function TableToolbar({
     onActiveFilterValuesChange([]);
   };
 
-  // Date select handlers
-  // function handleFromDateSelect(date?: Date) {
-  //   if (toDate && date && isAfter(date, toDate)) return
-  //   if (onDateRangeChange) onDateRangeChange(date, toDate)
-  //   setFromMonth(date || new Date())
-  //   setFromYear(date?.getFullYear() || currentYear)
-  // }
+  React.useEffect(() => {
+    setDraftFromDate(fromDate);
+    setDraftToDate(toDate);
+  }, [fromDate, toDate]);
 
-  // function handleToDateSelect(date?: Date) {
-  //   if (fromDate && date && isAfter(fromDate, date)) return
-  //   if (onDateRangeChange) onDateRangeChange(fromDate, date)
-  //   setToMonth(date || new Date())
-  //   setToYear(date?.getFullYear() || currentYear)
-  // }
+  const handleApplyDates = () => {
+    onDateRangeChange?.(draftFromDate, draftToDate);
+    setIsPopoverOpen(false);
+  };
 
-  // function clampMonth(date: Date): Date {
-  //   if (date < minDate) return new Date(minDate);
-  //   if (date > maxDate) return new Date(maxDate);
-  //   return date;
-  // }
+  const generateDateButtonText = () => {
+    if (fromDate && toDate) return `${format(fromDate, "dd/MM/yyyy")} → ${format(toDate, "dd/MM/yyyy")}`;
+    if (fromDate) return format(fromDate, "dd/MM/yyyy");
+    return "Pick a date range";
+  };
 
   const reset = () => { onResetFilters?.() };
 
@@ -238,7 +228,7 @@ export default function TableToolbar({
 
       {/* Date Range Picker */}
       <div className="flex items-center gap-0">
-        {/* The new dropdown to select the date field */}
+        {/* Dropdown to select the date field */}
         <Select value={activeDateFilterKey} onValueChange={onActiveDateFilterKeyChange}>
           <SelectTrigger className="w-auto gap-2 font-medium rounded-r-none border-r-0">
             <SelectValue placeholder="Filter by date...">
@@ -254,34 +244,49 @@ export default function TableToolbar({
           </SelectContent>
         </Select>
 
-        {/* The existing Popover and Button, now with rounded-l-none style */}
-        <Popover>
+        {/* Date range picker */}
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="justify-start text-left rounded-l-none">
+            <Button variant="outline" className="justify-start text-left rounded-l-none" onClick={() => setIsPopoverOpen(true)}>
               <CalendarIcon className="w-4 h-4 mr-2" />
-              {fromDate && toDate
-                ? `${format(fromDate, "dd/MM/yyyy")} → ${format(toDate, "dd/MM/yyyy")}`
-                : fromDate
-                  ? `${format(fromDate, "dd/MM/yyyy")} →`
-                  : "Pick a date range"}
+              {generateDateButtonText()}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="flex gap-4 p-4 w-auto" align="center">
-            {/* FROM Calendar */}
-            <Calendar22
-              placeholder="From date"
-              value={fromDate}
-              onChange={(date) => onDateRangeChange?.(date, toDate)}
-              disabled={(date) => toDate ? isAfter(date, toDate) : false}
-            />
+            <div className="flex gap-4">
+              {/* FROM Calendar */}
+              <Calendar22
+                placeholder="From date"
+                value={draftFromDate}
+                onChange={(date) => {
+                  setDraftFromDate(date);
+                  if (date && draftToDate && isAfter(date, draftToDate)) {
+                    setDraftToDate(undefined);
+                  }
+                }}
+                disabled={(date) => draftToDate ? isAfter(date, draftToDate) : false}
+              />
 
-            {/* TO Calendar */}
-            <Calendar22
-              placeholder="To date"
-              value={toDate}
-              onChange={(date) => onDateRangeChange?.(fromDate, date)}
-              disabled={(date) => fromDate ? isAfter(fromDate, date) : false}
-            />
+              {/* TO Calendar */}
+              <div className={cn(!draftFromDate && "cursor-not-allowed")}>
+                <Calendar22
+                  placeholder="To date"
+                  value={draftToDate}
+                  onChange={(date) => setDraftToDate(date)}
+                  // This disables the calendar dates before a "from" date is selected
+                  disabled={(date) => !draftFromDate || (draftFromDate && date < draftFromDate)}
+                  isPickerDisabled={!draftFromDate}
+                />
+              </div>
+            </div>
+
+            <div className={cn("flex justify-end", !draftFromDate && "cursor-not-allowed")}>
+              <Button onClick={handleApplyDates}
+                disabled={!draftFromDate}
+              >
+                Apply Dates
+              </Button>
+            </div>
           </PopoverContent>
         </Popover>
       </div>

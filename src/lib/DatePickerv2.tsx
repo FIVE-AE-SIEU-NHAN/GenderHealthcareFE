@@ -15,6 +15,7 @@ interface DatePickerProps {
   placeholder?: string;
   className?: string;
   disabled?: (date: Date) => boolean;
+  isPickerDisabled?: boolean; 
 }
 
 export function Calendar22({
@@ -23,19 +24,21 @@ export function Calendar22({
   placeholder = "Select a date",
   className,
   disabled,
+  isPickerDisabled = false
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
   const handleSelect = (date?: Date) => {
-    onChange(date); // Call parent's function
-    setOpen(false); // Close popover
+    onChange(date); 
+    setOpen(false); 
   };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild disabled={isPickerDisabled} >
         <Button
           variant="outline"
+          disabled={isPickerDisabled} 
           className={cn(
             "w-[200px] justify-start text-left font-normal",
             !value && "text-muted-foreground",

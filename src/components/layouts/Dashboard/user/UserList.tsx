@@ -14,7 +14,6 @@ import {
   ShieldBan,
   ShieldCheck,
   UserPlus2,
-  // UserX,
   XCircle,
 } from "lucide-react";
 
@@ -172,16 +171,17 @@ export default function UserListDashboard() {
 
   const [uiSearchConfig, setUiSearchConfig] = useState({ field: 'all', value: '' });
 
-  // 2. `apiSearchConfig`: For the API query. Updates only on submit.
   const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'all', value: '' });
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>(allUserColumns.map((col) => col.key));
   const visibleColumnCount = allUserColumns.filter(c => visibleColumns.includes(c.key)).length;
 
-  const [activeDateFilterKey, setActiveDateFilterKey] = useState('created_at');
-  const [fromDate, setFromDate] = useState<Date>();
-  const [toDate, setToDate] = useState<Date>();
-
+  const [dateConfig, setDateConfig] = useState<{
+    field: string;
+    from?: Date;
+    to?: Date;
+  }>({ field: 'created_at' });
+  
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { editStatus: editUserStatusMutation } = useUserMutations();
 
@@ -205,7 +205,7 @@ export default function UserListDashboard() {
 
   useEffect(() => {
     setPage(1);
-  }, [apiFilters, apiSearchConfig, sort, fromDate, toDate, activeDateFilterKey]);
+  }, [apiFilters, apiSearchConfig, sort, dateConfig]);
 
   const handleSearchSubmit = () => {
     setApiSearchConfig(uiSearchConfig);
@@ -224,7 +224,7 @@ export default function UserListDashboard() {
     filters: apiFilters,
     search: apiSearchConfig,
     sort,
-    dateRange: { field: activeDateFilterKey, from: fromDate, to: toDate },
+    dateRange: dateConfig,
   });
 
   const users = data?.data ?? [];
@@ -322,7 +322,6 @@ export default function UserListDashboard() {
         onSearchFieldChange={(newField) =>
           setUiSearchConfig(current => ({ ...current, field: newField }))
         }
-        // 4. Pass the new submit handler to the toolbar.
         onSearchSubmit={handleSearchSubmit}
 
         columns={allUserColumns}
@@ -331,14 +330,15 @@ export default function UserListDashboard() {
 
 
         dateFilterOptions={dateFilterOptions}
-        activeDateFilterKey={activeDateFilterKey}
-        onActiveDateFilterKeyChange={setActiveDateFilterKey}
-        fromDate={fromDate}
-        toDate={toDate}
-        onDateRangeChange={(from, to) => {
-          setFromDate(from);
-          setToDate(to);
-        }}
+        activeDateFilterKey={dateConfig.field}
+        onActiveDateFilterKeyChange={(newField) =>
+          setDateConfig(current => ({ ...current, field: newField }))
+        }
+        fromDate={dateConfig.from}
+        toDate={dateConfig.to}
+        onDateRangeChange={(from, to) => 
+          setDateConfig(current => ({ ...current, from, to }))
+        }
 
         onResetFilters={() => {
           setPage(1);
@@ -350,10 +350,8 @@ export default function UserListDashboard() {
           setUiSearchConfig({ field: 'all', value: '' });
           setApiSearchConfig({ field: 'all', value: '' });
           
-          setActiveDateFilterKey('created_at');
-          setFromDate(undefined);
-          setToDate(undefined);
-          
+          setDateConfig({ field: 'created_at' });
+
           setVisibleColumns(allUserColumns.map((c) => c.key));
         }}
         onCreate={() => setIsCreateDialogOpen(true)}
