@@ -22,6 +22,8 @@ import NotFound from '@/pages/Common/NotFound';
 import BlogPage from "@/pages/Content/Blog/BlogList"
 import BlogDetails from "@/pages/Content/Blog/BlogDetails"
 import ServiceList from '@/pages/Content/Services/ServiceList';
+import BookingForm2 from '@/pages/Content/Services/BookingForm2';
+import BookingFormConsultant from '@/pages/Content/Consultation/ConsultationBooking';
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -36,6 +38,8 @@ export default function AppRouter() {
           <Route path="/services" element={<ServiceList />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:id" element={<BlogDetails />} />
+          <Route path="/booking-form" element={<BookingForm2 />} />
+          <Route path="/booking-form-consultant" element={<BookingFormConsultant />} />
         </Route>
 
         {/* Auth Routes */}
