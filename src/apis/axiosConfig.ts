@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = 'http://localhost:3000/';
 
@@ -42,15 +41,16 @@ const processQueue = (error: unknown, token: string | null = null) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-    const navigate = useNavigate();
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const originalRequest = error.config;
+    const rs = error.response.data.message.toLowerCase();
+
+    if (error.response?.status === 401 && !originalRequest._retry && rs === 'jwt expired') {
       originalRequest._retry = true;
 
       const refreshToken = localStorage.getItem('refresh_token');
       if (!refreshToken) {
-        navigate('/login');
+        window.location.href = '/login';
         return Promise.reject(error);
       }
 
@@ -71,11 +71,11 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const response = await axios.post(`${BASE_URL}auth/refresh-token`, {
+        const response = await axios.post(`${BASE_URL}user/refresh-token`, {
           refresh_token: refreshToken,
-        });
+        }) as { data: { result: { access_token: string; refresh_token: string } } };
 
-        const { access_token: newAccessToken, refresh_token: newRefreshToken } = response.data as {
+        const { access_token: newAccessToken, refresh_token: newRefreshToken } = response.data.result as {
           access_token: string;
           refresh_token: string;
         };
@@ -90,7 +90,7 @@ axiosInstance.interceptors.response.use(
         processQueue(refreshError, null);
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        navigate('/login');
+        window.location.href = '/login';
 
         return Promise.reject(refreshError);
       } finally {
