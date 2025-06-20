@@ -2,9 +2,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SalWrapper from '@/components/SalWrapper';
 
 import { AdminRoutes } from './AdminRoutes';
-// import { ManagerRoutes } from './ManagerRoutes';
+import { ManagerRoutes } from './ManagerRoutes';
 // import { DoctorRoutes } from './DoctorRoutes';
 import { CustomerRoutes } from './CustomerRoutes';
+import { ConsultantRoutes } from './ConsultantRoutes';
+
 
 import PublicLayout from "@/components/layouts/PublicLayout";
 import AuthLayout from "@/components/layouts//AuthLayout";
@@ -51,7 +53,8 @@ export default function AppRouter() {
 
           {/* Role-Based Dashboard Routes */}
           {AdminRoutes}
-          {/* {ManagerRoutes} */}
+          {ManagerRoutes}
+          {ConsultantRoutes}
           {/* {DoctorRoutes} */}
           {CustomerRoutes}
         </Routes>

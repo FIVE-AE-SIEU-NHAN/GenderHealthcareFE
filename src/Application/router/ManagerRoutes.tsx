@@ -2,17 +2,17 @@ import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"; // Re-use the same layout
 import CustomerDashboard from "@/pages/Customer/Dashboard";
-import { customerSidebarItems } from "@/Application/constants/customerSidebarItems";
-import AppointmentHistory from "@/pages/Customer/Appointment/AppointmentHistory";
+import { managerSidebarItems } from "@/Application/constants/manager/managerSidebarItems";
+import QuestionListDashboard from "@/pages/Manager/Questions/QuestionList";
 
-export const CustomerRoutes = (
+export const ManagerRoutes = (
   <Route 
     path="/manager" 
-    element={<DashboardLayout sidebarItems={customerSidebarItems} />}
+    element={<DashboardLayout sidebarItems={managerSidebarItems} />}
   >
     <Route element={<ProtectedRoute allowedRoles={['Manager']} />}>
       <Route index element={<CustomerDashboard />} />
-      <Route path="appointments" element={<AppointmentHistory />} />
+      <Route path="questions" element={<QuestionListDashboard />} />
 
     </Route>
   </Route>
