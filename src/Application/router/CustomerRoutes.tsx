@@ -2,8 +2,9 @@ import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"; // Re-use the same layout
 import CustomerDashboard from "@/pages/Customer/Dashboard";
-import { customerSidebarItems } from "@/Application/constants/customerSidebarItems";
+import { customerSidebarItems } from "@/Application/constants/customer/customerSidebarItems";
 import AppointmentHistory from "@/pages/Customer/Appointment/AppointmentHistory";
+import QuestionListDashboard from "@/pages/Customer/Question/QuestionList";
 
 export const CustomerRoutes = (
   <Route 
@@ -13,7 +14,7 @@ export const CustomerRoutes = (
     <Route element={<ProtectedRoute allowedRoles={['Customer']} />}>
       <Route index element={<CustomerDashboard />} />
       <Route path="appointments" element={<AppointmentHistory />} />
-
+      <Route path="questions" element={<QuestionListDashboard />} />
     </Route>
   </Route>
 );
