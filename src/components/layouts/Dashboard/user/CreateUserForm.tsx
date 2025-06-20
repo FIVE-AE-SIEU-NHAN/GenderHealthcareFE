@@ -83,7 +83,7 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* === SECTION 1: ACCOUNT DETAILS === */}
-        <Card>
+        <Card className="pt-6 pb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><UserIcon /> Account Details</CardTitle>
             <CardDescription>Basic information for the user's account.</CardDescription>
@@ -109,7 +109,7 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
               </FormItem>
             )} />
             <FormField control={form.control} name="role" render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex">
                 <FormLabel>Role</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
                   <FormControl><SelectTrigger className={inputStyles}><SelectValue placeholder="Select a role" /></SelectTrigger></FormControl>
@@ -129,7 +129,7 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
 
         {/* === SECTION 2: CONSULTANT DETAILS (Conditional) === */}
         {IS_CONSULTANT && (
-          <Card className="animate-in fade-in-50 duration-500">
+          <Card className="animate-in fade-in-50 duration-500 pt-6 pb-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Briefcase /> Consultant Profile</CardTitle>
               <CardDescription>These fields are required for the Consultant role.</CardDescription>
