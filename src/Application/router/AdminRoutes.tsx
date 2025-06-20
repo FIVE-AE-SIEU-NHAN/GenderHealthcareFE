@@ -9,6 +9,7 @@ import BlogEdit from "@/pages/Admin/BlogEdit";
 import DashboardHome from "@/pages/Admin/DashboardMain"; 
 import { adminSidebarItems } from "@/Application/constants/adminSidebarItems";
 import Cycle from "@/pages/Admin/CycleHistory"; 
+import CycleList from "@/pages/Admin/CycleList";
 export const AdminRoutes = (
   <Route
     path="/admin/dashboard"
@@ -24,5 +25,6 @@ export const AdminRoutes = (
     <Route path="blog/edit/:id" element={<BlogEdit />} />
     <Route path="home" element={<DashboardHome />} />
     <Route path="cycle" element={<Cycle />} />
+    <Route path="cyclelist" element={<CycleList />} />
   </Route>
 );
