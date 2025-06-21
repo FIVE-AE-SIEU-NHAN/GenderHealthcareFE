@@ -30,8 +30,8 @@ export default function AppointmentHistory() {
   useEffect(() => {
     setBreadcrumb({
       title: "Apointments History",
-      parent: "Apointments",
-      parentHref: "",
+      parent: "Dashboard",
+      parentHref: "/user",
     });
     const stored = localStorage.getItem("bookingHistory");
     if (stored) {

@@ -4,7 +4,7 @@ import About from './components/About';
 import News from './components/News';
 import Doctors from './components/Doctors';
 import FAQSection from './components/FAQ';
-import { ScrollToTopButton } from '@/components/ui/button';
+import { AskQuestionButton, ScrollToTopButton } from '@/components/ui/button';
 
 
 const HomePage: React.FC = () => {
@@ -41,6 +41,7 @@ const HomePage: React.FC = () => {
         <div className="absolute -bottom-20 -right-60 w-120 h-140 opacity-12 blur-2xl bg-purple-300 rounded-full -z-10" />
         <News />
       </div>
+      <AskQuestionButton />
       <ScrollToTopButton />
     </>
   );

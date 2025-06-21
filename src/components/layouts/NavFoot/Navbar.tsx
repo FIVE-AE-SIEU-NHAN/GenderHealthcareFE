@@ -18,17 +18,16 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from "@/contexts/AuthContext"; // <<<< 1. IMPORT THE AUTH HOOK
-import { useNavigate } from "react-router-dom"; // <<<< 2. IMPORT FOR REDIRECTION
+import { useAuth } from "@/contexts/AuthContext"; 
+import { useNavigate } from "react-router-dom"; 
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // <<<< 4. CREATE A HANDLER FOR THE LOGOUT ACTION
   const handleLogout = () => {
-    logout(); // Clears user state and tokens from localStorage
-    navigate("/login"); // Redirects the user to the login page
+    logout(); 
+    navigate("/login"); 
   };
 
   return (
@@ -124,19 +123,16 @@ const Navbar = () => {
           </Sheet>
         </div>
         
-        {/* --- DYNAMIC UI SECTION FOR DESKTOP --- */}
         <div className="hidden lg:flex items-center gap-4">
           <a
-            href="/booking-form"
+            href="/booking-info"
             className="flex items-center gap-2 bg-gradient-to-r from-[#1c2359] via-[#1a3973] to-[#1977cc] text-white font-semibold px-5 py-2 rounded-full shadow-md hover:shadow-lg hover:brightness-110 transition-all duration-200"
           >
             <Calendar className="w-5 h-5" />
             Book an Appointment
           </a>
 
-          {/* <<<< 5. CONDITIONALLY RENDER UI BASED ON USER LOGIN STATE */}
           {user ? (
-            // === IF USER IS LOGGED IN, SHOW NOTIFICATIONS AND USER MENU ===
             <>
               {/* Notification */}
               <a href="/notifications" className="text-gray-600 hover:text-gray-900 transition duration-200">
@@ -161,13 +157,29 @@ const Navbar = () => {
                     <a href="/user/profile">Profile</a>
                   </DropdownMenuItem>
                   
-                  {/* <<<< (Bonus) Conditionally render Admin link */}
                   {user.role === 0 && ( 
                     <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                       <Settings className="w-4 h-4" />
                       <a href="/dashboard">Admin Dashboard</a>
                     </DropdownMenuItem>
                   )}
+
+
+                  {user.role === 1 && ( 
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="w-4 h-4" />
+                      <a href="/consultant">Consultant Dashboard</a>
+                    </DropdownMenuItem>
+                  )}
+
+
+                  {user.role === 2 && ( 
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="w-4 h-4" />
+                      <a href="/manager">Manager Dashboard</a>
+                    </DropdownMenuItem>
+                  )}
+
 
                   {user.role === 3 && ( 
                     <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
@@ -177,7 +189,6 @@ const Navbar = () => {
                   )}
 
                   <DropdownMenuSeparator />
-                  {/* <<<< 6. MAKE LOGOUT BUTTON FUNCTIONAL */}
                   <DropdownMenuItem
                     onSelect={handleLogout}
                     className="flex items-center gap-2 text-red-600 focus:text-white focus:bg-red-500 font-semibold transition duration-200 cursor-pointer"

@@ -2,9 +2,10 @@ import * as React from "react"
 import { useEffect, useState } from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-import { ChevronUp } from "lucide-react"
+import { ChevronUp, HelpCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { useNavigate } from "react-router-dom"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
@@ -93,4 +94,57 @@ function ScrollToTopButton() {
   )
 }
 
-export { Button, buttonVariants, ScrollToTopButton }
+
+
+function AskQuestionButton() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const navigate = useNavigate();
+  const toggleVisibility = () => {
+    if (window.pageYOffset > 300) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  const handleAskQuestion = () => {
+    navigate('/ask-question'); 
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', toggleVisibility);
+    return () => {
+      window.removeEventListener('scroll', toggleVisibility);
+    };
+  }, []);
+
+  return (
+    <div className="fixed bottom-20 right-6 z-50">
+      {/* 2. The entire button is now a group to control child elements on hover */}
+      {isVisible && (
+        <button
+          onClick={handleAskQuestion}
+          className="h-12 group flex items-center justify-center bg-light-blue hover:semi-dark-blue text-white font-bold rounded-full p-3 shadow-lg"
+          aria-label="Đặt câu hỏi"
+        >
+          <HelpCircle className="h-6 w-6" />
+
+          <span className="
+            opacity-0
+            overflow-hidden       
+            max-w-0  
+            group-hover:opacity-100
+            group-hover:max-w-xs 
+            group-hover:ml-2  
+            transition-all duration-600 ease-in-out
+          ">
+            Đặt câu hỏi
+          </span>
+        </button>
+      )}
+    </div>
+  );
+};
+
+export { Button, buttonVariants, ScrollToTopButton, AskQuestionButton };

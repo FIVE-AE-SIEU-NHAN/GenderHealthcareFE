@@ -21,6 +21,8 @@ import ForgotPassword from '@/pages/Auth/ForgotPassword/ForgotPassword';
 import NotFound from '@/pages/Common/NotFound';
 import BlogPage from '@/pages/Content/Blog/BlogList';
 import { Toaster } from '@/components/ui/sonner';
+import BookingInfoPage from '@/pages/Content/Services/BookingInfo';
+import ConsultantAppointmentPage from '@/pages/Content/Consultation/ConsultationBooking';
 
 export default function AppRouter() {
   return (
@@ -34,6 +36,10 @@ export default function AppRouter() {
             <Route path="/" element={<HomePage />} />
             <Route path="/services" element={<ServiceDetail />} />
             <Route path="/blog" element={<BlogPage />} />
+            <Route path="/booking-info" element={<BookingInfoPage />} />
+            <Route path="/book-consultant" element={<ConsultantAppointmentPage />} />
+
+            
           </Route>
 
           {/* Auth Routes (things that's related to authen will be here)*/}
