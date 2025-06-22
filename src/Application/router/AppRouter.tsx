@@ -13,13 +13,11 @@ import AuthLayout from "@/components/layouts//AuthLayout";
 import HomePage from "@/pages/Common/Home/Homepage";
 import LoginPage from '@/pages/Auth/Login/Login';
 import SignupPage from '@/pages/Auth/Signup/Signup';
-import ServiceDetail from '@/pages/Content/Services/ServiceDetails';
 import { PrivateRoutes } from './PrivateRoutes';
 import Unauthorized from '@/pages/Common/Unauthorized';
 import ResetPassword from '@/pages/Auth/ForgotPassword/ResetPassword';
 import ForgotPassword from '@/pages/Auth/ForgotPassword/ForgotPassword';
 import NotFound from '@/pages/Common/NotFound';
-import BlogPage from '@/pages/Content/Blog/BlogList';
 import { Toaster } from '@/components/ui/sonner';
 import BookingInfoPage from '@/pages/Content/Services/BookingInfo';
 import ConsultantAppointmentPage from '@/pages/Content/Consultation/ConsultationBooking';
@@ -34,8 +32,6 @@ export default function AppRouter() {
           {/* Public Routes */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/services" element={<ServiceDetail />} />
-            <Route path="/blog" element={<BlogPage />} />
             <Route path="/booking-info" element={<BookingInfoPage />} />
             <Route path="/book-consultant" element={<ConsultantAppointmentPage />} />
 

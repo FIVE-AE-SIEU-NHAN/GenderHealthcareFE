@@ -3,9 +3,9 @@ import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute"; 
 import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout";
 import AdminDashboard from "@/pages/Admin/Dashboard";
-import BlogListDashboard from "@/components/layouts/Dashboard/blog/BlogList";
+import BlogListDashboard from "@/pages/Admin/blog/BlogList";
 import { adminSidebarItems } from "@/Application/constants/admin/adminSidebarItems";
-import UserListDashboard from "@/components/layouts/Dashboard/user/UserList";
+import UserListDashboard from "@/pages/Admin/user/UserList";
 
 export const AdminRoutes = (
   <Route

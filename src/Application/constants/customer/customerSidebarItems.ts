@@ -1,5 +1,4 @@
-import { FileText, LucideIcon, User, MessageCircle } from "lucide-react"
-import { RiQuestionAnswerLine } from "react-icons/ri";
+import { FileText, FileQuestion, User, MessageCircle } from "lucide-react"
 import type { NavMainProps } from "@/components/nav-main"
 
 export const customerSidebarItems: NavMainProps["items"] = [
@@ -11,7 +10,7 @@ export const customerSidebarItems: NavMainProps["items"] = [
   {
     title: "Your Questions",
     url: "/user/questions",
-    icon: RiQuestionAnswerLine as LucideIcon, 
+    icon: FileQuestion, 
   },
   {
     title: "Chat",

@@ -25,7 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 import { useUsers } from '@/hooks/admin/useUsers';
-import { DataTableSkeleton } from "../DataTableSkeleton";
+import { DataTableSkeleton } from "@/components/layouts/Dashboard/DataTableSkeleton";
 import { useUserMutations } from "@/hooks/admin/useUserMutations";
 import { formatDate } from "@/utils/formatDate";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
