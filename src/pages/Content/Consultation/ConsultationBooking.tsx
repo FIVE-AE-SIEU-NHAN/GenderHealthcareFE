@@ -19,6 +19,8 @@ import { CardTitle, Card } from "@/components/ui/card";
 import { useAppointmentMutations } from "@/hooks/customer/useAppointmentMutations";
 import { TOPIC_OPTIONS } from "@/Application/constants/topics";
 
+
+// Ds consultants
 const consultants = [
   { id: 1, name: "TS. Nguyễn Văn A", speciality: "Bác sĩ tâm lý", img: "/images/bs1.png" },
   { id: 2, name: "ThS. Trần Thị B", speciality: "Chuyên gia hormone", img: "/images/bs1.png" },
@@ -28,6 +30,7 @@ const consultants = [
   { id: 6, name: "ThS. Vũ Thị F", speciality: "Tâm lý học", img: "/images/bs1.png" },
 ];
 
+// Slot tư vấn
 const timeSlotOptions = [
   { value: "SLOT_08_10", label: "8:00 - 10:00" },
   { value: "SLOT_10_12", label: "10:00 - 12:00" },
@@ -35,6 +38,7 @@ const timeSlotOptions = [
   { value: "SLOT_15_17", label: "15:00 - 17:00" },
 ];
 
+// Schema xác thực form
 const formSchema = z.object({
   topic: z.string({ required_error: "Vui lòng chọn chủ đề tư vấn." }).min(1, "Vui lòng chọn chủ đề tư vấn."),
   booking_date: z.date({ required_error: "Vui lòng chọn ngày hẹn." }),
@@ -43,6 +47,9 @@ const formSchema = z.object({
     message: "Bạn cần đồng ý với điều khoản sử dụng.",
   }),
 });
+
+
+
 
 const ConsultantAppointmentPage = () => {
   const { bookAppointment } = useAppointmentMutations();
@@ -99,6 +106,8 @@ const ConsultantAppointmentPage = () => {
 
       <div className="relative z-10">
         <div className="grid md:grid-cols-3 gap-10">
+          
+          {/* Trái: FORM */}
           <div className="md:col-span-1 mt-39">
             <div className="bg-white rounded-2xl p-8 text-black shadow-xl border border-gray-200 transition-all duration-300">
               <div className="text-center mb-6">
@@ -109,8 +118,11 @@ const ConsultantAppointmentPage = () => {
               </div>
               <p className="mb-6 text-sm text-gray-700 text-center">Hoàn thành mẫu liên hệ này để sắp xếp cuộc tư vấn đầu tiên của bạn!</p>
 
+              {/* Form */}
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4">
+
+                  {/* Dropdown pick chọn Dịch vụ cần tư vấn */}
                   <FormField control={form.control} name="topic" render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} value={field.value}>
@@ -133,7 +145,11 @@ const ConsultantAppointmentPage = () => {
                     </FormItem>
                   )} />
 
+
+                  {/* Chọn ngày và giờ */}
                   <div className="grid grid-cols-2 gap-2">
+                    
+                    {/* Chọn ngày */}
                     <FormField control={form.control} name="booking_date" render={({ field }) => (
                       <FormItem className="flex flex-col">
                         <Popover>
@@ -161,6 +177,9 @@ const ConsultantAppointmentPage = () => {
                         <FormMessage />
                       </FormItem>
                     )} />
+
+
+                    {/* Chọn giờ */}
                     <FormField control={form.control} name="time_slot" render={({ field }) => (
                       <FormItem>
                         <Select onValueChange={field.onChange} value={field.value} disabled={!form.watch("booking_date")}>
@@ -184,13 +203,18 @@ const ConsultantAppointmentPage = () => {
                     )} />
                   </div>
 
+                  
+                  {/* Thông tin cập nhật real time */}
                   {getSelectedTopic() && (
                     <div className="mt-4 bg-blue-50 p-4 rounded-md">
+                      {/* Topic */}
                       <p className="font-medium">Dịch vụ cần tư vấn: {" "}
                         <span className="text-[#1A3973] font-bold">
                           {getSelectedTopic()?.label}
                         </span>
                       </p>
+
+                      {/* Ngày */}
                       {form.watch("booking_date") && selectedDateValue && (
                         <p className="font-medium mt-2">Ngày hẹn: {" "}
                           <span className="text-[#1A3973] font-bold">
@@ -198,6 +222,8 @@ const ConsultantAppointmentPage = () => {
                           </span>
                         </p>
                       )}
+
+                      {/* Giờ */}
                       {form.watch("booking_date") && selectedTimeSlotValue && (
                         <p className="font-medium mt-2">Thời gian hẹn: {" "}
                           <span className="text-[#1A3973] font-bold">
@@ -207,7 +233,9 @@ const ConsultantAppointmentPage = () => {
                       )}
                     </div>
                   )}
+                  
 
+                  {/* Checkbox đồng ý điều khoản */}  
                   <FormField control={form.control} name="agreed" render={({ field }) => (
                     <FormItem className="flex flex-row items-center space-x-2 space-y-0 mt-4">
                       <FormControl>
@@ -223,6 +251,7 @@ const ConsultantAppointmentPage = () => {
                     </FormItem>
                   )} />
 
+                  {/* Nút submit */}
                   <div className="mt-6">
                     <Button
                       type="submit"
@@ -250,11 +279,18 @@ const ConsultantAppointmentPage = () => {
             </div>
           </div>
 
+
+
+
+          {/* Phải: DANH SÁCH ĐỘI NGŨ TƯ VẤN  */}
           <div className="md:col-span-2">
             <h2 className="text-4xl font-bold mb-6 text-center text-[#1A3973]">Đội Ngũ Tư Vấn Viên Chuyên Nghiệp</h2>
             <p className="text-gray-700 text-center mb-10 max-w-2xl mx-auto">
               Đội ngũ tư vấn viên giàu kinh nghiệm của chúng tôi luôn sẵn sàng hỗ trợ và đồng hành cùng bạn trong hành trình tìm hiểu và khẳng định bản thân.
             </p>
+            
+            
+            {/* Card tư vấn viên */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {consultants.map(c =>
                 <Card
@@ -296,6 +332,8 @@ const ConsultantAppointmentPage = () => {
           </div>
         </div>
 
+        
+        {/* BADGE HOTLINE */}
         <div className="flex items-center gap-2 bg-[#1A3973] p-3 rounded-lg shadow-lg w-fit ml-auto mt-10 mb-4 text-white">
           <a
             href="tel:+84123456789"
@@ -309,6 +347,8 @@ const ConsultantAppointmentPage = () => {
         </div>
       </div>
 
+
+      {/* Hiện khung thông báo success + Thông tin Form */}
       {showSuccessMessage && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
           <div className="bg-white p-8 rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3),0_0_40px_-15px_rgba(26,57,115,0.2)] max-w-lg w-full relative text-black animate-fade-in-up">
