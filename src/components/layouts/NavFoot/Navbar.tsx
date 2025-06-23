@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext"; 
-import { useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom"; 
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -36,22 +36,26 @@ const Navbar = () => {
         {/* Left side */}
         <div className="flex items-center gap-6 flex-1">
           {/* Logo */}
-          <a href="/" className="text-lg flex items-center gap-1">
+          <Link to="/" className="text-lg flex items-center gap-1">
             <img src={logo} alt="logo" className="w-[60px]" />
             <div className="logo">
               <div className="font-extrabold text-shadow-lg text-xl">Care4Gender</div>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex justify-center flex-1">
             <NavigationMenu>
               <NavigationMenuList className="flex gap-6 font-medium items-center">
                 <NavigationMenuItem>
-                  <NavigationMenuLink href="#top" className="nav-text text-xl">Home</NavigationMenuLink>
+                  <NavigationMenuLink className="nav-text text-xl">
+                    <Link to="/">
+                      Home
+                    </Link>
+                    </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <a href="/services"><NavigationMenuTrigger className="nav-text text-xl">Services</NavigationMenuTrigger></a>
+                  <Link to="/services"><NavigationMenuTrigger className="nav-text text-xl">Services</NavigationMenuTrigger></Link>
                   <NavigationMenuContent className="bg-white shadow-md rounded-lg p-4">
                     <ul className="grid gap-3 w-[200px]">
                       <li><NavigationMenuLink href="#gynecology" className="block text-lg font-semibold hover:bg-semi-dark-blue/8">Gynecology</NavigationMenuLink></li>

@@ -21,11 +21,15 @@ import NotFound from '@/pages/Common/NotFound';
 import { Toaster } from '@/components/ui/sonner';
 import BookingInfoPage from '@/pages/Content/Services/BookingInfo';
 import ConsultantAppointmentPage from '@/pages/Content/Consultation/ConsultationBooking';
+import ScrollToTop from '@/components/ScrollToTop';
+import About from '@/pages/Common/Home/components/About';
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <SalWrapper />
+
       <Toaster richColors position="bottom-right" />
       
         <Routes>
@@ -34,6 +38,8 @@ export default function AppRouter() {
             <Route path="/" element={<HomePage />} />
             <Route path="/booking-info" element={<BookingInfoPage />} />
             <Route path="/book-consultant" element={<ConsultantAppointmentPage />} />
+            <Route path="/services" element={<About />} />
+
 
             
           </Route>
