@@ -1,8 +1,7 @@
 // src/components/ChatWidget.tsx
 import React, { useState, useEffect, useRef } from 'react'
-import { BotMessageSquare } from 'lucide-react' // replaced logo1 with BotMessageSquare icon
+import { BotMessageSquare, ChevronDown, X, Send } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { X, Send } from 'lucide-react'
 
 interface Message {
   id: string
@@ -11,7 +10,6 @@ interface Message {
   createdAt: string
 }
 
-// Mẫu tin nhắn đầu
 const initialMessages: Message[] = [
   {
     id: 'welcome',
@@ -28,7 +26,6 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  // Cuộn xuống cuối mỗi khi messages thay đổi
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight })
   }, [messages, loading])
@@ -41,7 +38,7 @@ export default function ChatWidget() {
     ])
     setNewMsg('')
     setLoading(true)
-    // TODO: integrate AI response, then setLoading(false) and setMessages([...])
+    // TODO: integrate AI socket/response, then setLoading(false) and append AI message
   }
 
   const resetChat = () => {
@@ -49,7 +46,7 @@ export default function ChatWidget() {
     setLoading(false)
   }
 
-  // Khi đóng, hiển thị nút mở chat dạng icon
+  // Closed state: show open button
   if (!open) {
     return (
       <button
@@ -61,6 +58,7 @@ export default function ChatWidget() {
     )
   }
 
+  // Open state: show chat panel
   return (
     <div className="fixed bottom-4 right-4 w-[400px] h-[600px] flex flex-col bg-white shadow-xl rounded-2xl overflow-hidden">
       {/* Header */}
@@ -69,8 +67,11 @@ export default function ChatWidget() {
           <span className={`w-2 h-2 rounded-full ${loading ? 'bg-yellow-500' : 'bg-green-500'}`} />
         </div>
         <h1 className="text-lg font-medium">Got Questions?</h1>
-        <button className="p-2 rounded-full hover:bg-gray-100 transition" onClick={() => setOpen(false)}>
-          <X className="w-5 h-5 text-gray-600" />
+        <button
+          className="p-2 rounded-full bg-[#1977cc] hover:bg-[#165ea8] transition"
+          onClick={() => setOpen(false)}
+        >
+          <ChevronDown className="w-5 h-5 text-white" />
         </button>
       </div>
 
@@ -93,12 +94,13 @@ export default function ChatWidget() {
           >
             <p className="text-sm text-gray-800">{msg.text}</p>
             <span className="block text-xs text-gray-500 mt-1 text-right">
-              {new Date(msg.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
+              {new Date(msg.createdAt).toLocaleTimeString('en-US', {
+                hour: '2-digit', minute: '2-digit', hour12: true,
+              })}
             </span>
           </div>
         ))}
 
-        {/* Thinking Indicator */}
         {loading && (
           <div className="self-start p-2 italic text-gray-500 flex items-center space-x-1">
             <span>Assistant is thinking</span>
@@ -107,7 +109,7 @@ export default function ChatWidget() {
         )}
       </div>
 
-      {/* Enhanced Input */}
+      {/* Input */}
       <div className="flex items-center px-4 py-3 bg-white border-t">
         <div className="flex items-center flex-1 rounded-full border-2 border-blue-500 focus-within:border-blue-600 transition-colors px-4 py-2">
           <Input
@@ -115,7 +117,7 @@ export default function ChatWidget() {
             value={newMsg}
             onChange={e => setNewMsg(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && sendMessage()}
-            className="flex-1 bg-transparent border-none focus:ring-0 placeholder-blue-300 text-gray-700"
+            className="flex-1 bg-transparent border-none focus:ring-0 placeholder-gray-400 text-gray-700"
           />
           <button
             onClick={sendMessage}
