@@ -145,6 +145,7 @@ body {
       opacity: 1;
     }
   }
+
   @keyframes shine {
     0% {
       left: -75%;

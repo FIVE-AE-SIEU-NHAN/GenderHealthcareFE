@@ -17,7 +17,6 @@ export const AdminRoutes = (
       <Route index element={<AdminDashboard />} />
       <Route path="blogs" element={<BlogListDashboard />} />
       <Route path="users" element={<UserListDashboard />} />
-
     </Route>
   </Route>
 );

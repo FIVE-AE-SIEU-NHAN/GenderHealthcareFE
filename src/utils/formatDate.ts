@@ -96,7 +96,14 @@ export function formatDate(
       
       return `${day}${['st', 'nd', 'rd'][((day % 10) - 1) % 3] || 'th'} ${month} ${year}`;
     }
-    // Add more formats as needed
+    else if (displayFormat === 'MMMM d, yyyy') {
+      const month = dateObject.toLocaleString('default', { month: 'long' });
+      const day = String(dateObject.getUTCDate()).padStart(2, '0');
+      const year = dateObject.getUTCFullYear();
+      
+      return `${month} ${day}, ${year}`;
+    }
+
     throw new Error(`Unsupported date format: ${displayFormat}`);
 
   } catch (error) {

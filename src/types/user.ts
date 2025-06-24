@@ -9,4 +9,6 @@ export interface User {
   updated_at: string;
   verify: number; 
   role: number;
+  google_id: string | null; 
+  havePassword: boolean;
 }

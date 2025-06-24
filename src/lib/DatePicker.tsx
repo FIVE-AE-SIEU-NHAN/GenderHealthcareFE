@@ -183,11 +183,47 @@ function DatePickerNormal({ field,error }: DatePickerNormalProps) {
           disabled={(date) =>
             date < today || date > threeMonthsLater
           }
-          initialFocus
+          autoFocus
         />
       </PopoverContent>
     </Popover>
   )
 }
 
-export { DatePicker, DatePickerNormal };
+
+import { ChevronDownIcon } from "lucide-react"
+
+interface NewDatePickerProps {
+  value?: Date;
+  onChange: (date: Date | undefined) => void;
+}
+
+function NewDatePicker({ value, onChange }: NewDatePickerProps) {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="w-48 justify-between font-normal">
+          {value ? value.toLocaleDateString() : "Select date"}
+          <ChevronDownIcon />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={value}
+          captionLayout="dropdown"
+          onSelect={(selected) => {
+            onChange(selected);
+            setOpen(false);
+          }}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+
+
+export { DatePicker, DatePickerNormal, NewDatePicker };
