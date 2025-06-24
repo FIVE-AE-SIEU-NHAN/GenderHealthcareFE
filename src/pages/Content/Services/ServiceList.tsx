@@ -1,16 +1,14 @@
-// src/pages/Content/Services/ServiceList.tsx
-
 import React from 'react';
 import {
   ArrowRight,
   HeartPulse,
-  Users,
-  Stethoscope,
-  MessageSquare,
-  TestTube,
+  Calendar,
+  Baby,
+  Shield,
+  Brain,
+  Microscope
 } from 'lucide-react';
-import backgroundImage from '../../../assets/images/ser-bg.png';
-import bannerImage from '../../../assets/images/blog1.jpg';
+import backgroundImage from '@/assets/images/ser-bg.png';
 
 interface ServiceCardProps {
   icon: React.ReactNode;
@@ -24,30 +22,39 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description }) =
     style={{ borderTopColor: '#1C2359' }}
   >
     <div className="text-brand-light-blue mb-5">{icon}</div>
-    <h3 className="text-lg font-bold mb-3 text-center" style={{ color: '#1C2359' }}>
+
+    <h3
+      className="text-lg font-bold mb-3 text-center"
+      style={{ color: '#1C2359' }}
+    >
       {title}
     </h3>
-    <p className="text-brand-gray text-sm mb-6 text-center flex-grow">{description}</p>
+
+    <p className="text-brand-gray text-sm mb-6 text-center flex-grow">
+      {description}
+    </p>
+
     <div className="flex gap-3 mt-auto w-full">
       <a
         href="#"
-        className="flex-1 inline-flex items-center justify-center px-4 py-3 rounded-2xl border-2 font-medium transition-all duration-300 ease-in-out hover:bg-[#1C2359] hover:text-white hover:scale-105 hover:shadow-lg group text-center"
+        className="whitespace-nowrap flex-1 inline-flex items-center justify-center px-4 py-3 rounded-2xl border-2 font-medium transition-all duration-300 ease-in-out hover:bg-[#1C2359] hover:text-white hover:scale-105 hover:shadow-lg group text-center"
         style={{
           borderColor: '#1C2359',
           backgroundColor: 'transparent',
-          color: '#1C2359',
+          color: '#1C2359'
         }}
       >
         View service
         <ArrowRight className="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
       </a>
+
       <a
-        href="/booking-form"
-        className="flex-1 inline-flex items-center justify-center px-4 py-3 rounded-2xl border-2 font-medium transition-all duration-300 ease-in-out hover:bg-transparent hover:text-[#1C2359] hover:scale-105 hover:shadow-lg group text-center"
+        href="#"
+        className="flex-1 inline-flex items-center justify-center px-4 py-3 rounded-2xl border-2 font-medium hover:bg-transparent hover:text-[#1C2359] transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg group text-center"
         style={{
           borderColor: '#1C2359',
           backgroundColor: '#1C2359',
-          color: 'white',
+          color: 'white'
         }}
       >
         Booking
@@ -60,78 +67,90 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description }) =
 const servicesData: ServiceCardProps[] = [
   {
     icon: <HeartPulse size={36} strokeWidth={1.5} />,
-    title: "Women’s Reproductive Health",
+    title: "Women's Reproductive Health",
     description:
-      'Comprehensive care across all stages of women’s reproductive life—from puberty to menopause.',
+      'Comprehensive care for women’s reproductive wellness',
   },
   {
-    icon: <Users size={36} strokeWidth={1.5} />,
-    title: 'Contraception & Family Planning',
+    icon: <Calendar size={36} strokeWidth={1.5} />,
+    title: 'Contraception and Family Planning',
     description:
-      'Personalized contraception solutions and safe, effective family planning options.',
+      'Personalized guidance for contraceptive choices and family planning',
   },
   {
-    icon: <Stethoscope size={36} strokeWidth={1.5} />,
-    title: 'Pregnancy & Maternity Support + STI Care',
+    icon: <Baby size={36} strokeWidth={1.5} />,
+    title: 'Pregnancy and Maternity Support',
     description:
-      'Full prenatal to postnatal support, including screening and treatment of sexually transmitted infections.',
+      'Supportive services for pregnancy, childbirth, and postpartum care',
   },
   {
-    icon: <MessageSquare size={36} strokeWidth={1.5} />,
-    title: 'Sexual Health & Gender Psychology',
+    icon: <Shield size={36} strokeWidth={1.5} />,
+    title: 'STI Prevention and Care',
     description:
-      'Psychological counseling, sexual health guidance, and confidential gender identity support.',
+      'Accurate testing, prevention education, and treatment for sexually transmitted infections',
   },
   {
-    icon: <TestTube size={36} strokeWidth={1.5} />,
-    title: 'Testing & Diagnostic Services',
+    icon: <Brain size={36} strokeWidth={1.5} />,
+    title: 'Sexual Health and Gender Psychology',
     description:
-      'Accurate diagnostics through laboratory testing and advanced diagnostic services.',
+      'Expert counseling on sexual health and gender-related psychological well-being',
+  },
+  {
+    icon: <Microscope size={36} strokeWidth={1.5} />,
+    title: 'Testing and Diagnostic Services',
+    description:
+      'Advanced laboratory tests and diagnostic evaluations for sexual and reproductive health',
   },
 ];
 
-const ServiceList: React.FC = () => (
-  <>
-    {/* Hero Banner */}
-    <section
-      className="py-12 text-center bg-cover bg-center h-[330px] relative flex flex-col items-center justify-center"
-      style={{ backgroundImage: `url(${bannerImage})` }}
-    >
-      <h2 className="text-5xl text-white font-bold">Services</h2>
-      <p className="text-sm mt-2">
-        <span className="text-white">Home</span>
-        <span style={{ color: '#55AEFF' }}> / Services List</span>
-      </p>
-    </section>
+const ServiceList: React.FC = () => {
+  return (
+    <>
+      <section
+        className="py-12 text-center bg-cover bg-center h-[330px] relative flex flex-col items-center justify-center bg-[url('@/assets/images/blog1.jpg')]"
+      >
+        <h2 className="text-5xl text-white font-bold">Services</h2>
+        <p className="text-sm mt-2">
+          <span className="text-white">Home</span>
+          <span style={{ color: '#55AEFF' }}> / Services List</span>
+        </p>
+      </section>
 
-    {/* Services Grid */}
-    <section
-      className="relative bg-brand-bg-light py-20 lg:py-28 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1
-            className="text-4xl md:text-5xl font-extrabold mb-4 tracking-wide"
-            style={{ color: '#1C2359' }}
-          >
-            OUR SERVICES
-          </h1>
-          <p className="text-lg md:text-xl text-brand-gray max-w-3xl mx-auto">
-            Diverse and Specialized Sexual Health Solutions.
-          </p>
-        </div>
+      <section
+        className="relative bg-brand-bg-light py-20 lg:py-28 bg-cover bg-center bg-no-repeat 2xl:h-[calc(103vh)]"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+        }}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h1
+              className="text-4xl md:text-5xl font-extrabold mb-4 tracking-wide"
+              style={{ color: '#1C2359' }}
+            >
+              OUR SERVICES
+            </h1>
+            <p className="text-lg md:text-xl text-brand-gray max-w-3xl mx-auto">
+              Diverse and Specialized Sexual Health Solutions.
+            </p>
+          </div>
 
-        <div className="flex flex-wrap justify-center gap-8">
-          {servicesData.map((service, idx) => (
-            <div key={idx} className="w-full sm:w-[45%] lg:w-[30%]">
-              <ServiceCard {...service} />
+          <div className="flex items-center justify-center lg:-mt-11">
+            <div className="relative grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:mb-13.5 2xl:max-w-[75%]">
+              {servicesData.map((service, index) => (
+                <ServiceCard
+                  key={index}
+                  icon={service.icon}
+                  title={service.title}
+                  description={service.description}
+                />
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-    </section>
-  </>
-);
+      </section>
+    </>
+  );
+};
 
 export default ServiceList;
