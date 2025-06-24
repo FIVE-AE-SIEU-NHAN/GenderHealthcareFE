@@ -45,26 +45,28 @@ const ServiceDetail = () => {
           className="rounded-2xl shadow-lg mb-4 w-full h-64 object-cover"
         />
 
-        {/* Pricing & Book Button */}
-        <div className="border border-[#1A3973]/30 rounded-2xl shadow p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <p className="text-xl font-semibold text-[#1A3973]">Service Price</p>
-            <p className="text-2xl font-bold text-gray-800 mt-1">$49.99</p>
-          </div>
-          <Link to="/booking-form2">
-            <Button
-              className="min-w-[220px] px-8 py-4 sm:px-10 sm:py-5 bg-gradient-to-r from-[#1A3973] to-[#4F80E1] 
-             hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg sm:text-xl font-semibold 
-             rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
-              <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full 
-                               group-hover:translate-x-full transition-transform duration-700"></span>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <FaHeartbeat className="mr-2" />
-                <span>Book Consultant</span>
-              </div>
-            </Button>
-          </Link>
-        </div>
+        {/* Pricing & Book Button as Card */}
+        <Card className="border border-[#1A3973]/30 rounded-2xl shadow mb-8">
+          <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-xl font-semibold text-[#1A3973]">Service Price</p>
+              <p className="text-2xl font-bold text-gray-800 mt-1">$49.99</p>
+            </div>
+            <Link to="/booking-form2">
+              <Button
+                className="min-w-[220px] px-8 py-4 sm:px-10 sm:py-5 bg-gradient-to-r from-[#1A3973] to-[#4F80E1] 
+                  hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg sm:text-xl font-semibold 
+                  rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full 
+                  group-hover:translate-x-full transition-transform duration-700"></span>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <FaHeartbeat className="mr-2" />
+                  <span>Book This Service</span>
+                </div>
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
 
         {/* Service details */}
         <div className="space-y-6">
@@ -111,8 +113,6 @@ const ServiceDetail = () => {
             </AccordionItem>
           </Accordion>
         </div>
-
-
 
         {/* Related services */}
         <div className="mt-10">
