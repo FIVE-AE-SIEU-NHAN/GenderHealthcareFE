@@ -112,7 +112,7 @@ const ConsultantAppointmentPage = () => {
 
       <div className="relative z-10 flex justify-center w-full">
         <div className="w-full max-w-3xl px-4 md:px-0">
-          
+
           <div className="text-center mb-12">
             <CardTitle className="text-4xl md:text-5xl font-bold text-[#1A3973] mb-3">Booking Consultant</CardTitle>
             <div className="w-60 h-1 bg-gradient-to-r from-[#1A3973] to-[#4F80E1] mx-auto"></div>
@@ -265,9 +265,7 @@ const ConsultantAppointmentPage = () => {
                     type="submit"
                     className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f] hover:to-[#3a6ad0] 
                                   text-white text-lg font-semibold rounded-lg py-3 
-                                  shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
-                    
-                  >
+                                  shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
                     <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full 
                                       group-hover:translate-x-full transition-transform duration-700"></span>
                     <div className="absolute inset-0 flex items-center justify-center">
