@@ -44,7 +44,10 @@ export function useProfileMutations() {
   >({
     mutationFn: profileApi.updateProfileAPI,
     onSuccess: (data) => {
+      
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['consultantProfile'] });
+
       toast.success(data.message || 'Profile updated successfully!');
     },
     onError: (error) => {

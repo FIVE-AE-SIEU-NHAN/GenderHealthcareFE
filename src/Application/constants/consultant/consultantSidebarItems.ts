@@ -1,4 +1,4 @@
-import { FileText, MessageCircle } from "lucide-react"
+import { FileText, MessageCircle, User } from "lucide-react"
 import type { NavMainProps } from "@/components/nav-main"
 
 export const consultantSidebarItems: NavMainProps["items"] = [
@@ -12,11 +12,11 @@ export const consultantSidebarItems: NavMainProps["items"] = [
     url: "/consultant/chat",
     icon: MessageCircle, 
   },
-  // {
-  //   title: "Consultant Management",
-  //   url: "/consultant/consultants",
-  //   icon: Users, 
-  // },
+  {
+    title: "Profile Management",
+    url: "/consultant/profile",
+    icon: User, 
+  },
   // {
   //   title: "Services Management",
   //   url: "/consultant/services",

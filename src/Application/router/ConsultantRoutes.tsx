@@ -4,6 +4,7 @@ import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"; //
 import { consultantSidebarItems } from "@/Application/constants/consultant/consultantSidebarItems";
 import QuestionListDashboard from "@/pages/Consultant/Questions/QuestionList";
 import ConsultantDashboard from "@/pages/Consultant/Dashboard";
+import ConsultantProfilePage from "@/pages/Consultant/Profile/Profile";
 
 export const ConsultantRoutes = (
   <Route 
@@ -13,6 +14,7 @@ export const ConsultantRoutes = (
     <Route element={<ProtectedRoute allowedRoles={['Consultant']} />}>
       <Route index element={<ConsultantDashboard />} />
       <Route path="questions" element={<QuestionListDashboard />} />
+      <Route path="profile" element={<ConsultantProfilePage />} />
     </Route>
   </Route>
 );

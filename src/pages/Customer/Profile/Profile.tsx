@@ -9,7 +9,7 @@ import { Mail, Phone, Cake, User as UserIcon, PencilLine, CheckCircle, Mars, Ven
 import Google from "@/assets/images/google.png";
 
 import { useProfile } from '@/hooks/customer/useProfile';
-import { ChangePasswordForm, GoogleAuthNotice } from './ChangePasswordForm';
+import { ChangePasswordForm } from './ChangePasswordForm';
 import { formatDate } from '@/utils/formatDate';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { EditProfileForm } from './EditProfileForm';
@@ -30,9 +30,9 @@ function CustomerProfilePage() {
   const [activeView, setActiveView] = useState<'details' | 'password'>('details');
 
   const { data: user, isLoading, isError, error } = useProfile();
-  
+
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[80vh]">
@@ -82,14 +82,14 @@ function CustomerProfilePage() {
         <Card className="w-full max-w-4xl shadow-lg rounded-2xl overflow-hidden border-0 bg-gradient-to-t from-white via-white to-slate-200">
           <CardHeader className="p-0 gap-0">
             <div className="absolute translate-x-10 -translate-y-16 z-2">
-              <Avatar className="h-30 w-30 p-2 border-6 border-[#1A3973] bg-gray-200/70 shadow-md backdrop-blur-xs">
-                <AvatarImage src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${user.name}`} alt={user.name} />
+              <Avatar className="h-30 w-30 p-2 border-6 border-semi-dark-blue bg-gray-200/70 shadow-md backdrop-blur-xs">
+                <AvatarImage src={`https://api.dicebear.com/8.x/adventurer/svg?seed=${user.name}`} alt={user.name} />
                 <AvatarFallback className="text-3xl font-bold bg-muted">{getInitials(user.name)}</AvatarFallback>
               </Avatar>
             </div>
             {/* Colored Line */}
-            <div className="h-2 bg-gradient-to-r from-[#1A3973] to-[#4F80E1]"></div>
-            
+            <div className="h-2 bg-gradient-to-r from-semi-dark-blue to-[#4F80E1]"></div>
+
             {/* EDIT PROFILE */}
             <div className="flex justify-end p-4">
               <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
@@ -119,11 +119,9 @@ function CustomerProfilePage() {
             <div className="space-y-1.5">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{user.name}</h1>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-gray-500 dark:text-gray-400">
-                <div className="flex items-center">
-                  <Badge className="flex items-center text-[13px] border-blue-300 bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
-                    <Mail className="h-4 w-4 mr-2" /><span>{user.email}</span>
-                  </Badge>
-                </div>
+                <Badge className="flex items-center text-[13px] border-blue-300 bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
+                  <Mail className="h-4 w-4 mr-2" /><span>{user.email}</span>
+                </Badge>
                 <Badge className={`flex text-[13px] items-center border-blue-300 ${roleInfo.color}`}>
                   {roleInfo.icon} {roleInfo.name}
                 </Badge>
@@ -161,7 +159,7 @@ function CustomerProfilePage() {
                         <span className="text-sm text-gray-400 dark:text-gray-500 tracking-widest">••••••••••</span>
                         <Button
                           onClick={() => setActiveView(activeView === 'details' ? 'password' : 'details')}
-                          variant="secondary" size="sm" className="w-[80px] text-center active:translate-y-0.5 hover:shadow-md/20 shadow-sm/20 transition-all duration-300 rounded-lg text-sm font-semibold bg-blue-200 dark:bg-blue-700 text-blue-600 hover:bg-blue-300 dark:hover:bg-gray-600">
+                          size="sm" className="w-[80px] text-center active:translate-y-0.5 hover:shadow-md/20 shadow-sm/20 transition-all duration-500 rounded-lg text-sm font-semibold bg-blue-200 text-blue-600 hover:bg-blue-300">
                           {activeView === 'details' ? 'Change' : 'Close'}
                         </Button>
                       </div>
@@ -176,9 +174,9 @@ function CustomerProfilePage() {
                     </div>
                   </>
                 ) : (
-                  <div className="pt-2 animate-in fade-in-50 duration-500">
-                    <GoogleAuthNotice />
-                  </div>
+                  // <div className="pt-2 animate-in fade-in-50 duration-500">
+                  //   <GoogleAuthNotice />
+                  <div className="opacity-0"></div>
                 )
               }
 

@@ -1,5 +1,3 @@
-// src/hooks/customer/useProfile.ts
-
 import { profileApi } from '@/apis/customer/profileApi'; 
 import { User } from '@/types/user';
 import { useQuery } from '@tanstack/react-query';
