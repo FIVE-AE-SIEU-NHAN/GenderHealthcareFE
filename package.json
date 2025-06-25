@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node server.js"
+    "server": "node server.js",
+    "genlog": "node scripts/generateChangelog.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.0",
