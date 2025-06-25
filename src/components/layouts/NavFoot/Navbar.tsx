@@ -18,16 +18,17 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from "@/contexts/AuthContext"; 
-import { Link, useNavigate } from "react-router-dom"; 
+import { useAuth } from "@/contexts/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const ToTop = () => window.scrollTo({ top: 0 });
 
   const handleLogout = () => {
-    logout(); 
-    navigate("/login"); 
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -36,7 +37,11 @@ const Navbar = () => {
         {/* Left side */}
         <div className="flex items-center gap-6 flex-1">
           {/* Logo */}
-          <Link to="/" className="text-lg flex items-center gap-1">
+          <Link
+            to="/"
+            onClick={ToTop}
+            className="text-lg flex items-center gap-1"
+          >
             <img src={logo} alt="logo" className="w-[60px]" />
             <div className="logo">
               <div className="font-extrabold text-shadow-lg text-xl">Care4Gender</div>
@@ -48,11 +53,14 @@ const Navbar = () => {
             <NavigationMenu>
               <NavigationMenuList className="flex gap-6 font-medium items-center">
                 <NavigationMenuItem>
-                  <NavigationMenuLink className="nav-text text-xl">
-                    <Link to="/">
+                  <NavigationMenuLink className="nav-text text-xl" asChild>
+                    <Link
+                      to="/"
+                      onClick={ToTop}
+                    >
                       Home
                     </Link>
-                    </NavigationMenuLink>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link to="/services"><NavigationMenuTrigger className="nav-text text-xl">Services</NavigationMenuTrigger></Link>
@@ -66,10 +74,10 @@ const Navbar = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuLink href="/blog" className="nav-text text-xl">Blog</NavigationMenuLink>
+                  <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/blogs">Blog</Link></NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuLink href="#about-us" className="nav-text text-xl">About</NavigationMenuLink>
+                  <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/about-us">About</Link></NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
@@ -87,7 +95,7 @@ const Navbar = () => {
                 <NavigationMenu>
                   <NavigationMenuList className="flex flex-col gap-3 font-medium items-center">
                     <NavigationMenuItem>
-                      <NavigationMenuLink href="#top" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">Home</NavigationMenuLink>
+                      <NavigationMenuLink className="nav-text text-xl hover:bg-muted-foreground/20 block w-75"><Link onClick={ToTop} to="/">Home</Link></NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                       <NavigationMenuLink href="#gynecology" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">Gynecology</NavigationMenuLink>
@@ -126,7 +134,7 @@ const Navbar = () => {
             </SheetContent>
           </Sheet>
         </div>
-        
+
         <div className="hidden lg:flex items-center gap-4">
           <a
             href="/booking-info"
@@ -160,8 +168,8 @@ const Navbar = () => {
                     <User className="w-4 h-4" />
                     <a href="/user/profile">Profile</a>
                   </DropdownMenuItem>
-                  
-                  {user.role === 0 && ( 
+
+                  {user.role === 0 && (
                     <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                       <Settings className="w-4 h-4" />
                       <a href="/dashboard">Admin Dashboard</a>
@@ -169,7 +177,7 @@ const Navbar = () => {
                   )}
 
 
-                  {user.role === 1 && ( 
+                  {user.role === 1 && (
                     <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                       <Settings className="w-4 h-4" />
                       <a href="/consultant">Consultant Dashboard</a>
@@ -177,7 +185,7 @@ const Navbar = () => {
                   )}
 
 
-                  {user.role === 2 && ( 
+                  {user.role === 2 && (
                     <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                       <Settings className="w-4 h-4" />
                       <a href="/manager">Manager Dashboard</a>
@@ -185,7 +193,7 @@ const Navbar = () => {
                   )}
 
 
-                  {user.role === 3 && ( 
+                  {user.role === 3 && (
                     <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                       <Settings className="w-4 h-4" />
                       <a href="/user">Your Dashboard</a>
