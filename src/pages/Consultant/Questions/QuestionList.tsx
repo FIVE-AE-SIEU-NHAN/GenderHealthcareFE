@@ -151,7 +151,7 @@ export default function QuestionListDashboard() {
     setBreadcrumb({
       title: "Question Management",
       parent: "Dashboard",
-      parentHref: "/admin/dashboard",
+      parentHref: "/consultant",
     });
   }, [setBreadcrumb]);
 
