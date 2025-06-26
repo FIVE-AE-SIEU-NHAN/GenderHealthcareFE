@@ -51,7 +51,7 @@ export const fetchQuestions = async ({ page, limit, filters, search, sort, dateR
     }
   }
   
-  const response = await api.get<BackendQuestionResponse>('/question/admin', { params }); 
+  const response = await api.get<BackendQuestionResponse>('/question/manager', { params }); 
   const result = response.data?.result; 
   return {
     data: result?.questions ?? [],  
