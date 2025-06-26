@@ -70,7 +70,7 @@ export function DataTable<T extends { id: string }>({
                       key={String(col.key)}
                       onClick={() => col.sortable !== false && handleSort(col.key)}
                       className={cn(
-                        "px-4 py-3",
+                        "px-4 py-3 whitespace-nowrap",
                         col.sortable !== false && "cursor-pointer select-none"
                       )}
                     >

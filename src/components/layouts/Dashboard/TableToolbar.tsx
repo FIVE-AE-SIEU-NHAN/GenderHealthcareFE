@@ -194,9 +194,12 @@ export default function TableToolbar({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-auto justify-between rounded-l-[0]">
-                <span className="truncate capitalize">
+                <span className="truncate max-w-50">
                   {activeFilterValues.length > 0
-                    ? activeFilterValues.join(", ")
+                    ? currentFilter.options
+                      .filter(opt => activeFilterValues.includes(opt.value))
+                      .map(opt => opt.label)
+                      .join(", ")
                     : `Select ${currentFilter.label}`}
                 </span>
                 <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
@@ -296,7 +299,7 @@ export default function TableToolbar({
         {/* Search Field Dropdown */}
         {searchFieldOptions.length > 0 && (
           <Select value={searchFieldValue} onValueChange={onSearchFieldChange}>
-            <SelectTrigger className="w-[120px] rounded-r-none border-r-0 focus:ring-0 focus:ring-offset-0 font-medium">
+            <SelectTrigger className="w-auto rounded-r-none border-r-0 focus:ring-0 focus:ring-offset-0 font-medium">
               <SelectValue placeholder="Search in...">
                 {selectedFieldLabel}
               </SelectValue>
