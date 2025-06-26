@@ -13,7 +13,7 @@ export const consultantSidebarItems: NavMainProps["items"] = [
     icon: MessageCircle, 
   },
   {
-    title: "Profile Management",
+    title: "Your Profile",
     url: "/consultant/profile",
     icon: User, 
   },

@@ -1,25 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { differenceInYears } from 'date-fns';
 import {
-  Mail, Phone, Cake, PencilLine, CheckCircle, Mars, Venus,
+  Mail, Phone, Cake, PencilLine, Mars, Venus,
   Calendar, KeyRound, LogOut, Loader2,
   ScrollText, Stethoscope, Sparkles, Circle, TrendingUp,
   Fingerprint,
   Microscope,
-  UserRoundCheck
+  UserRoundCheck,
+  VenusAndMars
 } from 'lucide-react';
-import Google from "@/assets/images/google.png";
 
 
-import { ChangePasswordForm } from '@/pages/Customer/Profile/ChangePasswordForm'; 
+import { ChangePasswordForm } from '@/pages/Customer/Profile/ChangePasswordForm';
 import { formatDate } from '@/utils/formatDate';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useConsultantProfile } from '@/hooks/consultant/useConsultantProfile';
 import { EditProfileForm } from '@/pages/Customer/Profile/EditProfileForm';
+import { useOutletContext } from 'react-router-dom';
+import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout';
 
 const InfoItem = ({ icon, label, value, iconColor }: { icon: React.ReactNode; label: string; value: string | number; iconColor: string; }) => (
   <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-400/10 dark:bg-gray-900/40 transition-all duration-300 hover:bg-gray-400/10 dark:hover:bg-gray-900/60 hover:shadow-md">
@@ -38,13 +40,13 @@ const getStatusInfo = (status: number) => {
   if (status === 1) {
     return {
       label: "Online",
-      icon: <Circle className="h-2.5 w-2.5 mr-2 fill-current" />,
+      icon: <Circle className="h-2.5 w-2.5 -translate-y-[0.5px] fill-current" />,
       color: "border-green-400/50 bg-green-500/10 text-green-700 dark:text-green-300 dark:bg-green-700/20"
     };
   }
   return {
     label: "Offline",
-    icon: <Circle className="h-2.5 w-2.5 mr-2" />,
+    icon: <Circle className="h-2.5 w-2.5 -translate-y-[0.5px]" />,
     color: "border-slate-500/50 bg-slate-500/10 text-slate-700 dark:text-slate-400 dark:bg-slate-700/50"
   };
 };
@@ -59,10 +61,21 @@ const formatSpecialization = (specCode: string | null | undefined) => {
 };
 
 function ConsultantProfilePage() {
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
+
   const [activeView, setActiveView] = useState<'details' | 'password'>('details');
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const { data: consultant, isLoading, isError, error } = useConsultantProfile();
+
+  // ========== SET BREADCRUMB ==========
+  useEffect(() => {
+    setBreadcrumb({
+      title: "Your Profile",
+      parent: "Dashboard",
+      parentHref: "/consultant",
+    });
+  }, [setBreadcrumb]);
 
   if (isLoading) {
     return (
@@ -152,11 +165,16 @@ function ConsultantProfilePage() {
             </div>
           </div>
 
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             <InfoItem icon={<Phone />} label="Phone Number" value={consultant.phone_number || 'N/A'} iconColor="text-sky-500" />
             <InfoItem icon={<Cake />} label="Birthday" value={birthDate} iconColor="text-pink-500" />
-            <InfoItem icon={consultant.gender === 'male' ? <Mars /> : <Venus />} label="Gender" value={consultant.gender.charAt(0).toUpperCase() + consultant.gender.slice(1)} iconColor={consultant.gender === 'male' ? 'text-blue-500' : 'text-rose-500'} />
+            <InfoItem
+              icon={consultant.gender === 'male' ? <Mars /> : consultant.gender === 'female' ? <Venus /> : <VenusAndMars />}
+              label="Gender"
+              value={consultant.gender.charAt(0).toUpperCase() + consultant.gender.slice(1)}
+              iconColor={consultant.gender === 'male' ? 'text-blue-500' : consultant.gender === 'female' ? 'text-rose-500' : 'text-slate-500'}
+            />
             <InfoItem icon={<Calendar />} label="Age" value={`${age}`} iconColor="text-violet-500" />
           </div>
         </CardContent>
@@ -186,31 +204,19 @@ function ConsultantProfilePage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          {/* {consultant.havePassword && ( */}
-            <>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                <div className="flex items-center gap-3"><KeyRound className="h-5 w-5 text-amber-500" /><span className="font-semibold text-gray-700 dark:text-gray-300">Password</span></div>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-gray-400 dark:text-gray-500 tracking-widest">••••••••••</span>
-                  <Button
-                    onClick={() => setActiveView(activeView === 'details' ? 'password' : 'details')}
-                    size="sm" className="w-[80px] text-center active:translate-y-0.5 hover:shadow-md/20 shadow-sm/20 transition-all duration-500 rounded-lg text-sm font-semibold bg-blue-200 text-blue-600 hover:bg-blue-300">
-                    {activeView === 'details' ? 'Change' : 'Close'}</Button>
-                </div>
-              </div>
-              <div className={`transition-all duration-800 ease-in-out overflow-hidden ${activeView === 'password' ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                <ChangePasswordForm onCancel={() => setActiveView('details')} onSuccess={handlePasswordUpdateSuccess} />
-              </div>
-            </>
-          {/* )} */}
-          {consultant.google_id && (
-            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-                <img src={Google} alt="Google Icon" width="30px" /><span className="font-semibold">Google</span>
-              </div>
-              <Badge className="flex items-center gap-2 font-medium shadow-sm bg-green-100 text-md text-green-700 dark:bg-green-900/50 dark:text-green-300"><CheckCircle className="h-5 w-5" /><span>Connected</span></Badge>
+          <div className="flex items-center justify-between p-4 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center gap-3"><KeyRound className="h-5 w-5 text-amber-500" /><span className="font-semibold text-gray-700 dark:text-gray-300">Password</span></div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-400 dark:text-gray-500 tracking-widest">••••••••••</span>
+              <Button
+                onClick={() => setActiveView(activeView === 'details' ? 'password' : 'details')}
+                size="sm" className="w-[80px] text-center active:translate-y-0.5 hover:shadow-md/20 shadow-sm/20 transition-all duration-500 rounded-lg text-sm font-semibold bg-blue-200 text-blue-600 hover:bg-blue-300">
+                {activeView === 'details' ? 'Change' : 'Close'}</Button>
             </div>
-          )}
+          </div>
+          <div className={`transition-all duration-800 ease-in-out overflow-hidden ${activeView === 'password' ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+            <ChangePasswordForm onCancel={() => setActiveView('details')} onSuccess={handlePasswordUpdateSuccess} />
+          </div>
         </CardContent>
       </Card>
 

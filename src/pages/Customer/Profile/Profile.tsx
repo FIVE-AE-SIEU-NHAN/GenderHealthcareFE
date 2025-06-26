@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,8 @@ import { ChangePasswordForm } from './ChangePasswordForm';
 import { formatDate } from '@/utils/formatDate';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { EditProfileForm } from './EditProfileForm';
+import { useOutletContext } from 'react-router-dom';
+import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout';
 
 const InfoItem = ({ icon, label, value, iconColor }: { icon: React.ReactNode; label: string; value: string; iconColor: string; }) => (
   <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-400/10 dark:bg-gray-900/40 transition-all duration-300 hover:bg-gray-400/10 dark:hover:bg-gray-900/60 hover:shadow-md">
@@ -27,11 +29,22 @@ const InfoItem = ({ icon, label, value, iconColor }: { icon: React.ReactNode; la
 );
 
 function CustomerProfilePage() {
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
+
   const [activeView, setActiveView] = useState<'details' | 'password'>('details');
 
   const { data: user, isLoading, isError, error } = useProfile();
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  // ========== SET BREADCRUMB ==========
+  useEffect(() => {
+    setBreadcrumb({
+      title: "Your Profile",
+      parent: "Dashboard",
+      parentHref: "/user",
+    });
+  }, [setBreadcrumb]);
 
   if (isLoading) {
     return (
@@ -134,10 +147,10 @@ function CustomerProfilePage() {
                 <InfoItem icon={<Phone />} label="Phone Number" value={user.phone_number || 'N/A'} iconColor="text-sky-500" />
                 <InfoItem icon={<Cake />} label="Birthday" value={birthDate} iconColor="text-pink-500" />
                 <InfoItem
-                  icon={user.gender === 'male' ? <Mars /> : user.gender === 'male' ? <Venus /> : <VenusAndMars />}
+                  icon={user.gender === 'male' ? <Mars /> : user.gender === 'female' ? <Venus /> : <VenusAndMars />}
                   label="Gender"
                   value={(user.gender.charAt(0).toUpperCase() + user.gender.slice(1)) || 'N/A'}
-                  iconColor={user.gender === 'male' ? 'text-blue-500' : user.gender === 'male' ? 'text-rose-500' : 'text-slate-500'}
+                  iconColor={user.gender === 'male' ? 'text-blue-500' : user.gender === 'female' ? 'text-rose-500' : 'text-slate-500'}
                 />
                 <InfoItem icon={<CalendarRange />} label="Age" value={`${age}`} iconColor="text-violet-500" />
                 <InfoItem icon={<Calendar />} label="Member Since" value={formatDate(user.created_at, 'MMMM d, yyyy')} iconColor="text-green-500" />
