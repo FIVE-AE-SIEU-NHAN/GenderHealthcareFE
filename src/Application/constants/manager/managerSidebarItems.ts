@@ -1,4 +1,4 @@
-import { FileText } from "lucide-react"
+import { FileText, ShieldUser } from "lucide-react"
 import type { NavMainProps } from "@/components/nav-main"
 
 export const managerSidebarItems: NavMainProps["items"] = [
@@ -7,15 +7,15 @@ export const managerSidebarItems: NavMainProps["items"] = [
     url: "/manager/questions",
     icon: FileText, 
   },
+  {
+    title: "Consultants Management",
+    url: "/manager/consultants",
+    icon: ShieldUser, 
+  },
   // {
   //   title: "Consultant Management",
   //   url: "/manager/consultants",
   //   icon: Users, 
-  // },
-  // {
-  //   title: "Services Management",
-  //   url: "/dashboard/services",
-  //   icon: ClipboardList, 
   // },
   // {
   //   title: "Appointments Management",

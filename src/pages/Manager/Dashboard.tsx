@@ -5,7 +5,7 @@ import { useOutletContext } from "react-router-dom";
 
 
 
-export default function AdminDashboard() {
+export default function ManagerDashboard() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
   useEffect(() => {
     setBreadcrumb({
