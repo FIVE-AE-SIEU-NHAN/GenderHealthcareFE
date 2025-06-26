@@ -31,20 +31,18 @@ import { ViewAnswerDialog } from "./ViewAnswer";
 // =============== NEW: COLUMNS FORMAT FOR QUESTIONS ===============
 const allQuestionColumns = [
   {
-    key: "topic",
-    label: "Topic",
-    render: (question: Question) => (
-      <Badge className={cn("font-medium text-xs",
-        question.topic === "WOMENS_REPRODUCTIVE_HEALTH" ? "border-purple-500/50 bg-purple-500/10 text-purple-700" :
-          question.topic === "CONTRACEPTION_AND_FAMILY_PLANNING" ? "border-blue-500/50 bg-blue-500/10 text-blue-700" :
-            question.topic === "PREGNANCY_AND_MATERNITY_SUPPORT" ? "border-yellow-500/50 bg-yellow-500/10 text-yellow-700" :
-              question.topic === "STIS" ? "border-green-500/50 bg-green-500/10 text-green-700" :
-                question.topic === "SEXUAL_HEALTH_AND_GENDER_PSYCHOLOGY" ? "border-gray-500/50 bg-gray-500/10 text-gray-700" :
-                  question.topic === "TESTING_AND_DIAGNOSTIC_SERVICES" && "border-pink-500/50 bg-pink-500/10 text-pink-700"
-      )}>
-        {question.topic}
-      </Badge>
-    )
+    key: 'topic',
+    label: 'Topic',
+    render: (question: Question) => {
+      const topic = TOPIC_OPTIONS.find(opt => opt.value === question.topic);
+      return (
+        <Badge
+          className={cn('font-medium text-xs', topic?.style ?? 'border-muted bg-muted/10 text-muted-foreground')}
+        >
+          {topic?.label ?? question.topic}
+        </Badge>
+      );
+    },
   },
   {
     key: "question",
@@ -106,7 +104,7 @@ const searchableFields = [
 
 export default function QuestionListDashboard() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
-  
+
   const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
@@ -267,9 +265,9 @@ export default function QuestionListDashboard() {
           setDateConfig({ field: 'created_at' });
           setVisibleColumns(allQuestionColumns.map((c) => c.key));
         }}
-        
+
         // onCreate={}
-        onCreate={() => navigate('/ask-question')} 
+        onCreate={() => navigate('/ask-question')}
         createButtonLabel="+ Ask a New Question"
       />
 
