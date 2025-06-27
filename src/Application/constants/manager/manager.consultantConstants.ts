@@ -3,8 +3,8 @@
 // =================================================================
 
 const STATUS_DEFINITIONS = [
-  { id: 0, key: 'Online', label: 'Online' },
-  { id: 1, key: 'Offline', label: 'Offline' },
+  { id: 0, key: 'Offline', label: 'Offline' },
+  { id: 1, key: 'Online', label: 'Online' },
 ] as const; 
 
 
@@ -18,13 +18,13 @@ const STATUS_DEFINITIONS = [
 export const CONSULTANT_STATUS = {
   /**
    * Status definitions.
-   * @example [{ id: 0, key: 'Online', label: 'Online' }]
+   * @example [{ id: 0, key: 'Offline', label: 'Offline' }]
    */
   DEFINITIONS: STATUS_DEFINITIONS,
 
   /**
-   * String ('Online') to Number (0) (for API).
-   * @example { 'Online': 0, 'Offline': 1 }
+   * String ('Offline') to Number (0) (for API).
+   * @example { 'Offline': 0, 'Online': 1 }
    */
   API_MAP: STATUS_DEFINITIONS.reduce((acc, status) => {
     acc[status.key] = status.id;
@@ -32,8 +32,8 @@ export const CONSULTANT_STATUS = {
   }, {} as Record<string, number>),
 
   /**
-   * Number (0) to String ('Online') (for UI).
-   * @example { 0: 'Online', 1: 'Offline' }
+   * Number (0) to String ('Offline') (for UI).
+   * @example { 0: 'Offline', 1: 'Online' }
    */
   UI_MAP: STATUS_DEFINITIONS.reduce((acc, status) => {
     acc[status.id] = status.label;
@@ -42,7 +42,7 @@ export const CONSULTANT_STATUS = {
   
   /**
    * An array of options formatted for faceted filter components.
-   * @example [{ value: 'Online', label: 'Online' }]
+   * @example [{ value: 'Offline', label: 'Offline' }]
    */
   FILTER_OPTIONS: STATUS_DEFINITIONS.map(status => ({
     value: status.key,

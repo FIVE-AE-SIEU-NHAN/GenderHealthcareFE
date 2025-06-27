@@ -11,6 +11,7 @@ export interface ConsultantProfile {
   experienceYears: number | null;
   created_at?: string; 
   status: number;
+  email?: string;
 }
 
 // This interface describes the full API response structure

@@ -84,6 +84,8 @@ const allConsultantColumns = [
   {
     key: "specialization",
     label: "Specializations",
+    cellClassName: "min-w-xs",
+    sortable: false,
     render: (consultant: ConsultantProfile) => {
       const specialization_1 = TOPIC_OPTIONS.find(opt => opt.value === consultant.specialization_1);
       const specialization_2 = TOPIC_OPTIONS.find(opt => opt.value === consultant.specialization_2);
@@ -114,6 +116,7 @@ const allConsultantColumns = [
     key: "certifications",
     label: "Certifications",
     cellClassName: "min-w-66",
+    defaultVisible: false,
     render: (consultant: ConsultantProfile) => {
       return (
         <p className="line-clamp-2">
@@ -132,27 +135,13 @@ const allConsultantColumns = [
   },
   {
     key: "experienceYears",
-    label: "Experience (Years)",
+    label: "Experience",
+    cellClassName: "max-w-4",
     render: (consultant: ConsultantProfile) => {
-      const years = consultant.experienceYears || 0;
-
-      let colorClasses = "bg-zinc-500/15 text-zinc-700 border-zinc-500/50"; // default
-
-      if (years >= 2 && years <= 4) {
-        colorClasses = "bg-cyan-500/15 text-cyan-700 border-cyan-500/50";
-      } else if (years >= 5 && years <= 9) {
-        colorClasses = "bg-indigo-500/15 text-indigo-700 border-indigo-500/50";
-      } else if (years >= 10) {
-        colorClasses = "bg-amber-500/15 text-amber-700 border-amber-500/50";
-      }
-
       return (
-        <Badge
-          variant="outline"
-          className={cn("font-black font-mono", colorClasses)}
-        >
-          {years}
-        </Badge>
+        <p className="font-mono text-sm font-semibold">
+          {consultant.experienceYears}
+        </p>
       )
     }
   },
@@ -335,7 +324,7 @@ export default function ConsultantListDashboard() {
           {statusString === 'Offline' && (
             <DropdownMenuItem
               className="text-green-600 focus:bg-green-50 focus:text-green-700"
-              onClick={() => editConsultantStatusMutation.mutate({ consultantId: consultant.id, status: 0 })}
+              onClick={() => editConsultantStatusMutation.mutate({ consultantId: consultant.id, status: 1 })}
             >
               <ShieldCheck className="mr-2 h-4 w-4" />
               Make Online
@@ -345,7 +334,7 @@ export default function ConsultantListDashboard() {
           {statusString === 'Online' && (
             <DropdownMenuItem
               className="text-red-600 focus:bg-red-50 focus:text-red-700"
-              onClick={() => editConsultantStatusMutation.mutate({ consultantId: consultant.id, status: 1 })}
+              onClick={() => editConsultantStatusMutation.mutate({ consultantId: consultant.id, status: 0 })}
             >
               <ShieldBan className="mr-2 h-4 w-4" />
               Make Offline
