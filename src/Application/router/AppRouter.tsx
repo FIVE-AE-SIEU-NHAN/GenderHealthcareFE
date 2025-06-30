@@ -26,6 +26,7 @@ import ServiceDetail2 from '@/pages/Content/Services/ServiceDetail2';
 import BookingForm from '@/pages/Content/Services/BookingForm';
 import ViewResultService from '@/pages/Content/Services/ViewResultService';
 import BlogDetails from '@/pages/Content/Blog/BlogDetails';
+import BlogPage from '@/pages/Content/Blog/BlogList';
 
 export default function AppRouter() {
   return (
@@ -43,7 +44,7 @@ export default function AppRouter() {
             <Route path="/servicedetail2" element={<ServiceDetail2 />} />
             <Route path="/booking-form2" element={<BookingForm />} />
             <Route path="/result-service" element={<ViewResultService />} />
-
+            <Route path="/blog" element={<BlogPage />} />
             
           </Route>
 
