@@ -5,7 +5,7 @@ import { FaXTwitter } from 'react-icons/fa6';
 import { format } from 'date-fns'; // Import hàm format từ date-fns
 
 // 1. Import hook useBlogDetail bạn đã tạo
-import { useBlogDetail } from '@/hooks/blog/useBlogDetail'; 
+import { useBlogDetail } from '@/hooks/customer/useBlogDetail'; 
 
 // Dữ liệu tĩnh cho Recent Blogs (giữ nguyên theo yêu cầu)
 const mockRecentBlogs = [
