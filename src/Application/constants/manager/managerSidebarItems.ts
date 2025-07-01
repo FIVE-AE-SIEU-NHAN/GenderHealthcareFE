@@ -1,4 +1,4 @@
-import { FileText, ShieldUser } from "lucide-react"
+import { CalendarCheck, FileText, ShieldUser } from "lucide-react"
 import type { NavMainProps } from "@/components/nav-main"
 
 export const managerSidebarItems: NavMainProps["items"] = [
@@ -12,16 +12,17 @@ export const managerSidebarItems: NavMainProps["items"] = [
     url: "/manager/consultants",
     icon: ShieldUser, 
   },
+  {
+    title: "Appointments",
+    url: "/manager/appointments",
+    icon: CalendarCheck, 
+  },
   // {
   //   title: "Consultant Management",
   //   url: "/manager/consultants",
   //   icon: Users, 
   // },
-  // {
-  //   title: "Appointments Management",
-  //   url: "/admin/appointments",
-  //   icon: CalendarCheck, 
-  // },
+
   // {
   //   title: "Báo Cáo Thống Kê",
   //   url: "/dashboard/reports",

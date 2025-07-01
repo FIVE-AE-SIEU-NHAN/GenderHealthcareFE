@@ -5,6 +5,7 @@ import { managerSidebarItems } from "@/Application/constants/manager/managerSide
 import QuestionListDashboard from "@/pages/Manager/Questions/QuestionList";
 import ManagerDashboard from "@/pages/Manager/Dashboard";
 import ConsultantListDashboard from "@/pages/Manager/ConsultantManagement/ConsultantsList";
+import AppointmentCalendar from "@/pages/Manager/Appointments/AppointmentCalendar";
 
 export const ManagerRoutes = (
   <Route 
@@ -15,6 +16,7 @@ export const ManagerRoutes = (
       <Route index element={<ManagerDashboard />} />
       <Route path="questions" element={<QuestionListDashboard />} />
       <Route path="consultants" element={<ConsultantListDashboard />} />
+      <Route path="appointments" element={<AppointmentCalendar />} />
 
     </Route>
   </Route>
