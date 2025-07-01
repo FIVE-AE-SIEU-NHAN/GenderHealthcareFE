@@ -32,7 +32,7 @@ import { useQuestionMutations } from "@/hooks/manager/useQuestionMutations";
 import { DataTableSkeleton } from "@/components/layouts/Dashboard/DataTableSkeleton";
 import { formatDate } from "@/utils/formatDate";
 import { QUESTION_STATUS } from "@/Application/constants/manager/manager.questionConstants";
-import { TOPIC_OPTIONS } from "@/Application/constants/topics";
+import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
 
 
 // =============== NEW: COLUMNS FORMAT FOR QUESTIONS ===============

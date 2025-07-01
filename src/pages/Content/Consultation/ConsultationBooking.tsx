@@ -17,7 +17,7 @@ import { FaHeartbeat } from "react-icons/fa";
 import { CardTitle, Card } from "@/components/ui/card";
 
 import { useAppointmentMutations } from "@/hooks/customer/useAppointmentMutations";
-import { TOPIC_OPTIONS } from "@/Application/constants/topics";
+import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
 
 const consultants = [
   { id: 1, name: "TS. Nguyễn Văn A", speciality: "Bác sĩ tâm lý", img: "/images/bs1.png" },

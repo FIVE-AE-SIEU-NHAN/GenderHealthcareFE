@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useConsultantMutations } from "@/hooks/manager/useConsultantMutations";
-import { TOPIC_OPTIONS } from "@/Application/constants/topics";
+import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
 import { ConsultantProfile } from "@/types/consultant/profileTypes";
 
 const formSchema = z.object({

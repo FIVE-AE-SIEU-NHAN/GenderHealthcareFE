@@ -20,7 +20,7 @@ import { useConsultants } from '@/hooks/manager/useConsultants';
 import { DataTableSkeleton } from "@/components/layouts/Dashboard/DataTableSkeleton";
 import { formatDate } from "@/utils/formatDate";
 import { CONSULTANT_STATUS } from "@/Application/constants/manager/manager.consultantConstants";
-import { TOPIC_OPTIONS } from "@/Application/constants/topics";
+import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useConsultantMutations } from "@/hooks/manager/useConsultantMutations";

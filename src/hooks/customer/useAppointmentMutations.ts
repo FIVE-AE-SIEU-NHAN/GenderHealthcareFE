@@ -15,8 +15,6 @@ export const useAppointmentMutations = () => {
   >({
     mutationFn: bookAppointmentAPI,
     onError: (error) => {
-      // The backend provides specific error messages for conflicts (e.g., "No available consultant").
-      // These will be displayed automatically.
       toast.error(error.message || 'Đặt lịch hẹn không thành công. Vui lòng thử lại.');
     },
   });

@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 import { useQuestionMutations } from "@/hooks/customer/useQuestionMutations"; 
-import { TOPIC_OPTIONS } from "@/Application/constants/topics";
+import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
 
 // FAQ type and data remain the same
 interface FAQ {

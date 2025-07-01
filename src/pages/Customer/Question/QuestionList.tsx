@@ -22,7 +22,7 @@ import { useQuestions } from "@/hooks/customer/useQuestions";
 import { DataTableSkeleton } from "@/components/layouts/Dashboard/DataTableSkeleton";
 import { formatDate } from "@/utils/formatDate";
 import { QUESTION_STATUS } from "@/Application/constants/manager/manager.questionConstants";
-import { TOPIC_OPTIONS } from "@/Application/constants/topics";
+import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ViewAnswerDialog } from "./ViewAnswer";

@@ -35,7 +35,7 @@ import {
 import { useUserMutations } from "@/hooks/admin/useUserMutations";
 import { USER_ROLE } from "@/Application/constants/admin/admin.userConstants";
 import { CreateUserPayload } from "@/types/admin/userTypes";
-import { TOPIC_OPTIONS } from "@/Application/constants/topics";
+import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
 import { NewDatePicker } from "@/lib/DatePicker";
 import { formatDate } from "@/utils/formatDate";
 
