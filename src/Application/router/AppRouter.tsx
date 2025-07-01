@@ -27,6 +27,7 @@ import BookingForm from '@/pages/Content/Services/BookingForm';
 import ViewResultService from '@/pages/Content/Services/ViewResultService';
 import BlogDetails from '@/pages/Content/Blog/BlogDetails';
 import BlogPage from '@/pages/Content/Blog/BlogList';
+import BlogWrite from '@/pages/Content/Blog/BlogWrite';
 
 export default function AppRouter() {
   return (
@@ -45,8 +46,7 @@ export default function AppRouter() {
             <Route path="/booking-form2" element={<BookingForm />} />
             <Route path="/result-service" element={<ViewResultService />} />
             <Route path="/blog" element={<BlogPage />} />            
-
-            
+            <Route path='/write-blog' element={<BlogWrite />} />
           </Route>
 
           {/* Auth Routes (things that's related to authen will be here)*/}
