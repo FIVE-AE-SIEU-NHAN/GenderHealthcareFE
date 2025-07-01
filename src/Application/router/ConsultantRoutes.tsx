@@ -5,6 +5,7 @@ import { consultantSidebarItems } from "@/Application/constants/consultant/consu
 import QuestionListDashboard from "@/pages/Consultant/Questions/QuestionList";
 import ConsultantDashboard from "@/pages/Consultant/Dashboard";
 import ConsultantProfilePage from "@/pages/Consultant/Profile/Profile";
+import AppointmentCalendar from "@/pages/Consultant/Appointments/AppointmentCalendar";
 
 export const ConsultantRoutes = (
   <Route 
@@ -15,6 +16,7 @@ export const ConsultantRoutes = (
       <Route index element={<ConsultantDashboard />} />
       <Route path="questions" element={<QuestionListDashboard />} />
       <Route path="profile" element={<ConsultantProfilePage />} />
+      <Route path="appointments" element={<AppointmentCalendar />} />
     </Route>
   </Route>
 );
