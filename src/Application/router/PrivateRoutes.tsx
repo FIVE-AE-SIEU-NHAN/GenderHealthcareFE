@@ -20,7 +20,7 @@ export const PrivateRoutes = (
     <Route element={<NavFootLayout />}>
       <Route path="/booking-form" element={<BookingForm />} />
       <Route path="/ask-question" element={<AskQuestion />} />
-      <Route path="/blogdetail/:id" element={<BlogDetails />} />
+      <Route path="/blog/:id" element={<BlogDetails />} />
       {/* Add more private routes here */}
     </Route>
     <Route path="/hehe" element={<div>HEHEHEHHEHEHEHHE</div>} />
