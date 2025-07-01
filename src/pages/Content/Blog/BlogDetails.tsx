@@ -9,10 +9,10 @@ import { useBlogDetail } from '@/hooks/customer/useBlogs';
 
 // Dữ liệu tĩnh cho Recent Blogs (giữ nguyên theo yêu cầu)
 const mockRecentBlogs = [
-  { id: 2, title: 'Tại sao nên tập yoga buổi sáng?', authorName: 'Anna Nguyễn' },
-  { id: 3, title: 'Thực đơn ăn sạch cho tuần mới', authorName: 'Chef Long' },
-  { id: 4, title: '10 phút thiền giúp giảm stress', authorName: 'Minh Thiền' },
-  { id: 5, title: 'Ngủ ngon hơn với thói quen lành mạnh', authorName: 'Dr. Tâm An' },
+  { id: 2, title: 'Why should you practice yoga in the morning?', authorName: 'Anna Nguyen' },
+  { id: 3, title: 'Clean eating menu for the new week', authorName: 'Chef Long' },
+  { id: 4, title: '10 minutes of meditation to reduce stress', authorName: 'Minh Thien' },
+  { id: 5, title: 'Sleep better with healthy habits', authorName: 'Dr. Tam An' },
 ];
 
 const BlogDetails: React.FC = () => {
@@ -26,7 +26,7 @@ const BlogDetails: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="text-xl font-semibold">Đang tải bài viết...</div>
+        <div className="text-xl font-semibold">Loading article...</div>
       </div>
     );
   }
@@ -36,7 +36,7 @@ const BlogDetails: React.FC = () => {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="text-xl font-semibold text-red-500">
-          Lỗi: Không thể tải được dữ liệu bài viết.
+          Error: Unable to load article data.
           <p className="text-sm text-gray-600 mt-2">{error.message}</p>
         </div>
       </div>
@@ -47,7 +47,7 @@ const BlogDetails: React.FC = () => {
   if (!blog) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="text-xl font-semibold">Không tìm thấy bài viết.</div>
+        <div className="text-xl font-semibold">Article not found.</div>
       </div>
     );
   }
@@ -66,7 +66,7 @@ const BlogDetails: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
         <aside className="md:col-span-1 border p-6 rounded shadow h-fit">
-          <h4 className="font-bold text-xl mb-4">Bài viết gần đây</h4>
+          <h4 className="font-bold text-xl mb-4">Recent Articles</h4>
           <ul className="space-y-4">
             {mockRecentBlogs.map((b) => (
               <li key={b.id}>
@@ -85,19 +85,19 @@ const BlogDetails: React.FC = () => {
           <p className="text-sm mb-6">
             {blog.author_name} |{' '}
             <time dateTime={blog.created_at}>
-              {format(new Date(blog.created_at), "dd/MM/yyyy 'lúc' HH:mm")}
+              {format(new Date(blog.created_at), "dd/MM/yyyy 'at' HH:mm")}
             </time>
           </p>
 
           <div className="text-lg mb-6 whitespace-pre-line">{blog.summary}</div>
 
           <section className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Nội dung bài viết</h2>
+            <h2 className="text-xl font-semibold mb-2">Article Content</h2>
             <p className="text-base leading-7 whitespace-pre-line">{blog.content}</p>
           </section>
 
           <section className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Nội dung chính</h2>
+            <h2 className="text-xl font-semibold mb-2">Main Content</h2>
             <p className="text-base leading-7 whitespace-pre-line">{blog.section_1}</p>
           </section>
 
@@ -105,14 +105,14 @@ const BlogDetails: React.FC = () => {
             <div className="my-6">
               <img
                 src={blog.sub_image}
-                alt="Ảnh phụ"
+                alt="Supporting image"
                 className="w-full rounded shadow"
               />
             </div>
           )}
 
           <section className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Thông tin bổ sung</h2>
+            <h2 className="text-xl font-semibold mb-2">Additional Information</h2>
             <p className="text-base leading-7 whitespace-pre-line">{blog.section_2}</p>
           </section>
 
