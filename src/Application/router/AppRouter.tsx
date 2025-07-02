@@ -22,6 +22,9 @@ import { Toaster } from '@/components/ui/sonner';
 import BookingInfoPage from '@/pages/Content/Services/BookingInfo';
 import ConsultantAppointmentPage from '@/pages/Content/Consultation/ConsultationBooking';
 import About from '@/pages/Common/Home/components/About';
+import ServiceList from '@/pages/Content/Services/ServiceList';
+import ServiceDetail from '@/pages/Content/Services/ServiceDetails';
+import BlogPage from '@/pages/Content/Blog/BlogList';
 
 export default function AppRouter() {
   return (
@@ -36,9 +39,10 @@ export default function AppRouter() {
             <Route path="/" element={<HomePage />} />
             <Route path="/booking-info" element={<BookingInfoPage />} />
             <Route path="/book-consultant" element={<ConsultantAppointmentPage />} />
-            <Route path="/services" element={<About />} />
-
-
+            <Route path="/about-us" element={<About />} />
+            <Route path="/services" element={<ServiceList />} />
+            <Route path="/service-details" element={<ServiceDetail />} />
+            <Route path="/blogs" element={<BlogPage />} />
             
           </Route>
 
