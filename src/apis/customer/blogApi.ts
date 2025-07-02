@@ -5,18 +5,14 @@ import { Blog } from '@/types';
 
 // =============== BLOGDETAIL FETCHING ===============
 export const fetchBlogDetail = async (blogId: string): Promise<Blog> => {
-  try {
+  
     // Sử dụng api đã được cấu hình sẵn (tự động đính kèm token)
     const response = await api.get<BackendBlogDetailResponse>(`/blog/detail/${blogId}`);
 
     // API trả về { message, result: { blog: { ... } } }
     // Chúng ta chỉ cần trả về phần dữ liệu `blog` cho Tanstack Query
     return response.data.result.blog;
-  } catch (error) {
-    // Axios sẽ tự động throw lỗi, Tanstack Query sẽ bắt và xử lý nó
-    console.error('Error fetching blog detail:', error);
-    throw error;
-  }
+  
 };
 
 

@@ -5,6 +5,8 @@ import CustomerDashboard from "@/pages/Customer/Dashboard";
 import { customerSidebarItems } from "@/Application/constants/customer/customerSidebarItems";
 import AppointmentHistory from "@/pages/Customer/Appointment/AppointmentHistory";
 import QuestionListDashboard from "@/pages/Customer/Question/QuestionList";
+import CustomerProfilePage from "@/pages/Customer/Profile/Profile";
+
 
 export const CustomerRoutes = (
   <Route 
@@ -15,6 +17,7 @@ export const CustomerRoutes = (
       <Route index element={<CustomerDashboard />} />
       <Route path="appointments" element={<AppointmentHistory />} />
       <Route path="questions" element={<QuestionListDashboard />} />
+      <Route path="profile" element={<CustomerProfilePage />} />
     </Route>
   </Route>
 );

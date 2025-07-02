@@ -1,12 +1,14 @@
 export interface User {
   id: string;
-  name: string; 
-  email: string;
+  email: string; 
+  name: string;
   date_of_birth: string;
   gender: string;
   phone_number: string;
   created_at: string; 
-  updated_at: string;
-  verify: number; 
+  updated_at?: string;
+  verify?: number; 
   role: number;
+  google_id: string | null; 
+  havePassword: boolean;
 }
