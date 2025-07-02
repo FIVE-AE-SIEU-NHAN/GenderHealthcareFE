@@ -12,13 +12,13 @@ import { FaArrowRightLong } from "react-icons/fa6";
 const Home: React.FC = () => {
   const sharedButtons = [
     {
-      text: 'Tìm chuyên gia',
+      text: 'Find a Specialist',
       link: '#consultant',
       color:
         'text-xl bg-semi-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-900 transition duration-200 font-semibold',
     },
     {
-      text: 'Gặp bác sĩ của chúng tôi',
+      text: 'Meet Our Doctors',
       link: '#doctors',
       color:
         'text-xl border-2 border-white text-white px-4 py-2 rounded-button font-semibold',
@@ -27,30 +27,32 @@ const Home: React.FC = () => {
 
   const slides = [
     {
-      heading: "Chăm sóc sức khỏe giới tính toàn diện",
-      title: 'Bảo vệ sức khỏe của bạn — mọi lúc, mọi nơi',
+      heading: "Comprehensive Sexual Health Care",
+      title: 'Protect your health — anytime, anywhere',
       description:
-        'Tư vấn và chăm sóc chuyên nghiệp về sức khỏe sinh sản và giới tính từ các bác sĩ hàng đầu.',
+        'Professional consultation and care for reproductive and sexual health from top doctors.',
       image: slide1, // Your local asset
       buttons: sharedButtons,
     },
     {
-      heading: "Đội ngũ bác sĩ tận tâm và giàu kinh nghiệm",
-      title: 'Gặp gỡ chuyên gia của chúng tôi',
+      heading: "Dedicated and Experienced Medical",
+      title: 'Meet Our Experts',
       description:
-        'Hỗ trợ tận tình, lắng nghe và đồng hành cùng bạn trong mọi giai đoạn chăm sóc sức khỏe.',
+        'Wholehearted support, attentive listening, and companionship through every stage of your health journey.',
       image: "/images/bs2.webp", // Existing image path
       buttons: sharedButtons,
     },
     {
-      heading: "Dịch vụ đặt lịch khám tiện lợi",
-      title: 'Đặt lịch hẹn chỉ với vài bước đơn giản',
+      heading: "Convenient Appointments Booking Services",
+      title: 'Book an Appointment in Just a Few Steps',
       description:
-        'Chọn bác sĩ, chọn thời gian phù hợp và bắt đầu hành trình chăm sóc sức khỏe ngay hôm nay.',
+        'Choose your doctor, pick a suitable time, and start your healthcare journey today.',
       image: slide3, // Your local asset
       buttons: sharedButtons,
     },
   ];
+
+
 
   return (
     <section id="home" className="relative w-full h-screen">

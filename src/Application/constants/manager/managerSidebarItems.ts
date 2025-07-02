@@ -3,12 +3,12 @@ import type { NavMainProps } from "@/components/nav-main"
 
 export const managerSidebarItems: NavMainProps["items"] = [
   {
-    title: "Questions Management",
+    title: "Questions",
     url: "/manager/questions",
     icon: FileText, 
   },
   {
-    title: "Consultants Management",
+    title: "Consultants",
     url: "/manager/consultants",
     icon: ShieldUser, 
   },

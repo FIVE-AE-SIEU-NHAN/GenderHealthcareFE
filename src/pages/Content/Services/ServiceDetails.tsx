@@ -1,143 +1,128 @@
-import React from 'react';
-
-import { Link } from 'react-router-dom';
-
+import React from "react";
 import { Button } from "@/components/ui/button";
-
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { Accordion, AccordionItem } from "@/components/ui/accordion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 import { FaHeartbeat } from "react-icons/fa";
-import { FaSquarePhone } from "react-icons/fa6";
 
-const ServiceDetail: React.FC = () => {
+const ServiceDetail = () => {
   return (
-    <div className='font-sans text-gray-800 '>
+    <div>
       {/* Banner */}
-      <section className='bg-blue-100 py-0 text-center'>
-        <div className='relative w-full'>
-          <img src='/images/banner_blog.png' alt='' className='rounded w-full' />
-          <div className='absolute inset-0 w-full bg-[#1A2159]/70 flex flex-col items-center justify-center'>
-            <h2 className='text-6xl font-bold text-white'>Service Detail</h2>
-            <p className='text-sm mt-3'>
-              <span className='text-white'>Home</span>
-              <span className='text-[#55AEFF]'> &gt; Services &gt; BookingService</span>
-            </p>
+      <div className="mb-15">
+        <section className="bg-[#1A3973] py-0 text-center">
+          <div className="relative w-full">
+            <img src="/images/banner_blog.png" alt="" className="rounded w-full" />
+            <div className="absolute inset-0 w-full bg-[#1A3973]/70 flex flex-col items-center justify-center">
+              <h2 className="text-6xl font-bold text-white">Service</h2>
+              <p className="text-sm mt-3">
+                <span className="text-white">Home</span>
+                <span className="text-[#55AEFF]">
+                  {" "}
+                  &gt; Service &gt; Hormone therapy service for transgender people
+                </span>
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
-      {/* Main Content */}
-      <div className='max-w-6xl mx-auto mt-10 pb-16 px-4 space-y-6'>
-        <h1 className='text-4xl font-bold text-[#030D43]'>
-          Professional Medical Service Of Health & Wellness Solutions
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Title */}
+        <h1 className="text-3xl font-bold text-center mb-4 text-[#1A3973]">
+          Hormone Therapy Service for Transgender People
         </h1>
 
-        <div>
-          <img src='/images/imgService.png' alt='Service' className='rounded-3xl w-full' />
-        </div>
+        {/* Short description */}
+        <p className="text-center text-gray-600 mb-6">
+          We accompany you on your journey to express your gender identity safely and scientifically.
+        </p>
 
-        <div className='text-sm text-gray-700 leading-relaxed space-y-4'>
-          <p>
-            Advancements in technology are revolutionizing the healthcare industry, improving patient outcomes and making medical services more accessible. Telemedicine allows patients to consult with
-            doctors remotely, reducing wait times and increasing convenience. Artificial Intelligence (AI) is enhancing diagnostic accuracy, while wearable health devices help monitor vital signs in real time.
-            These innovations not only improve efficiency but also play a crucial role in early disease detection and personalized treatment plans. Preventive healthcare is the key to long-term well-being.
-            Regular check-ups, screenings, and vaccinations help detect potential health issues early, allowing for timely intervention and reducing the risk of serious illnesses. Simple lifestyle changes such
-            as maintaining a balanced diet, staying active, and managing stress contribute significantly to disease prevention.
-          </p>
+        {/* Illustration */}
+        <img
+          src="/images/bs2.webp"
+          alt="Hormone therapy illustration"
+          className="rounded-2xl shadow-lg mb-4 w-full h-64 object-cover"
+        />
 
-          <div className='flex gap-6 items-stretch'>
-            <div className='w-3/5'>
-              <img
-                src="/images/ab1.webp"
-                alt="Service detail"
-                className='rounded-3xl w-full h-full object-cover'
-              />
+        {/* Pricing & Book Button as Card */}
+        <Card className="border border-[#1A3973]/30 rounded-2xl shadow mb-8">
+          <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-xl font-semibold text-[#1A3973]">Service Price</p>
+              <p className="text-2xl font-bold text-gray-800 mt-1">$49.99</p>
             </div>
-            <div className='w-2/5 space-y-3'>
-              <div className='flex items-start gap-2 mb-5'>
-                <p>
-                  Our expert skill and excellent patient service. If co-management for an ocular disease, such
-                  as macular degeneration, cataracts or glaucoma to keep watch on your eye health and prevent
-                  future vision loss.
-                </p>
-              </div>
-              <div className='flex items-start gap-2 '>
-                <IoMdCheckmarkCircleOutline className='text-[#1977CC] w-10 h-10 mt-1' />
-                <p>Advancements in technology are revolutionizing the healthcare industry, improving patient outcomes and making medical services.</p>
-              </div>
-              <div className='flex items-start gap-2 '>
-                <IoMdCheckmarkCircleOutline className='text-[#1977CC] w-10 h-10 mt-1' />
-                <p>Hypertension, commonly known as high blood pressure, often develops without noticeable symptoms, making it a "silent killer."</p>
-              </div>
-              <div className='flex items-start gap-2 '>
-                <IoMdCheckmarkCircleOutline className='text-[#1977CC] w-10 h-10 mt-1' />
-                <p>Preventive healthcare is the key to long-term well-being. Regular check-ups, screenings, and vaccinations help detect potential health issues early</p>
-              </div>
-              <div className='flex items-start gap-2 '>
-                <IoMdCheckmarkCircleOutline className='text-[#1977CC] w-10 h-10 mt-1' />
-                <p>Managing hypertension involves regular monitoring, adopting a heart-healthy diet, reducing sodium intake, engaging in physical activity.</p>
-              </div>
-              <div className='flex items-start gap-2 '>
-                <IoMdCheckmarkCircleOutline className='text-[#1977CC] w-10 h-10 mt-1' />
-                <p>Modern equipment and techniques to provide accurate diagnosis and effective treatment plans, engaging in physical activity.</p>
-              </div>
-              <div className='flex items-start gap-2 '>
-                <IoMdCheckmarkCircleOutline className='text-[#1977CC] w-10 h-10 mt-1' />
-                <p>A well-balanced diet plays a crucial role in preventing chronic diseases such as diabetes, obesity, and heart disease.</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div>
-            <h1 className='text-3xl font-bold text-[#030D43] mb-3 '>
-            How do i get eye infections and solutions?
-             </h1>
-            <p>
-                Preventive healthcare is the key to long-term well-being. Regular check-ups, screenings, and vaccinations help detect potential health issues early, allowing for timely intervention and reducing
-                the risk of serious illnesses. Simple lifestyle changes such as maintaining a balanced diet, staying active, and managing stress contribute significantly to disease prevention. Investing inh
-                preventive care today ensures a healthier future and lowers healthcare costs in the long run. If you need co-management for an ocular disease, such as macular degeneration, cataracts or
-                glaucoma to keep watch on your eye health and prevent future vision loss.
-            </p>
-        </div>
-        <div className='bg-[#F2F3FC] flex p-5 rounded-lg'>
-            <div className='w-2/5'>
-                <img src="/images/ab1.webp" className='h-full pr-5'/>
-            </div>
-            <div className='w-3/5'>
-                <div className='flex items-center gap-2 py-5'>
-                    <FaHeartbeat className='text-[#1977CC]' />
-                    <p className=' text-[#1977CC]'>SPECIAL CARE FREE DOCTOR CONSULTATION</p> 
+            <Link to="/book-service">
+              <Button
+                className="min-w-[220px] px-8 py-4 sm:px-10 sm:py-5 bg-gradient-to-r from-[#1A3973] to-[#4F80E1] 
+                  hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg sm:text-xl font-semibold 
+                  rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full 
+                  group-hover:translate-x-full transition-transform duration-700"></span>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <FaHeartbeat className="mr-2" />
+                  <span>Book This Service</span>
                 </div>
-                <p className='text-3xl text-[#030D43]'>Emergency</p>
-                <div className='text-3xl font-bold text-[#030D43] mb-3'>
-                     Medical Care 24/7
-                </div>
-                <p className='my-5'>
-                    Treatment for an eye disease or condition, you'll benefit from our expert skill
-                    and excellent patient service. If  co-management for an ocular disease, such as
-                    macular degeneration, cataracts or glaucoma to keep watch on your eye health
-                    and prevent future vision loss.
-                </p>
-                <div className="flex items-center gap-4">
-                    <Link to={"/bookingservices"} >
-                        <Button className="bg-[#1A3973] text-white font-semibold rounded-sm">
-                            Book An Appointment 
-                        </Button>
-                    </Link>
-                    
-                    <div className="h-10 w-10 rounded-full bg-[#1A3973] flex items-center justify-center">
-                        <FaSquarePhone className="text-white text-xl" />
-                    </div>
-                    
-                    <div className="flex flex-col">
-                        <div className='font-semibold'>Or Book on Call</div>
-                        <div className="font-semibold">+00 (123) 456789 00</div>
-                    </div>
-                </div>
-            </div>
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
+        {/* Service details */}
+        <div className="space-y-6">
+          <Card className="shadow border border-[#1A3973]/30">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-2 text-[#1A3973]">Who is this for?</h2>
+              <p>
+                For transgender people (MTF or FTM) who are considering or starting hormone therapy.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow border border-[#1A3973]/30">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-2 text-[#1A3973]">Service Workflow</h2>
+              <ol className="list-decimal list-inside space-y-1">
+                <li>Register for the service and provide your personal information.</li>
+                <li>Receive guidance for hormone-related evaluations.</li>
+                <li>Submit necessary health records or hormone test results.</li>
+                <li>Receive a personalized hormone therapy plan.</li>
+              </ol>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow border border-[#1A3973]/30">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-2 text-[#1A3973]">Privacy & Support</h2>
+              <p>
+                All information is strictly confidential. Our team includes professionals with LGBTQ+ healthcare experience to ensure respectful and informed service.
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
-        
+        {/* FAQ */}
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold mb-4 text-[#1A3973]">Frequently Asked Questions</h2>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="q1" title="Do I need to take tests beforehand?">
+              Blood tests may be necessary to determine your current hormone levels before starting.
+            </AccordionItem>
+            <AccordionItem value="q2" title="Is this service inclusive for transgender people?">
+              Yes, it is specifically designed to support transgender individuals with sensitivity and care.
+            </AccordionItem>
+          </Accordion>
+        </div>
+
+        {/* Related services */}
+        <div className="mt-10">
+          <h2 className="text-xl font-semibold mb-4 text-[#1A3973]">You may be interested in</h2>
+          <ul className="list-disc list-inside text-gray-700">
+            <li>Regular gynecological exams for transgender women</li>
+            <li>Gender identity psychological support</li>
+            <li>Legal counseling for gender change</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

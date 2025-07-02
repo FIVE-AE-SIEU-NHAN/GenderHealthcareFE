@@ -3,7 +3,7 @@ import type { NavMainProps } from "@/components/nav-main"
 
 export const consultantSidebarItems: NavMainProps["items"] = [
   {
-    title: "Questions Management",
+    title: "Questions",
     url: "/consultant/questions",
     icon: FileText, 
   },
@@ -18,13 +18,8 @@ export const consultantSidebarItems: NavMainProps["items"] = [
     icon: User, 
   },
   {
-    title: "Appointments Management",
-    url: "/consultant/appointments",
-    icon: CalendarCheck, 
-  },
-    {
     title: "Appointments",
-    url: "/consultant/appointments2",
+    url: "/consultant/appointments",
     icon: CalendarCheck, 
   },
   // {
