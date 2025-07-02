@@ -81,7 +81,7 @@ const BlogDetails: React.FC = () => {
 
         <article className="md:col-span-3">
           {/* Tất cả các trường dưới đây đều lấy từ object `blog` trả về từ API */}
-          <h1 className="text-4xl font-bold mb-3">{blog.title}</h1>
+          <h1 className="text-5xl font-bold mb-3">{blog.title}</h1>
           <p className="text-sm mb-6">
             {blog.author_name} |{' '}
             <time dateTime={blog.created_at}>
