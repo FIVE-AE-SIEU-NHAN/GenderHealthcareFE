@@ -65,7 +65,7 @@ const Navbar = () => {
                   <NavigationMenuLink href="/blog" className="nav-text text-xl">Blog</NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuLink href="#about-us" className="nav-text text-xl">About</NavigationMenuLink>
+                  <NavigationMenuLink href="/about-us" className="nav-text text-xl">About</NavigationMenuLink>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
