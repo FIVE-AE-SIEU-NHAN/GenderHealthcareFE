@@ -39,6 +39,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login: loginContext } = useAuth();
+  const [errorServer, setErrorServer] = useState<string | null>(null);
 
   const {
     register,
@@ -54,9 +55,7 @@ export default function LoginForm() {
 
       if (accessToken) {
         loginContext(accessToken);
-        toast.success("Login Successful", {
-          description: "Welcome back!",
-        });
+        
         navigate('/');
       } else {
         toast.error("Login Failed", { description: "Could not retrieve login credentials." });
@@ -99,6 +98,7 @@ export default function LoginForm() {
         toast.error("Login Failed", {
           description: generalMessage,
         });
+        setErrorServer(generalMessage);
       }
       // 3. Fallback for any other kind of error (e.g., network failure).
       else {
@@ -178,6 +178,11 @@ export default function LoginForm() {
               Forgot password?
             </a>
           </div>
+
+          {/* Invalid Email or Pass */}
+          {errorServer && (
+            <p id="errorServer" className="text-red-500 text-xl mx-auto">{errorServer}</p>
+          )}
 
           {/* Submit */}
           <Button type="submit" className="h-[45px] w-full bg-dark-blue hover:bg-semi-dark-blue text-lg"
