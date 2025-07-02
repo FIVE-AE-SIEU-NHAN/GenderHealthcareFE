@@ -13,7 +13,7 @@ import BookingService from './Application/BookingService';
 import RequireLoginBooking from './Application/RequireLoginBooking';
 import ServiceList from './Application/ServiceList';
 import ServiceDetail from './Application/ServiceDetail';
-import ContactUs from './Application/ContactUs';
+import AboutUs from './Application/AboutUs';
 import Prescription from './Application/PrescriptionDetail';
 import 'sal.js/dist/sal.css';
 
@@ -38,7 +38,7 @@ const App: React.FC = () => {
         <Route path="/requirebookingform" element={<RequireLoginBooking />} />
         <Route path="/servicelist" element={<ServiceList />} />
         <Route path="/servicedetail" element={<ServiceDetail />} />
-        <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/prescription" element={<Prescription />} />
       </Routes>
 
