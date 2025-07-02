@@ -11,6 +11,8 @@ import {
   ArrowRight,
   CheckCircle
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface StatItemProps {
   number: string;
@@ -60,13 +62,15 @@ const StatItem: React.FC<StatItemProps> = ({ number, label }) => {
 
 const ValueCard: React.FC<ValueCardProps> = ({ icon, title, description }) => {
   return (
-    <div className="group bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-2xl text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#1A3973]/20 border border-[#1A3973]/10">
-      <div className="w-16 h-16 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl group-hover:scale-110 transition-transform duration-300">
-        {icon}
-      </div>
-      <h3 className="text-xl font-semibold text-slate-800 mb-3">{title}</h3>
-      <p className="text-slate-600 leading-relaxed">{description}</p>
-    </div>
+    <Card className="group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#1A3973]/20 border border-[#1A3973]/10">
+      <CardContent className="text-center p-8">
+        <div className="w-16 h-16 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl group-hover:scale-110 transition-transform duration-300">
+          {icon}
+        </div>
+        <CardTitle className="text-xl font-semibold text-slate-800 mb-3">{title}</CardTitle>
+        <CardDescription className="text-slate-600 leading-relaxed">{description}</CardDescription>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -132,38 +136,46 @@ const AboutUsPage: React.FC = () => {
         </div>
 
         {/* Our Story Section */}
-        <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 md:p-12 mb-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6 relative">
-            Our Story
-            <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full"></div>
-          </h2>
-          <div className="space-y-6 text-lg text-slate-700 leading-relaxed">
-            <p>
-              Founded in 2018, Gender Health Care Center emerged from a recognized need for specialized, affirming healthcare services in our community. Our multidisciplinary team of healthcare professionals came together with a shared vision: to bridge the gap in gender-specific healthcare and provide comprehensive support for individuals on their health journey.
-            </p>
-            <p>
-              What started as a small clinic has grown into a leading center of excellence, serving thousands of patients and pioneering innovative approaches to gender health. We've built partnerships with leading medical institutions and continue to advance research in gender-affirming care.
-            </p>
-          </div>
-        </div>
+        <Card className="mb-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+          <CardHeader>
+            <CardTitle className="text-3xl md:text-4xl font-bold text-slate-800 relative">
+              Our Story
+              <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full"></div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6 text-lg text-slate-700 leading-relaxed">
+              <p>
+                Founded in 2018, Gender Health Care Center emerged from a recognized need for specialized, affirming healthcare services in our community. Our multidisciplinary team of healthcare professionals came together with a shared vision: to bridge the gap in gender-specific healthcare and provide comprehensive support for individuals on their health journey.
+              </p>
+              <p>
+                What started as a small clinic has grown into a leading center of excellence, serving thousands of patients and pioneering innovative approaches to gender health. We've built partnerships with leading medical institutions and continue to advance research in gender-affirming care.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Our Values Section */}
-        <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 md:p-12 mb-8 shadow-xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-8 relative">
-            Our Values
-            <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full"></div>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {values.map((value, index) => (
-              <ValueCard
-                key={index}
-                icon={value.icon}
-                title={value.title}
-                description={value.description}
-              />
-            ))}
-          </div>
-        </div>
+        <Card className="mb-8 shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-3xl md:text-4xl font-bold text-slate-800 relative">
+              Our Values
+              <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full"></div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {values.map((value, index) => (
+                <ValueCard
+                  key={index}
+                  icon={value.icon}
+                  title={value.title}
+                  description={value.description}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Statistics Section */}
         <div className="bg-gradient-to-r from-[#1A3973] to-[#2c5282] text-white text-center p-12 md:p-16 rounded-3xl mb-8 shadow-2xl">
@@ -177,46 +189,56 @@ const AboutUsPage: React.FC = () => {
         </div>
 
         {/* Our Services Section */}
-        <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 md:p-12 mb-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6 relative">
-            Our Services
-            <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full"></div>
-          </h2>
-          <div className="space-y-6 text-lg text-slate-700 leading-relaxed">
-            <p>
-              We offer a comprehensive range of gender-affirming healthcare services, including hormone therapy, surgical consultations, mental health support, fertility preservation, and preventive care. Our multidisciplinary approach ensures that each patient receives coordinated, holistic care tailored to their individual needs and goals.
-            </p>
-            <p>
-              Our team includes endocrinologists, surgeons, mental health professionals, nurses, and support staff who are specially trained in gender health. We work collaboratively to provide seamless care transitions and ongoing support throughout each patient's healthcare journey.
-            </p>
-          </div>
-        </div>
+        <Card className="mb-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+          <CardHeader>
+            <CardTitle className="text-3xl md:text-4xl font-bold text-slate-800 relative">
+              Our Services
+              <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full"></div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6 text-lg text-slate-700 leading-relaxed">
+              <p>
+                We offer a comprehensive range of gender-affirming healthcare services, including hormone therapy, surgical consultations, mental health support, fertility preservation, and preventive care. Our multidisciplinary approach ensures that each patient receives coordinated, holistic care tailored to their individual needs and goals.
+              </p>
+              <p>
+                Our team includes endocrinologists, surgeons, mental health professionals, nurses, and support staff who are specially trained in gender health. We work collaboratively to provide seamless care transitions and ongoing support throughout each patient's healthcare journey.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Our Commitment Section */}
-        <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 md:p-12 mb-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6 relative">
-            Our Commitment
-            <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full"></div>
-          </h2>
-          <div className="space-y-6 text-lg text-slate-700 leading-relaxed">
-            <p>
-              We are committed to advancing the field of gender health through continuous education, research, and advocacy. We regularly participate in professional development, contribute to medical literature, and collaborate with other healthcare institutions to improve standards of care.
-            </p>
-            <p>
-              Our center is also dedicated to training the next generation of healthcare providers in gender-affirming care practices, helping to expand access to quality care in our region and beyond.
-            </p>
-          </div>
-          
-          <div className="mt-8 p-6 bg-slate-50 rounded-2xl">
-            <div className="flex items-center gap-4 text-slate-800">
-              <Award className="text-[#1A3973] flex-shrink-0" size={24} />
-              <div>
-                <p className="font-semibold">Accreditations:</p>
-                <p className="text-slate-600">Joint Commission Certified • WPATH Standards of Care Compliant • LGBTQ+ Healthcare Equality Index Leader</p>
-              </div>
+        <Card className="mb-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+          <CardHeader>
+            <CardTitle className="text-3xl md:text-4xl font-bold text-slate-800 relative">
+              Our Commitment
+              <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-[#1A3973] to-[#2c5282] rounded-full"></div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6 text-lg text-slate-700 leading-relaxed">
+              <p>
+                We are committed to advancing the field of gender health through continuous education, research, and advocacy. We regularly participate in professional development, contribute to medical literature, and collaborate with other healthcare institutions to improve standards of care.
+              </p>
+              <p>
+                Our center is also dedicated to training the next generation of healthcare providers in gender-affirming care practices, helping to expand access to quality care in our region and beyond.
+              </p>
             </div>
-          </div>
-        </div>
+            
+            <Card className="mt-8 bg-slate-50">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4 text-slate-800">
+                  <Award className="text-[#1A3973] flex-shrink-0" size={24} />
+                  <div>
+                    <p className="font-semibold">Accreditations:</p>
+                    <p className="text-slate-600">Joint Commission Certified • WPATH Standards of Care Compliant • LGBTQ+ Healthcare Equality Index Leader</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </CardContent>
+        </Card>
 
         {/* Call to Action Section */}
         <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white text-center p-12 md:p-16 rounded-3xl shadow-2xl">
@@ -224,10 +246,13 @@ const AboutUsPage: React.FC = () => {
           <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
             Take the first step toward affirming, comprehensive healthcare. Our team is here to support you every step of the way.
           </p>
-          <button className="group inline-flex items-center gap-3 bg-gradient-to-r from-[#1A3973] to-[#2c5282] text-white px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#1A3973]/40">
+          <Button 
+            size="lg"
+            className="group inline-flex items-center gap-3 bg-gradient-to-r from-[#1A3973] to-[#2c5282] text-white px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#1A3973]/40"
+          >
             Schedule a Consultation
             <ArrowRight className="group-hover:translate-x-1 transition-transform duration-300" size={20} />
-          </button>
+          </Button>
           
           <div className="flex items-center justify-center gap-6 mt-8 text-sm opacity-75">
             <div className="flex items-center gap-2">
