@@ -162,7 +162,7 @@ const BookingForm = () => {
               <FaHeartbeat className="text-3xl text-white" />
             </div>
             
-            <CardTitle className="text-3xl font-bold mb-4 text-center text-[#1A3973] text-shadow-lg">Book an Appointment</CardTitle>
+            <CardTitle className="text-3xl font-bold mb-4 text-center text-[#1A3973] text-shadow-lg">Book Service</CardTitle>
             <p className="text-sm text-gray-600 text-center mt-2">
               Complete this contact form to schedule your first appointment with us!
             </p>

@@ -98,11 +98,25 @@ const ConsultantAppointmentPage = () => {
   }
 
   return (
-    <div className="min-h-screen p-6 md:p-10 relative bg-blend-overlay" style={{ backgroundImage: "url('https://benhviengreen.com/wp-content/uploads/2016/05/doctor-health-wellness-1200x480.jpg')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
+    <div
+      className="flex items-center justify-center max-[1125px]:min-h-[82vh] min-[1125px]:min-h-[77vh] relative bg-blend-overlay"
+      style={{
+        backgroundImage:
+          "url('https://benhviengreen.com/wp-content/uploads/2016/05/doctor-health-wellness-1200x480.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="absolute inset-0 bg-white/70 z-0"></div>
 
-      <div className="relative z-10 flex justify-center">
+      <div className="relative z-10 flex justify-center w-full">
         <div className="w-full max-w-3xl px-4 md:px-0">
+
+          <div className="text-center mb-12">
+            <CardTitle className="text-4xl md:text-5xl font-bold text-[#1A3973] mb-3">Booking Consultant</CardTitle>
+            <div className="w-60 h-1 bg-gradient-to-r from-[#1A3973] to-[#4F80E1] mx-auto"></div>
+          </div>
           <div className="bg-white rounded-2xl p-8 text-black shadow-xl border border-gray-200 transition-all duration-300">
             <div className="text-center mb-6">
               <div className="bg-[#1A3973] rounded-full p-3 w-14 h-14 mx-auto mb-3 flex items-center justify-center shadow-sm">
@@ -142,7 +156,7 @@ const ConsultantAppointmentPage = () => {
 
                 {/* Select date and time */}
                 <div className="grid grid-cols-2 gap-2">
-                  
+
                   {/* Select date */}
                   <FormField control={form.control} name="booking_date" render={({ field }) => (
                     <FormItem className="flex flex-col">
@@ -197,7 +211,7 @@ const ConsultantAppointmentPage = () => {
                   )} />
                 </div>
 
-                
+
                 {/* Real-time info */}
                 {getSelectedTopic() && (
                   <div className="mt-4 bg-blue-50 p-4 rounded-md">
@@ -227,9 +241,9 @@ const ConsultantAppointmentPage = () => {
                     )}
                   </div>
                 )}
-                
 
-                {/* Terms agreement checkbox */}  
+
+                {/* Terms agreement checkbox */}
                 <FormField control={form.control} name="agreed" render={({ field }) => (
                   <FormItem className="flex flex-row items-center space-x-2 space-y-0 mt-4">
                     <FormControl>
@@ -249,23 +263,15 @@ const ConsultantAppointmentPage = () => {
                 <div className="mt-6">
                   <Button
                     type="submit"
-                    disabled={bookAppointment.isPending}
-                    className="flex items-center justify-center w-full bg-gradient-to-r from-[#1A3973] to-[#2A59A3]
-                               text-white text-lg font-semibold rounded-lg px-6 py-3 shadow-lg 
-                               hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
-                  >
-
-                    {bookAppointment.isPending ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        <span>PROCESSING...</span>
-                      </>
-                    ) : (
-                      <>
-                        <FaHeartbeat className="text-lg mr-2" />
-                        <span>Book Consultation</span>
-                      </>
-                    )}
+                    className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f] hover:to-[#3a6ad0] 
+                                  text-white text-lg font-semibold rounded-lg py-3 
+                                  shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                    <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full 
+                                      group-hover:translate-x-full transition-transform duration-700"></span>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <FaHeartbeat className="mr-2" />
+                      <span>Book Consultant</span>
+                    </div>
                   </Button>
                 </div>
               </form>
