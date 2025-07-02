@@ -74,7 +74,7 @@ for (const [key, details] of Object.entries(TOPIC_DETAILS)) {
   const { label, color } = details;
   TOPIC_STYLES_MAP.set(key as Topic, {
     label,
-    cardClasses: `border-l-${color}-500 bg-${color}-500/10 text-${color}-700 dark:border-l-${color}-400 dark:text-${color}-300`,
+    cardClasses: `border-l-${color}-500 bg-${color}-500/10 text-${color}-700`,
     dotClass: `bg-${color}-500`,
   });
 }

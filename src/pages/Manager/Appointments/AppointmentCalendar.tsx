@@ -16,6 +16,25 @@ const StatCardSkeleton = () => (
   </div>
 );
 
+function SafelistClasses() {
+  return (
+    <div className="hidden">
+      {/* Purple */}
+      <div className="border-l-purple-500 dark:border-l-purple-400 bg-purple-500/10 text-purple-700 dark:text-purple-300"></div>
+      {/* Blue */}
+      <div className="border-l-blue-500 dark:border-l-blue-400 bg-blue-500/10 text-blue-700"></div>
+      {/* Yellow */}
+      <div className="border-l-yellow-500 dark:border-l-yellow-400 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300"></div>
+      {/* Teal */}
+      <div className="border-l-teal-500 dark:border-l-teal-400 bg-teal-500/10 text-teal-700 dark:text-teal-300"></div>
+      {/* Gray */}
+      <div className="border-l-gray-500 dark:border-l-gray-400 bg-gray-500/10 text-gray-700 dark:text-gray-300"></div>
+      {/* Pink */}
+      <div className="border-l-pink-500 dark:border-l-pink-400 bg-pink-500/10 text-pink-700 dark:text-pink-300"></div>
+    </div>
+  );
+}
+
 export default function AppointmentCalendar() {
   const [currentWeek, setCurrentWeek] = useState(new Date());
 
@@ -155,7 +174,7 @@ export default function AppointmentCalendar() {
               </div>
             </div>
           )}
-
+          <SafelistClasses />
 
           <TopicLegend />
           {/* Weekly Calendar */}
