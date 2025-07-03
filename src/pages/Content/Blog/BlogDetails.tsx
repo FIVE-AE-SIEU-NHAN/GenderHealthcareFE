@@ -58,7 +58,7 @@ const BlogDetails: React.FC = () => {
       {/* Sử dụng key `cover_image` từ API */}
       <div className="w-full h-[400px] mb-12">
         <img
-          src="/images/cover.jpg"
+          src={blog.main_image}
           alt={blog.title}
           className="w-full h-full object-cover rounded-xl"
         />
@@ -92,12 +92,12 @@ const BlogDetails: React.FC = () => {
           <div className="text-lg mb-6 whitespace-pre-line">{blog.summary}</div>
 
           <section className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Article Content</h2>
+            <h2 className="text-xl font-semibold mb-2">Main Content</h2>
             <p className="text-base leading-7 whitespace-pre-line">{blog.content}</p>
           </section>
 
           <section className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Main Content</h2>
+            <h2 className="text-xl font-semibold mb-2">Article Content</h2>
             <p className="text-base leading-7 whitespace-pre-line">{blog.section_1}</p>
           </section>
 
