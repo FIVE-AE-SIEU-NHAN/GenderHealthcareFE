@@ -1,5 +1,4 @@
 // Question List Dashboard for Manager
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
@@ -173,7 +172,7 @@ export default function QuestionListDashboard() {
     setBreadcrumb({
       title: "Question Management",
       parent: "Dashboard",
-      parentHref: "/admin/dashboard",
+      parentHref: "/manager",
     });
   }, [setBreadcrumb]);
 
