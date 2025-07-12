@@ -1,5 +1,5 @@
 import api from '@/apis/axiosConfig';
-import type { BookAppointmentPayload, BookAppointmentResponse } from '@/types/customer/appointmentTypes';
+import type { BookAppointmentPayload, BookAppointmentResponse, CustomerAppointment } from '@/types/customer/appointmentTypes';
 
 // =============== CREATE (BOOK) A NEW APPOINTMENT ===============
 /**
@@ -11,4 +11,17 @@ import type { BookAppointmentPayload, BookAppointmentResponse } from '@/types/cu
 export const bookAppointmentAPI = async (payload: BookAppointmentPayload): Promise<BookAppointmentResponse> => {
   const response = await api.post<BookAppointmentResponse>('/appointment/book', payload);
   return response.data;
+};
+
+
+// ============== GET APPOINTMENT HISTORY ===============
+/**
+ * Fetches the appointment history for the currently logged-in customer.
+ * Corresponds to the "Connect with a consultant" type of booking.
+ * @returns A promise that resolves to an array of customer appointments.
+ */
+export const fetchCustomerAppointments = async (): Promise<CustomerAppointment[]> => {
+  const response = await api.get('/appointment/customer');
+  
+  return response.data.result || [];
 };
