@@ -1,5 +1,5 @@
 import { BarChart2, CalendarCheck, ClipboardList, FileText, Settings, User, Users } from "lucide-react"
-import type { NavMainProps } from "@/components/nav-main"
+import type { NavMainProps } from "@/components/layouts/Dashboard/nav-main"
 
 export const adminSidebarItems: NavMainProps["items"] = [
   {

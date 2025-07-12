@@ -1,5 +1,5 @@
 import { CalendarCheck, FileText, MessageCircle, User } from "lucide-react"
-import type { NavMainProps } from "@/components/nav-main"
+import type { NavMainProps } from "@/components/layouts/Dashboard/nav-main"
 
 export const consultantSidebarItems: NavMainProps["items"] = [
   {
