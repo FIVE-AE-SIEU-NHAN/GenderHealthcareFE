@@ -1,27 +1,45 @@
 const TOPIC_DETAILS = {
   WOMENS_REPRODUCTIVE_HEALTH: {
     label: "Women's Reproductive Health",
-    color: 'purple',
+    classes: {
+      card: 'border-l-purple-500 bg-purple-500/10 text-purple-700',
+      dot: 'bg-purple-500',
+    },
   },
   CONTRACEPTION_AND_FAMILY_PLANNING: {
     label: 'Contraception & Family Planning',
-    color: 'blue',
+    classes: {
+      card: 'border-l-blue-500 bg-blue-500/10 text-blue-700',
+      dot: 'bg-blue-500',
+    },
   },
   PREGNANCY_AND_MATERNITY_SUPPORT: {
     label: 'Pregnancy & Maternity Support',
-    color: 'yellow',
+    classes: {
+      card: 'border-l-yellow-500 bg-yellow-500/10 text-yellow-700',
+      dot: 'bg-yellow-500',
+    },
   },
   STIS: {
     label: 'STIs (Sexually Transmitted Infections)',
-    color: 'teal',
+    classes: {
+      card: 'border-l-teal-500 bg-teal-500/10 text-teal-700',
+      dot: 'bg-teal-500',
+    },
   },
   SEXUAL_HEALTH_AND_GENDER_PSYCHOLOGY: {
     label: 'Sexual Health & Gender Psychology',
-    color: 'gray',
+    classes: {
+      card: 'border-l-gray-500 bg-gray-500/10 text-gray-700',
+      dot: 'bg-gray-500',
+    },
   },
   TESTING_AND_DIAGNOSTIC_SERVICES: {
     label: 'Testing & Diagnostic Services',
-    color: 'pink',
+    classes: {
+      card: 'border-l-pink-500 bg-pink-500/10 text-pink-700',
+      dot: 'bg-pink-500',
+    },
   },
 } as const;
 
@@ -71,22 +89,22 @@ export type TopicStyle = {
 export const TOPIC_STYLES_MAP = new Map<Topic, TopicStyle>();
 
 for (const [key, details] of Object.entries(TOPIC_DETAILS)) {
-  const { label, color } = details;
+  const { label, classes } = details;
   TOPIC_STYLES_MAP.set(key as Topic, {
     label,
-    cardClasses: `border-l-${color}-500 bg-${color}-500/10 text-${color}-700`,
-    dotClass: `bg-${color}-500`,
+    cardClasses: classes.card,
+    dotClass: classes.dot,
   });
 }
 
 // TOPIC_OPTIONS for consultants/questions management
 export const TOPIC_OPTIONS: { value: string; label: string; style?: string }[] =
   Object.entries(TOPIC_DETAILS).map(([value, details]) => {
-    const { label, color } = details;
+    const { label, classes } = details;
     return {
       value,
       label,
-      style: `border-${color}-500/50 bg-${color}-500/10 text-${color}-700`,
+      style: classes.card,
     };
   });
 
