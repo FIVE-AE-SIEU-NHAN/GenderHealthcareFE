@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { vi } from "date-fns/locale";
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -65,9 +64,10 @@ const ConsultantAppointmentPage = () => {
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find(t => t.value === selectedTimeSlotValue)?.label;
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    const formattedDate = format(values.booking_date, "yyyy-MM-dd");
     const payload = {
       topic: values.topic,
-      booking_date: values.booking_date,
+      booking_date: formattedDate,
       time_slot: values.time_slot,
     };
 
@@ -78,7 +78,7 @@ const ConsultantAppointmentPage = () => {
 
         setBookingDetails({
           topic: topicLabel,
-          date: format(values.booking_date, "dd/MM/yyyy", { locale: vi }),
+          date: formattedDate,
           time: timeLabel
         });
 

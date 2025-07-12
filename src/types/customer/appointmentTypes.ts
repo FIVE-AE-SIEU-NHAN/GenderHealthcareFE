@@ -6,7 +6,7 @@
  */
 export interface BookAppointmentPayload {
   topic: string;
-  booking_date: Date;
+  booking_date: string;
   time_slot: string;
 }
 

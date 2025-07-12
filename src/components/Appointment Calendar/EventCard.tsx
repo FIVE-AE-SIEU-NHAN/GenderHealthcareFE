@@ -1,5 +1,5 @@
 import { Appointment } from "@/types/consultant/appointmentTypes";
-import { StatusBadge } from "@/components/status-badge";
+import { StatusBadge } from "@/components/Appointment Calendar/status-badge";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_TOPIC_STYLE, TOPIC_STYLES_MAP } from "@/Application/constants/appointment";

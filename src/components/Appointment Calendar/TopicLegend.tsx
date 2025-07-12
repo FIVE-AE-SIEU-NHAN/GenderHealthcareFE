@@ -16,7 +16,7 @@ export function TopicLegend() {
                 )}
               />
               <span className="text-sm text-gray-800 dark:text-gray-200">
-                {topicStyle.label} 
+                {topicStyle.label}
               </span>
             </div>
           ))}

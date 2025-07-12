@@ -1,19 +1,11 @@
 import { useState, useMemo } from 'react';
 import { startOfWeek, endOfWeek, formatISO } from 'date-fns';
-import { Calendar, Users, Clock, Activity, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 import { useConsultantAppointments } from '@/hooks/consultant/useAppointments';
 
-import { CalendarWeekView } from './Calendar/CalendarWeekView';
+import { CalendarWeekView } from '../../../components/Appointment Calendar/CalendarWeekView';
 import { Appointment } from '@/types/consultant/appointmentTypes';
-
-// A simple skeleton loader for the stat cards
-const StatCardSkeleton = () => (
-  <div className="relative p-6 bg-white/70 backdrop-blur-sm border border-white/30 rounded-2xl shadow-xl animate-pulse">
-    <div className="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
-    <div className="h-8 bg-gray-400 rounded w-1/4"></div>
-  </div>
-);
 
 export default function AppointmentCalendar() {
   const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -24,7 +16,7 @@ export default function AppointmentCalendar() {
     return { start, end };
   }, [currentWeek]);
 
-  // Use the custom hook to fetch data. The component is now clean and declarative.
+  // Use the custom hook 
   const {
     data: appointmentData,
     isLoading,
@@ -62,88 +54,6 @@ export default function AppointmentCalendar() {
 
       <div className="max-h-[84vh] overflow-y-auto relative">
         <div className="relative z-10 w-full max-w-7xl mx-auto">
-          {/* CARD HEADER with Loading State */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            {isLoading ? (
-              <>
-                <StatCardSkeleton />
-                <StatCardSkeleton />
-                <StatCardSkeleton />
-                <StatCardSkeleton />
-              </>
-            ) : (
-              <>
-                {/* Total Appointments Card */}
-                <div className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-2xl" />
-                  <div className="absolute inset-0 bg-white/70 backdrop-blur-sm border border-white/30 rounded-2xl shadow-xl transition-all duration-300" />
-                  <div className="relative z-10 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Appointments</p>
-                        <p className="text-3xl font-bold text-gray-900 mt-2">{weeklyStats.totalAppointments}</p>
-                      </div>
-                      <div className="p-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
-                        <Calendar className="w-7 h-7 text-white" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Pending Card */}
-                <div className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-600/20 rounded-2xl" />
-                  <div className="absolute inset-0 bg-white/70 backdrop-blur-sm border border-white/30 rounded-2xl shadow-xl transition-all duration-300" />
-                  <div className="relative z-10 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Pending</p>
-                        <p className="text-3xl font-bold text-amber-600 mt-2">{weeklyStats.pending}</p>
-                      </div>
-                      <div className="p-4 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
-                        <Clock className="w-7 h-7 text-white" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Cancelled Card */}
-                <div className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-2xl" />
-                  <div className="absolute inset-0 bg-white/70 backdrop-blur-sm border border-white/30 rounded-2xl shadow-xl transition-all duration-300" />
-                  <div className="relative z-10 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Cancelled</p>
-                        <p className="text-3xl font-bold text-red-600 mt-2">{weeklyStats.cancelled}</p>
-                      </div>
-                      <div className="p-4 bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
-                        <Activity className="w-7 h-7 text-white" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Completed Card */}
-                <div className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 rounded-2xl" />
-                  <div className="absolute inset-0 bg-white/70 backdrop-blur-sm border border-white/30 rounded-2xl shadow-xl transition-all duration-300" />
-                  <div className="relative z-10 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Completed</p>
-                        <p className="text-3xl font-bold text-emerald-600 mt-2">{weeklyStats.completed}</p>
-                      </div>
-                      <div className="p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
-                        <Users className="w-7 h-7 text-white" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
           {/* Error State Handling */}
           {isError && (
             <div role="alert" className="p-4 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 flex items-center gap-2">
@@ -160,7 +70,9 @@ export default function AppointmentCalendar() {
             appointments={appointments}
             currentWeek={currentWeek}
             onWeekChange={setCurrentWeek}
+            weeklyStats={weeklyStats}
             isFetching={isFetching}
+            isLoading={isLoading}
           />
         </div>
       </div>

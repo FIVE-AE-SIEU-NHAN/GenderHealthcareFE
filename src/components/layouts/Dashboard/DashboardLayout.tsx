@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/layouts/Dashboard/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,7 +15,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import type { NavMainProps } from "@/components/nav-main";
+import type { NavMainProps } from "@/components/layouts/Dashboard/nav-main";
 import { UserNav } from "@/components/layouts/Dashboard/user-nav";
 import WebLogo from "@/assets/images/logo1.png"
 
