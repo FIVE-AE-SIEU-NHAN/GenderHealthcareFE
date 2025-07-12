@@ -16,3 +16,10 @@ export interface BookAppointmentPayload {
 export interface BookAppointmentResponse {
   message: string;
 }
+
+/**
+ * The error structure returned by the backend when booking an appointment fails.
+ */
+export interface BookAppointmentError {
+  message: string;
+}

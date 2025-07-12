@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "lucide-react";
+import { Calendar, Loader2 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -56,6 +56,10 @@ const ConsultantAppointmentPage = () => {
     }
   });
 
+  const today = new Date(new Date().setHours(0, 0, 0, 0)); 
+  const maxDate = new Date(today);
+  maxDate.setMonth(maxDate.getMonth() + 2); // Allow booking up to 2 months in advance
+
   const selectedTopicValue = form.watch("topic");
   const selectedDateValue = form.watch("booking_date");
   const selectedTimeSlotValue = form.watch("time_slot");
@@ -75,10 +79,11 @@ const ConsultantAppointmentPage = () => {
       onSuccess: () => {
         const topicLabel = getSelectedTopic()?.label || "";
         const timeLabel = getSelectedTimeSlotLabel() || "";
+        const displayDate = format(values.booking_date, "dd/MM/yyyy");
 
         setBookingDetails({
           topic: topicLabel,
-          date: formattedDate,
+          date: displayDate,
           time: timeLabel
         });
 
@@ -92,17 +97,11 @@ const ConsultantAppointmentPage = () => {
 
   return (
     <div
-      className="flex items-center justify-center max-[1125px]:min-h-[90vh] min-[1125px]:min-h-[93vh] relative bg-blend-overlay"
-      style={{
-        backgroundImage:
-          "url('https://benhviengreen.com/wp-content/uploads/2016/05/doctor-health-wellness-1200x480.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+      className="flex items-center justify-center max-[1125px]:min-h-[90vh] min-[1125px]:min-h-[93vh] 
+                  relative bg-blend-overlay bg-cover bg-center bg-no-repeat 
+                  bg-[url('https://benhviengreen.com/wp-content/uploads/2016/05/doctor-health-wellness-1200x480.jpg')]"
     >
       <div className="absolute inset-0 bg-white/70 z-0"></div>
-
       <div className="relative z-10 flex justify-center w-full">
         <div className="w-full max-w-3xl px-4 md:px-0">
 
@@ -126,7 +125,7 @@ const ConsultantAppointmentPage = () => {
                 {/* Dropdown to pick consultation topic */}
                 <FormField control={form.control} name="topic" render={({ field }) => (
                   <FormItem>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value} disabled={bookAppointment.isPending}>
                       <FormControl>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select consultation topic" />
@@ -149,7 +148,6 @@ const ConsultantAppointmentPage = () => {
 
                 {/* Select date and time */}
                 <div className="grid grid-cols-2 gap-2">
-
                   {/* Select date */}
                   <FormField control={form.control} name="booking_date" render={({ field }) => (
                     <FormItem className="flex flex-col">
@@ -159,6 +157,7 @@ const ConsultantAppointmentPage = () => {
                             <Button
                               type="button"
                               variant="outline"
+                              disabled={bookAppointment.isPending}
                               className="w-full justify-start text-left font-normal">
                               <Calendar className="mr-2 h-4 w-4 text-[#1A3973]" />
                               {field.value ? format(field.value, "dd/MM/yyyy") : "Select date"}
@@ -170,7 +169,10 @@ const ConsultantAppointmentPage = () => {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0)) || date.getDay() === 0}
+                            disabled={(date) => 
+                              date < today ||
+                              date > maxDate || 
+                              date.getDay() === 0}
                             autoFocus
                           />
                         </PopoverContent>
@@ -240,13 +242,24 @@ const ConsultantAppointmentPage = () => {
                 <FormField control={form.control} name="agreed" render={({ field }) => (
                   <FormItem className="flex flex-row items-center space-x-2 space-y-0 mt-4">
                     <FormControl>
-                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      <Checkbox 
+                        id="agreed"
+                        checked={field.value} 
+                        onCheckedChange={field.onChange} 
+                        disabled={bookAppointment.isPending}
+                      />
                     </FormControl>
 
                     <div className="space-y-1 leading-none">
-                      <label htmlFor="terms" className="text-sm">
+                      <label htmlFor="agreed" className="text-sm cursor-pointer">
                         I agree to the{" "}
-                        <a href="/terms-and-privacy" className="text-[#1A3973] hover:underline">Terms of Use and Privacy Policy</a>
+                        <a 
+                          href="/terms-and-privacy" 
+                          className="text-[#1A3973] hover:underline"
+                          onClick={(e) => e.stopPropagation()} 
+                        >
+                          Terms of Use and Privacy Policy
+                        </a>
                       </label>
                     </div>
                   </FormItem>
@@ -256,14 +269,25 @@ const ConsultantAppointmentPage = () => {
                 <div className="mt-6">
                   <Button
                     type="submit"
+                    disabled={bookAppointment.isPending}
                     className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f] hover:to-[#3a6ad0] 
                                   text-white text-lg font-semibold rounded-lg py-3 
-                                  shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                                  shadow-lg hover:shadow-xl transition-all duration-300 relative 
+                                  overflow-hidden group disabled:opacity-75 disabled:cursor-not-allowed">
                     <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full 
                                       group-hover:translate-x-full transition-transform duration-700"></span>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <FaHeartbeat className="mr-2" />
-                      <span>Book Consultant</span>
+                    <div className="relative flex items-center justify-center">
+                      {bookAppointment.isPending ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          <span>Booking...</span>
+                        </>
+                      ) : (
+                        <>
+                          <FaHeartbeat className="mr-2" />
+                          <span>Book Consultant</span>
+                        </>
+                      )}
                     </div>
                   </Button>
                 </div>
