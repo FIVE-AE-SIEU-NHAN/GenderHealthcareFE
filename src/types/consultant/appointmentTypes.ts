@@ -29,7 +29,7 @@ export interface AppointmentsApiResponse {
 
 
 /**
- * Example response type for /api/demo
+ * Backend response for appointments, including pagination
  */
 export interface BackendAppointmentsResponse {
   message: string;
@@ -53,4 +53,14 @@ export interface WeeklyAppointmentsResponse {
 export interface UseAppointmentsOptions {
   startDate: string;
   endDate:string;
+}
+
+
+// =================== APPOINTMENTS STATUS =================== 
+export interface EditAppointmentStatusPayload {
+  appointmentId: string;
+  status: AppointmentStatus;
+}
+export interface EditAppointmentStatusResponse {
+  message: string;
 }

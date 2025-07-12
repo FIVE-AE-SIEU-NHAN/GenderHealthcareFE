@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { startOfWeek, endOfWeek, formatISO } from 'date-fns';
 import { AlertCircle } from 'lucide-react';
 
@@ -6,9 +6,22 @@ import { useManagerAppointments } from '@/hooks/manager/useAppointments';
 
 import { CalendarWeekView } from '@/components/Appointment Calendar/CalendarWeekView';
 import { Appointment } from '@/types/consultant/appointmentTypes';
+import { useOutletContext } from 'react-router-dom';
+import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout';
 
 export default function ManagerAppointmentCalendar() {
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
+
   const [currentWeek, setCurrentWeek] = useState(new Date());
+
+  // ========== SET BREADCRUMB ==========
+  useEffect(() => {
+    setBreadcrumb({
+      title: "Appointments Management",
+      parent: "Dashboard",
+      parentHref: "/manager",
+    });
+  }, [setBreadcrumb]);
 
   // ========== CALCULATE WEEK DATE RANGE ==========
   const weekDateRange = useMemo(() => {
@@ -18,9 +31,9 @@ export default function ManagerAppointmentCalendar() {
   }, [currentWeek]);
 
   // ========== USE MANAGER APPOINTMENTS HOOK ==========
-  const { 
-    data: appointmentData, 
-    isLoading, 
+  const {
+    data: appointmentData,
+    isLoading,
     isError,
     error,
     isFetching,
@@ -31,10 +44,10 @@ export default function ManagerAppointmentCalendar() {
 
   // ========== EXTRACT APPOINTMENTS FROM DATA ==========
   const appointments: Appointment[] = useMemo(
-    () => appointmentData?.data?? [], 
+    () => appointmentData?.data ?? [],
     [appointmentData]
   );
-   
+
   // ========== CALCULATE WEEKLY STATS ==========
   const weeklyStats = useMemo(() => {
     const totalAppointments = appointments.length;
@@ -42,7 +55,7 @@ export default function ManagerAppointmentCalendar() {
     const ongoing = appointments.filter(apt => apt.status === 'ONGOING').length;
     const completed = appointments.filter(apt => apt.status === 'COMPLETED').length;
     const cancelled = appointments.filter(apt => apt.status === 'CANCELLED').length;
-    
+
     return { totalAppointments, pending, ongoing, completed, cancelled };
   }, [appointments]);
 
@@ -52,7 +65,7 @@ export default function ManagerAppointmentCalendar() {
       <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-xl animate-pulse" />
       <div className="absolute top-40 right-32 w-24 h-24 bg-gradient-to-r from-emerald-400/20 to-blue-400/20 rounded-full blur-xl animate-pulse delay-1000" />
       <div className="absolute bottom-32 left-32 w-28 h-28 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-xl animate-pulse delay-2000" />
-      
+
       <div className="max-h-[84vh] overflow-y-auto relative">
         <div className="relative z-10 w-full max-w-7xl mx-auto">
           {/* ======== ERROR HANDLING ======== */}

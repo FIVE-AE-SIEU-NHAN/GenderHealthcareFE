@@ -66,7 +66,12 @@ export type AppointmentStatus =
   | "COMPLETED"
   | "CANCELLED";
 
-
+export const APPOINTMENT_STATUS_OPTIONS = [
+  "PENDING", 
+  "ONGOING", 
+  "COMPLETED", 
+  "CANCELLED"
+] as const;
 /**
  * Healthcare topics enum
  */

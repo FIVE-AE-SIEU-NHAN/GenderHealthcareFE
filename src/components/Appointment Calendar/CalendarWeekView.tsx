@@ -3,10 +3,11 @@ import { AppointmentCard } from "./EventCard";
 import { format, startOfWeek, addDays, isSameDay, parseISO } from "date-fns";
 import { ChevronLeft, ChevronRight, Calendar, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TimeSlot } from "@/Application/constants/appointment";
+import { AppointmentStatus, TimeSlot } from "@/Application/constants/appointment";
 import { TopicLegend } from "./TopicLegend";
 import { WeeklyStats, WeeklyStatsHeader } from "./StatsHeader";
 import { cn } from "@/lib/utils";
+import { useUpdateAppointmentStatus } from "@/hooks/manager/useAppointmentsMutation";
 
 interface CalendarWeekViewProps {
   appointments: Appointment[];
@@ -66,6 +67,13 @@ export function CalendarWeekView({
     onWeekChange(addDays(currentWeek, 7));
   };
 
+  const updateStatusMutation = useUpdateAppointmentStatus();
+
+  const handleStatusChange = (appointmentId: string, status: AppointmentStatus) => {
+    updateStatusMutation.mutate({ appointmentId, status });
+  };
+
+
   return (
     <>
       {/* CARD HEADER */}
@@ -77,7 +85,7 @@ export function CalendarWeekView({
       {/* ========= CALENDAR ========= */}
       <div className="w-full">
         {/* Week Navigation Header */}
-        <div className="flex items-center justify-between mb-6 bg-white rounded-lg p-4 shadow-sm border">
+        <div className="flex items-center justify-between mb-2 bg-white rounded-lg p-4 shadow-sm border">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-blue-100 rounded-lg">
               <Calendar className="w-5 h-5 text-blue-600" />
@@ -175,6 +183,11 @@ export function CalendarWeekView({
                             key={appointment.id}
                             appointment={appointment}
                             className="w-full"
+                            onStatusChange={(newStatus) => handleStatusChange(appointment.id, newStatus)}
+                            isUpdating={
+                              updateStatusMutation.isPending &&
+                              updateStatusMutation.variables?.appointmentId === appointment.id
+                            }
                           />
                         ))}
                       </div>

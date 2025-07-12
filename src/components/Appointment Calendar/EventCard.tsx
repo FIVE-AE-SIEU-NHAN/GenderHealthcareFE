@@ -2,16 +2,22 @@ import { Appointment } from "@/types/consultant/appointmentTypes";
 import { StatusBadge } from "@/components/Appointment Calendar/status-badge";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_TOPIC_STYLE, TOPIC_STYLES_MAP } from "@/Application/constants/appointment";
+import { APPOINTMENT_STATUS_OPTIONS, AppointmentStatus, DEFAULT_TOPIC_STYLE, TOPIC_STYLES_MAP } from "@/Application/constants/appointment";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { Loader2, Pencil } from "lucide-react";
 
 interface AppointmentCardProps {
   appointment: Appointment;
   className?: string;
+  onStatusChange: (status: AppointmentStatus) => void;
+  isUpdating?: boolean;
 }
 
 export function AppointmentCard({
   appointment,
   className,
+  onStatusChange,
+  isUpdating = false,
 }: AppointmentCardProps) {
   const { topic, status, socket_room_id } = appointment;
   const topicStyle = TOPIC_STYLES_MAP.get(topic) || DEFAULT_TOPIC_STYLE;
@@ -25,14 +31,42 @@ export function AppointmentCard({
         className,
       )}
     >
-      {/* Header with status and time */}
-      <div className="flex gap-2 justify-between">
-        <StatusBadge status={status} className="text-xs" />
+      {/* Badge and Edit Status button */}
+      <div className="flex items-center gap-2">
+        <StatusBadge status={status} className="text-xs" isCompact/>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="bg-white border border-gray-400">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              disabled={isUpdating}
+            >
+              {isUpdating ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Pencil className="h-3 w-3 text-gray-500" />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {APPOINTMENT_STATUS_OPTIONS.map((newStatus) => (
+              <DropdownMenuItem
+                key={newStatus}
+                disabled={status === newStatus}
+                onSelect={() => onStatusChange(newStatus)}
+              >
+                <StatusBadge status={newStatus} className="text-xs" />
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Room ID */}
       <div className="flex flex-col gap-2 text-xs text-gray-700">
-        <code className="bg-gray-100 min-w-22 px-1.5 py-0.5 rounded text-xs font-bold font-mono text-center">
+        <code className="bg-gray-100 w-full px-1.5 py-0.5 rounded text-xs font-bold font-mono text-center border border-gray-400 truncate">
           {socket_room_id || "N/A"}
         </code>
 
@@ -42,7 +76,7 @@ export function AppointmentCard({
               <Button
                 variant="outline"
                 size="sm"
-                className="p-2 w-full cursor-pointer"
+                className="p-2 w-full cursor-pointer border border-gray-400 truncate"
               >
                 Join
               </Button>

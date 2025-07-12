@@ -1,5 +1,5 @@
 import api from "@/apis/axiosConfig"
-import { BackendAppointmentsResponse, PaginatedAppointments, UseAppointmentsOptions } from '@/types/consultant/appointmentTypes';
+import { BackendAppointmentsResponse, EditAppointmentStatusPayload, EditAppointmentStatusResponse, PaginatedAppointments, UseAppointmentsOptions } from '@/types/consultant/appointmentTypes';
 
 
 /**
@@ -23,4 +23,15 @@ export const fetchManagerAppointments = async (
     data: result?.appointments ?? [],  
     total: result?.total ?? 0,  
   };
+};
+
+/**
+ * Updates the status of a specific appointment.
+ * @param id - The ID of the appointment to update.
+ * @param status - The new status to set for the appointment.
+ * @returns The updated appointment data.
+ */
+export const editAppointmentStatusApi = async ({ appointmentId, status }: EditAppointmentStatusPayload): Promise<EditAppointmentStatusResponse> => {
+  const response = await api.patch<EditAppointmentStatusResponse>(`/appointment/${appointmentId}/edit-status`, { status });
+  return response.data;
 };
