@@ -33,7 +33,7 @@ export function AppointmentCard({
     >
       {/* Badge and Edit Status button */}
       <div className="flex items-center gap-2">
-        <StatusBadge status={status} className="text-xs" isCompact/>
+        <StatusBadge status={status} className="text-xs" isCompact />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="bg-white border border-gray-400">
@@ -70,18 +70,17 @@ export function AppointmentCard({
           {socket_room_id || "N/A"}
         </code>
 
-        {
-          ["PENDING", "ONGOING"].includes(status) && (
-            <div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="p-2 w-full cursor-pointer border border-gray-400 truncate"
-              >
-                Join
-              </Button>
-            </div>
-          )}
+        {["PENDING", "ONGOING"].includes(status) && (
+          <div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="p-2 w-full cursor-pointer border border-gray-400 truncate"
+            >
+              Join
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

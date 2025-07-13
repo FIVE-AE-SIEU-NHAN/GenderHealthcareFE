@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { CustomerAppointment } from "@/types/customer/appointmentTypes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/utils/formatDate";
+import { Button } from "@/components/ui/button";
 
 // Helper function to format the time slot, co-located with the component that uses it.
 const formatTimeSlot = (slot: string) => {
@@ -76,6 +77,18 @@ export function ConsultantBookingCard({ booking, className, isHighlighted = fals
           <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-bold font-mono">
             {booking.socket_room_id || "N/A"}
           </code>
+          {
+            ["PENDING", "ONGOING"].includes(booking.status) && (
+              <span>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="p-2 w-full cursor-pointer"
+                >
+                  Join
+                </Button>
+              </span>
+            )}
         </p>
       </CardContent>
     </Card>

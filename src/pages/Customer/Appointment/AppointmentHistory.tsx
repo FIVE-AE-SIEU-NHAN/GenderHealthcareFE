@@ -56,10 +56,7 @@ export default function AppointmentHistory() {
     }
     return (
       <div className="relative border-l-2 border-blue-200 space-y-6 pl-6 pb-6 max-h-[80vh] overflow-y-auto">
-        {bookingHistory
-          .slice()
-          .reverse()
-          .map((booking, index) => (
+        {bookingHistory && bookingHistory.map((booking, index) => (
             <ConsultantBookingCard key={index} booking={booking} isHighlighted={index === 0} />
           ))}
       </div>
