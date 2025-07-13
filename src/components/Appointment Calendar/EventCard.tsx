@@ -25,7 +25,7 @@ export function AppointmentCard({
   return (
     <div
       className={cn(
-        "bg-white rounded-lg overflow-x-auto border border-gray-200 border-l-4 p-3 shadow-sm hover:shadow-md transition-all duration-200",
+        "rounded-lg overflow-x-auto border border-gray-200 border-l-4 p-3 shadow-sm hover:shadow-md transition-all duration-200",
         "min-h-[50px] space-y-2",
         topicStyle.cardClasses,
         className,

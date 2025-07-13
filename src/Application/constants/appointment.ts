@@ -2,42 +2,42 @@ const TOPIC_DETAILS = {
   WOMENS_REPRODUCTIVE_HEALTH: {
     label: "Women's Reproductive Health",
     classes: {
-      card: 'border-l-purple-500 bg-purple-500/10 text-purple-700',
+      card: 'border-l-purple-500 bg-[#f3effe] text-purple-700',
       dot: 'bg-purple-500',
     },
   },
   CONTRACEPTION_AND_FAMILY_PLANNING: {
     label: 'Contraception & Family Planning',
     classes: {
-      card: 'border-l-blue-500 bg-blue-500/10 text-blue-700',
+      card: 'border-l-blue-500 bg-[#ebf3fe] text-blue-700',
       dot: 'bg-blue-500',
     },
   },
   PREGNANCY_AND_MATERNITY_SUPPORT: {
     label: 'Pregnancy & Maternity Support',
     classes: {
-      card: 'border-l-yellow-500 bg-yellow-500/10 text-yellow-700',
+      card: 'border-l-yellow-500 bg-[#fdf7e6] text-yellow-700',
       dot: 'bg-yellow-500',
     },
   },
   STIS: {
     label: 'STIs (Sexually Transmitted Infections)',
     classes: {
-      card: 'border-l-teal-500 bg-teal-500/10 text-teal-700',
+      card: 'border-l-teal-500 bg-[#e8f8f6] text-teal-700',
       dot: 'bg-teal-500',
     },
   },
   SEXUAL_HEALTH_AND_GENDER_PSYCHOLOGY: {
     label: 'Sexual Health & Gender Psychology',
     classes: {
-      card: 'border-l-gray-500 bg-gray-500/10 text-gray-700',
+      card: 'border-l-gray-500 bg-[#f0f1f2] text-gray-700',
       dot: 'bg-gray-500',
     },
   },
   TESTING_AND_DIAGNOSTIC_SERVICES: {
     label: 'Testing & Diagnostic Services',
     classes: {
-      card: 'border-l-pink-500 bg-pink-500/10 text-pink-700',
+      card: 'border-l-pink-500 bg-[#fdedf5] text-pink-700',
       dot: 'bg-pink-500',
     },
   },

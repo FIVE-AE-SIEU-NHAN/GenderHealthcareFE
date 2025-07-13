@@ -1,6 +1,6 @@
 import { Appointment } from "@/types/consultant/appointmentTypes";
 import { AppointmentCard } from "./EventCard";
-import { format, startOfWeek, addDays, isSameDay, parseISO } from "date-fns";
+import { format, startOfWeek, addDays, isSameDay, parseISO, isSameWeek } from "date-fns";
 import { ChevronLeft, ChevronRight, Calendar, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppointmentStatus, TimeSlot } from "@/Application/constants/appointment";
@@ -8,6 +8,7 @@ import { TopicLegend } from "./TopicLegend";
 import { WeeklyStats, WeeklyStatsHeader } from "./StatsHeader";
 import { cn } from "@/lib/utils";
 import { useUpdateAppointmentStatus } from "@/hooks/manager/useAppointmentsMutation";
+import { useEffect, useMemo, useState } from "react";
 
 interface CalendarWeekViewProps {
   appointments: Appointment[];
@@ -41,6 +42,9 @@ const daysOfWeek = [
   "Sunday",
 ];
 
+const ROW_HEIGHT_PIXELS = 100; // Must match `min-h-[100px]` class
+const CALENDAR_START_HOUR = 7; // Must match first time slot "SLOT_07_08"
+
 export function CalendarWeekView({
   appointments,
   currentWeek,
@@ -49,8 +53,39 @@ export function CalendarWeekView({
   isLoading,
   isFetching,
 }: CalendarWeekViewProps) {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    // Update the 'now' state every minute to move the timeline
+    const intervalId = setInterval(() => {
+      setNow(new Date());
+    }, 60000); 
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []); 
+
+
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+
+
+  const timelinePosition = useMemo(() => {
+    // Calculate total minutes passed since the calendar's start time (7 AM)
+    const minutesSinceStart = (now.getHours() - CALENDAR_START_HOUR) * 60 + now.getMinutes();
+    
+    // Calculate the top offset in pixels
+    // (minutesSinceStart / 60) gives us hours passed as a decimal
+    // We multiply by the row height to get the pixel offset
+    const top = (minutesSinceStart / 60) * ROW_HEIGHT_PIXELS;
+
+    return top;
+  }, [now]);
+
+  // --- 5. Determine if the timeline should be visible ---
+  // Only show the timeline if the user is viewing the current week
+  const showTimeline = isSameWeek(now, currentWeek, { weekStartsOn: 1 });
+
 
   const getAppointmentsForSlot = (date: Date, timeSlot: TimeSlot) => {
     return appointments.filter((apt) => {
@@ -151,7 +186,25 @@ export function CalendarWeekView({
           </div>
 
           {/* Time Slots Grid */}
-          <div className="max-h-[600px] overflow-y-auto">
+          <div className="relative max-h-[600px] overflow-y-auto">
+            {showTimeline && (
+              <div
+                className="absolute z-10 grid grid-cols-8 w-full"
+                style={{ top: `${timelinePosition}px` }}
+              >
+                {/* The dot and the time label in the first column */}
+                <div className="relative flex justify-end items-center pr-2">
+                   <span className="text-xs font-semibold text-blue-600 bg-white px-1">
+                      {format(now, 'HH:mm')}
+                   </span>
+                   <div className="absolute right-[-4px] w-2 h-2 bg-blue-800 rounded-full" />
+                </div>
+                {/* The line spanning the next 7 columns */}
+                <div className="col-span-7 h-0.5 bg-blue-500/50 self-center" />
+              </div>
+            )}
+
+
             {timeSlots.map((timeSlot) => (
               <div
                 key={timeSlot.slot}
@@ -182,7 +235,7 @@ export function CalendarWeekView({
                           <AppointmentCard
                             key={appointment.id}
                             appointment={appointment}
-                            className="w-full"
+                            className="w-full relative z-20"
                             onStatusChange={(newStatus) => handleStatusChange(appointment.id, newStatus)}
                             isUpdating={
                               updateStatusMutation.isPending &&
