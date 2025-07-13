@@ -25,6 +25,8 @@ import About from '@/pages/Common/Home/components/About';
 import ServiceList from '@/pages/Content/Services/ServiceList';
 import ServiceDetail from '@/pages/Content/Services/ServiceDetails';
 import BlogPage from '@/pages/Content/Blog/BlogList';
+import PaymentResultPage from '@/pages/Customer/Appointment/Payment/PaymentResultPage';
+
 
 export default function AppRouter() {
   return (
@@ -43,6 +45,7 @@ export default function AppRouter() {
             <Route path="/services" element={<ServiceList />} />
             <Route path="/service-details" element={<ServiceDetail />} />
             <Route path="/blogs" element={<BlogPage />} />
+            <Route path="/pay" element={<PaymentResultPage />} />
             
           </Route>
 
