@@ -11,6 +11,7 @@ export interface BookAppointmentPayload {
   topic: string;
   booking_date: string;
   time_slot: string;
+  note: string;
 }
 
 /**
@@ -34,6 +35,7 @@ export interface CustomerAppointment {
   topic: Topic;
   booking_date: string; 
   time_slot: TimeSlot;
+  note: string;
   status: AppointmentStatus;
   socket_room_id: string | null;
 }

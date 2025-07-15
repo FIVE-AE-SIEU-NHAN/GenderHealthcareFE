@@ -28,7 +28,6 @@ interface ConsultantBookingCardProps {
 }
 
 export function ConsultantBookingCard({ booking, className, isHighlighted = false }: ConsultantBookingCardProps) {
-  // Derive display data from the booking prop
   const topicLabel = TOPIC_STYLES_MAP.get(booking.topic)?.label || booking.topic.replace(/_/g, " ");
   const formattedDate = formatDate(booking.booking_date, "MMMM d, yyyy");
   const formattedTime = formatTimeSlot(booking.time_slot);
@@ -69,9 +68,14 @@ export function ConsultantBookingCard({ booking, className, isHighlighted = fals
           <Clock className="w-4 h-4 text-blue-500" />
           <span>Time: <strong>{formattedTime}</strong></span>
         </p>
+        <p className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-blue-500" />
+          <span>Note: <strong>{booking.note}</strong></span>
+        </p>
         <div className="flex items-center gap-2">
           <StatusBadge status={booking.status} />
         </div>
+        
         <p className="flex items-center gap-2">
           <span className="font-semibold">Room:</span>
           <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-bold font-mono">

@@ -10,7 +10,7 @@ import AppointmentIllustration2 from "@/assets/images/appointment2.svg";
 import { useOutletContext } from "react-router-dom";
 import { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
 import { useCustomerAppointments } from "@/hooks/customer/useAppointments";
-import { ConsultantBookingCard } from "./ConsultantBookingCard";
+import { ConsultantBookingCard } from "./ConsultantBookingHistoryCard";
 
 
 export default function AppointmentHistory() {
