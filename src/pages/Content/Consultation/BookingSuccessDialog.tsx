@@ -1,5 +1,3 @@
-// components/features/customer/BookingSuccessDialog.tsx (or similar path)
-
 import { Button } from "@/components/ui/button";
 import { Calendar, X } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -16,11 +14,10 @@ interface BookingSuccessDialogProps {
 }
 
 export function BookingSuccessDialog({ bookingDetails, onClose }: BookingSuccessDialogProps) {
-  const navigate = useNavigate(); // --- 2. Initialize the navigate function ---
+  const navigate = useNavigate(); 
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // --- Handler for closing and navigating ---
   const handleCloseAndNavigate = () => {
     // If a timer is running, clear it to prevent it from firing again.
     if (timerRef.current) {
@@ -30,15 +27,14 @@ export function BookingSuccessDialog({ bookingDetails, onClose }: BookingSuccess
     navigate('/user/appointments'); 
   };
 
-  // --- 10-second timeout when the component mounts ---
+  // --- Timeout when the component mounts ---
   useEffect(() => {
     // Start the timer when the dialog appears.
     timerRef.current = setTimeout(() => {
       handleCloseAndNavigate(); 
     }, 10000); // 10 secs
 
-    // --- Cleanup Function ---
-    // Run when the component unmounts (i.e., when onClose is called).
+    // Run when the component unmounts (onClose is called).
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -97,13 +93,12 @@ export function BookingSuccessDialog({ bookingDetails, onClose }: BookingSuccess
           className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f]
                     hover:to-[#3a6ad0] text-white text-lg font-semibold rounded-lg py-3 
                     shadow-lg hover:shadow-xl transition-all duration-300 
-                    relative overflow-hidden group"
+                    relative overflow-hidden group cursor-pointer"
           onClick={handleCloseAndNavigate}
         >
           <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full 
                           group-hover:translate-x-full transition-transform duration-700"></span>
           <div className="relative flex items-center justify-center">Got it</div>
-
         </Button>
       </div>
     </div>

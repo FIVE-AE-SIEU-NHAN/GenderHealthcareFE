@@ -13,8 +13,12 @@ import { BookAppointmentResponse } from "@/types/customer/appointmentTypes";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 import { useSocket } from "@/contexts/SocketContext";
-import { BookingSuccessDialog } from "@/pages/Customer/Appointment/BookingSuccessDialog";
+import { BookingSuccessDialog } from "@/pages/Content/Consultation/BookingSuccessDialog";
 import { AppointmentForm, formSchema } from "./ConsultationBookingForm";
+import { BookingFailedDialog } from "./BookingFailedDialog";
+
+const PAYMENT_DATA_KEY = "payment_session_data";
+const PAYMENT_DEADLINE_KEY = "payment_session_deadline";
 
 const ConsultantAppointmentPage = () => {
   const { bookAppointment } = useAppointmentMutations();
@@ -22,8 +26,13 @@ const ConsultantAppointmentPage = () => {
 
   const [bookingDetails, setBookingDetails] = useState({ topic: "", date: "", time: "" });
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
+
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [isFailedDialogOpen, setFailedDialogOpen] = useState(false);
+  const [failureReason, setFailureReason] = useState("");
+
   const [paymentData, setPaymentData] = useState<PayOSResponse | null>(null);
+  const [paymentDeadline, setPaymentDeadline] = useState<number>(0);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -31,31 +40,59 @@ const ConsultantAppointmentPage = () => {
       topic: "",
       booking_date: undefined,
       time_slot: "",
+      note: "",
       agreed: false,
     }
   });
 
   useEffect(() => {
-    const handlePaymentStatus = (paymentUpdate: { status: string; content: string }) => {
-      console.log('Received payment status update in parent:', paymentUpdate);
+    const storedData = sessionStorage.getItem(PAYMENT_DATA_KEY);
+    const storedDeadline = sessionStorage.getItem(PAYMENT_DEADLINE_KEY);
 
-      // Check for the success status from BE
+    if (storedData && storedDeadline) {
+      const deadline = parseInt(storedDeadline, 10);
+      // Check if the deadline has not expired
+      if (Date.now() < deadline) {
+        setPaymentData(JSON.parse(storedData));
+        setPaymentDeadline(deadline);
+        setPaymentDialogOpen(true);
+      } else {
+        // Clear expired data
+        sessionStorage.removeItem(PAYMENT_DATA_KEY);
+        sessionStorage.removeItem(PAYMENT_DEADLINE_KEY);
+      }
+    }
+  }, []);
+
+  // --- HELPER FUNCTION TO CLEAR THE SESSION ---
+  const clearPaymentSession = () => {
+    sessionStorage.removeItem(PAYMENT_DATA_KEY);
+    sessionStorage.removeItem(PAYMENT_DEADLINE_KEY);
+    setPaymentData(null);
+  };
+
+  // --- SOCKET ---
+  useEffect(() => {
+    const handlePaymentStatus = (paymentUpdate: { status: string; content: string }) => {
       if (paymentUpdate.status === 'SUCCESS') {
         toast.success(paymentUpdate.content || 'Payment confirmed successfully!');
-
+        clearPaymentSession();
         setPaymentDialogOpen(false);
         setSuccessDialogOpen(true);
       } else if (paymentUpdate.status === 'FAILED') {
-        toast.error(paymentUpdate.content || 'Payment failed.');
+        if (isPaymentDialogOpen) {
+          clearPaymentSession();
+          setPaymentDialogOpen(false);
+          setFailureReason(paymentUpdate.content || "Payment failed or was canceled.");
+          setFailedDialogOpen(true);
+        }
       }
     };
-
     socket.on('payment:status', handlePaymentStatus);
-
     return () => {
       socket.off('payment:status', handlePaymentStatus);
     };
-  }, [socket]);
+  }, [socket, isPaymentDialogOpen]);
 
 
 
@@ -66,11 +103,15 @@ const ConsultantAppointmentPage = () => {
       topic: values.topic,
       booking_date: formattedDate,
       time_slot: values.time_slot,
+      note: values.note,
     };
 
     bookAppointment.mutate(payload, {
       onSuccess: (data: BookAppointmentResponse) => {
-        setPaymentData(data.result);
+        const newDeadline = Date.now() + 10 * 1000;
+        sessionStorage.setItem(PAYMENT_DATA_KEY, JSON.stringify(data.result));
+        sessionStorage.setItem(PAYMENT_DEADLINE_KEY, newDeadline.toString());
+
 
         const topicLabel = TOPIC_OPTIONS.find(t => t.value === values.topic)?.label || "";
         const timeLabel = timeSlotOptions.find(t => t.value === values.time_slot)?.label || "";
@@ -82,11 +123,27 @@ const ConsultantAppointmentPage = () => {
           time: timeLabel
         });
 
+        setPaymentData(data.result);
+        setPaymentDeadline(newDeadline);
         setPaymentDialogOpen(true);
         form.reset();
       },
     });
   }
+
+  const handleDialogChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      clearPaymentSession();
+    }
+    setPaymentDialogOpen(isOpen);
+  };
+
+  const handleTimerEnd = () => {
+    clearPaymentSession();
+    setPaymentDialogOpen(false);
+    setFailureReason("Your payment session has expired. Please try booking again.");
+    setFailedDialogOpen(true);
+  };
 
   return (
     <div
@@ -105,11 +162,11 @@ const ConsultantAppointmentPage = () => {
       {/* Success notification + Form info */}
       <Dialog
         open={isPaymentDialogOpen}
-        onOpenChange={setPaymentDialogOpen}
+        onOpenChange={handleDialogChange}
       >
 
         <DialogContent
-          className="p-0 bg-transparent border-none shadow-none md:min-w-4xl h-[calc(95vh)] md:h-auto md overflow-y-auto"
+          className="[&>button:first-of-type]:hidden p-0 bg-transparent border-none shadow-none md:min-w-4xl h-[calc(95vh)] md:h-auto md overflow-y-auto"
           onInteractOutside={(e) => {
             // Prevent closing on outside click
             e.preventDefault();
@@ -122,7 +179,12 @@ const ConsultantAppointmentPage = () => {
           <DialogTitle className="sr-only">Payment Result</DialogTitle>
           {/* Render the payment page only when data is available */}
           {paymentData && (
-            <PaymentResultPage paymentData={paymentData} />
+            <PaymentResultPage
+              paymentData={paymentData}
+              deadline={paymentDeadline}
+              onCancelSuccess={clearPaymentSession}
+              onTimerEnd={handleTimerEnd}
+            />
           )}
         </DialogContent>
       </Dialog>
@@ -132,6 +194,13 @@ const ConsultantAppointmentPage = () => {
         <BookingSuccessDialog
           bookingDetails={bookingDetails}
           onClose={() => setSuccessDialogOpen(false)}
+        />
+      )}
+
+      {isFailedDialogOpen && (
+        <BookingFailedDialog
+          errorMessage={failureReason}
+          onClose={() => setFailedDialogOpen(false)}
         />
       )}
     </div>

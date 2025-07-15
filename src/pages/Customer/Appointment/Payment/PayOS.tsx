@@ -7,7 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { usePaymentMutations } from "@/hooks/payment/usePaymentMutations";
 
-export function PayOSResponseCard({ data, timeLeft }: { data: PayOSResponse; timeLeft: number }) {
+interface PayOSResponseCardProps {
+  data: PayOSResponse;
+  timeLeft: number;
+  onCancelSuccess: () => void; 
+}
+
+
+export function PayOSResponseCard({ data, timeLeft, onCancelSuccess }: PayOSResponseCardProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const { cancelPayment } = usePaymentMutations();
@@ -34,6 +41,7 @@ export function PayOSResponseCard({ data, timeLeft }: { data: PayOSResponse; tim
   const handleConfirmCancel = () => {
     cancelPayment.mutate({ orderCode: data.orderCode.toString() }, {
       onSuccess: () => {
+        onCancelSuccess();
         navigate("/booking-info");
       },
     });

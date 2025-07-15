@@ -10,9 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { timeSlotOptions, TOPIC_OPTIONS } from "@/Application/constants/appointment";
 import { CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 
 // Form validation schema
@@ -20,12 +21,20 @@ export const formSchema = z.object({
   topic: z.string({ required_error: "Please select a consultation topic." }).min(1, "Please select a consultation topic."),
   booking_date: z.date({ required_error: "Please select a date." }),
   time_slot: z.string({ required_error: "Please select a time slot." }).min(1, "Please select a time slot."),
+  note: z.string()
+    .trim()
+    .refine(value => {
+      if (!value) return true;
+      const wordCount = value.split(/\s+/).filter(word => word.length > 0).length;
+      return wordCount >= 8 && wordCount <= 50;
+    }, {
+      message: "The note must be between 8 and 50 words.",
+    }),
   agreed: z.boolean().refine(val => val === true, {
     message: "You must agree to the terms of use.",
   }),
 });
 
-// Define the type for the component's props
 interface AppointmentFormProps {
   onSubmit: (values: z.infer<typeof formSchema>) => void;
   isPending: boolean;
@@ -128,6 +137,25 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                 )} />
               </div>
 
+              <FormField
+                control={form.control}
+                name="note"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Note for the Consultant (Optional)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Please describe your current condition or specific questions for the consultant... (8-50 words)"
+                        className="resize-none h-30" // Prevents users from resizing the textarea
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Real-time info */}
               {getSelectedTopic() && (
                 <div className="mt-4 bg-blue-50 p-4 rounded-md">
@@ -138,6 +166,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                   {selectedTimeSlotValue && (
                     <p className="font-medium mt-2">Time: <span className="text-[#1A3973] font-bold">{getSelectedTimeSlotLabel()}</span></p>
                   )}
+                  <p>Price: <span className="text-[#1A3973] font-bold">5,000₫</span></p>
                 </div>
               )}
 
@@ -163,7 +192,10 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg font-semibold rounded-lg py-3 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group disabled:opacity-75 disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] 
+                            hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg font-semibold 
+                            rounded-lg py-3 shadow-lg hover:shadow-xl transition-all duration-300 
+                            relative overflow-hidden group cursor-pointer"
                 >
                   <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
                   <div className="relative flex items-center justify-center">
