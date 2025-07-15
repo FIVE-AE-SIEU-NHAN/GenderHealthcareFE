@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import SalWrapper from '@/components/SalWrapper';
+import SalWrapper from '@/components/sal-wrapper';
 
 import { AdminRoutes } from './AdminRoutes';
 import { ManagerRoutes } from './ManagerRoutes';
@@ -20,13 +20,11 @@ import ForgotPassword from '@/pages/Auth/ForgotPassword/ForgotPassword';
 import NotFound from '@/pages/Common/NotFound';
 import { Toaster } from '@/components/ui/sonner';
 import BookingInfoPage from '@/pages/Content/Services/BookingInfo';
-import ConsultantAppointmentPage from '@/pages/Content/Consultation/ConsultationBooking';
+import ConsultantAppointmentPage from '@/pages/Content/Consultation/ConsultationBookingPage';
 import About from '@/pages/Common/Home/components/About';
 import ServiceList from '@/pages/Content/Services/ServiceList';
 import ServiceDetail from '@/pages/Content/Services/ServiceDetails';
 import BlogPage from '@/pages/Content/Blog/BlogList';
-import PaymentResultPage from '@/pages/Customer/Appointment/Payment/PaymentResultPage';
-
 
 export default function AppRouter() {
   return (
@@ -45,7 +43,6 @@ export default function AppRouter() {
             <Route path="/services" element={<ServiceList />} />
             <Route path="/service-details" element={<ServiceDetail />} />
             <Route path="/blogs" element={<BlogPage />} />
-            <Route path="/pay" element={<PaymentResultPage />} />
             
           </Route>
 

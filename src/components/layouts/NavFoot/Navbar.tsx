@@ -20,6 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import Notification from "@/components/Notification/Notification";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -147,11 +148,7 @@ const Navbar = () => {
           {user ? (
             <>
               {/* Notification */}
-              <a href="/notifications" className="text-gray-600 hover:text-gray-900 transition duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22a2 2 0 100-4 2 2 0 000 4zm6-6V9a6 6 0 10-12 0v7l-2 2v1h16v-1l-2-2z" />
-                </svg>
-              </a>
+              <div className="translate-y-[3px]"><Notification /></div>
 
               {/* User Settings Dropdown */}
               <DropdownMenu>
