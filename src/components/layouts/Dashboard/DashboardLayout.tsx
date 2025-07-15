@@ -18,6 +18,8 @@ import {
 import type { NavMainProps } from "@/components/layouts/Dashboard/nav-main";
 import { UserNav } from "@/components/layouts/Dashboard/user-nav";
 import WebLogo from "@/assets/images/logo1.png"
+import { useAuth } from "@/contexts/AuthContext";
+import { CustomerNavMenu } from "./CustomerNavMenu";
 
 
 // 1. Define breadcrumb type and outlet context type
@@ -52,11 +54,16 @@ export default function DashboardLayout({
     title: "Dashboard",
   });
 
+  const { user } = useAuth();
+
   return (
     <>
       <header className="mt-2 max-w-[99%] mx-auto relative flex h-15 items-center justify-between rounded-xl border bg-card p-4 text-card-foreground shadow-sm">
         <AppLogo />
-        <UserNav />
+        {user && user.role === 3 && <CustomerNavMenu />}
+        <div className="flex items-center ml-auto">
+          <UserNav />
+        </div>
       </header>
       <div className="relative">
         <SidebarProvider className="absolute">

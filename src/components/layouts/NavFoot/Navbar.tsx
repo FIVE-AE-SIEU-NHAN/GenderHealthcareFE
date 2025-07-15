@@ -21,20 +21,43 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Notification from "@/components/Notification/Notification";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const ToTop = () => window.scrollTo({ top: 0 });
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  const navClass = isScrolled
+    ? "translate-y-2 max-w-[99%] mx-auto relative h-15 rounded-xl bg-white/60 backdrop-blur-md shadow-lg/15 shadow-b"
+    : "bg-white shadow-lg/15 shadow-b";
+
   return (
-    <nav className="bg-white shadow-lg/15 sticky top-0 z-40 shadow-b">
-      <div className="mx-4 sm:mx-10 px-2 flex justify-between items-center p-1 relative">
+    <nav className={`sticky top-0 z-40 transition-all duration-100 ${navClass}`}>
+      <div className="mx-4 sm:mx-10 px-2 flex justify-between items-center relative">
         {/* Left side */}
         <div className="flex items-center gap-6 flex-1">
           {/* Logo */}
@@ -45,7 +68,7 @@ const Navbar = () => {
           >
             <img src={logo} alt="logo" className="w-[60px]" />
             <div className="logo">
-              <div className="font-extrabold text-shadow-lg text-xl">Care4Gender</div>
+              <div className="font-extrabold text-shadow-lg text-xl bg-gradient-to-r from-blue-900 via-blue-700 to-blue-500 bg-clip-text text-transparent">Care4Gender</div>
             </div>
           </Link>
 
