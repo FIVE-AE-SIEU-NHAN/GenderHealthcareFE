@@ -4,79 +4,47 @@ import { useEffect, useState } from "react"
 import { PayOSResponseCard } from "./PayOS"
 import { PayOSResponse } from "@/types/payment"
 
+interface PaymentResultPageProps {
+  paymentData: PayOSResponse;
+}
 
 const DEADLINE_KEY = "payos_deadline";
 
-export default function PaymentResultPage() {
-  const [timeLeft, setTimeLeft] = useState(0);
-  // const [data, setData] = useState(null)
-
-  // useEffect(() => {
-  //   async function fetchPayment() {
-  //     try {
-  //       const res = await axios.post("https://996b7361ac3d.ngrok-free.app/test") 
-  //       setData(res.data)
-  //     } catch (error) {
-  //       console.error("Failed to fetch payment data:", error)
-  //     }
-  //   }
-  //   fetchPayment()
-  // }, [])
-
-
-  const [data, setData] = useState<PayOSResponse | null>(null)
-
-  const mockData: PayOSResponse = {
-    "bin": "970416",
-    "accountNumber": "LOCCASS000332340",
-    "accountName": "MAI NHAN KIET",
-    "amount": 5000,
-    "description": "CSITUEJGCB3 PAYMENT FOR CONSULTATION",
-    "orderCode": 680028,
-    "currency": "VND",
-    "paymentLinkId": "0b191016f24a4349aaa7f0e324155cdc",
-    "status": "PENDING",
-    "checkoutUrl": "https://pay.payos.vn/web/0b191016f24a4349aaa7f0e324155cdc",
-    "qrCode": "00020101021238600010A000000727013000069704160116LOCCASS0003323400208QRIBFTTA5303704540450005802VN62400836CSITUEJGCB3 PAYMENT FOR CONSULTATION6304BD60"
-  }
+export default function PaymentResultPage({ paymentData }: PaymentResultPageProps) {
+  const [timeLeft, setTimeLeft] = useState(900);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setData(mockData)
-    }, 200)
+    // If there's no payment data, don't start a timer.
+    if (!paymentData) return;
 
-    return () => clearTimeout(timer)
-  }, [])
-
-
-  useEffect(() => {
-    let deadline: number;
-
-    const stored = localStorage.getItem(DEADLINE_KEY);
-    if (stored) {
-      deadline = parseInt(stored);
-    } else {
-      deadline = Date.now() + 5 * 60 * 1000; // 15 minutes
-      localStorage.setItem(DEADLINE_KEY, deadline.toString());
-    }
+    // Create a new deadline for this specific payment session.
+    const deadline = Date.now() + 15 * 60 * 1000; // 15 mins
+    localStorage.setItem(DEADLINE_KEY, deadline.toString());
 
     const updateTimer = () => {
       const now = Date.now();
-      const remaining = Math.max(0, Math.floor((deadline - now) / 1000)); // in seconds
+      const remaining = Math.max(0, Math.floor((deadline - now) / 1000));
       setTimeLeft(remaining);
+
+      // Clear localStorage if timer hits zero to allow a new timer next time
+      if (remaining === 0) {
+        localStorage.removeItem(DEADLINE_KEY);
+      }
     };
 
-    updateTimer();
+    updateTimer(); // Run immediately
     const interval = setInterval(updateTimer, 1000);
+
+    // Cleanup function
     return () => clearInterval(interval);
-  }, []);
+  }, [paymentData]);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 to-blue-100 flex items-center justify-center p-4">
-      {!data ? (
+    <div>
+      {!paymentData ? (
         <p className="text-center text-lg font-medium text-gray-600 dark:text-gray-300">Loading payment details...</p>
       ) : (
-        <PayOSResponseCard data={data} timeLeft={timeLeft} />
+        <PayOSResponseCard data={paymentData} timeLeft={timeLeft} />
       )}
     </div>
   )

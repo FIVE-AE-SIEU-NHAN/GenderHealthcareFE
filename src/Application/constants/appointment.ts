@@ -57,6 +57,17 @@ export type TimeSlot =
   | "SLOT_15_16"
   | "SLOT_16_17"
 
+export const timeSlotOptions = [
+  { value: "SLOT_07_08", label: "7:00 - 8:00" },
+  { value: "SLOT_08_09", label: "8:00 - 9:00" },
+  { value: "SLOT_09_10", label: "9:00 - 10:00" },
+  { value: "SLOT_10_11", label: "10:00 - 11:00" },
+  { value: "SLOT_13_14", label: "13:00 - 14:00" },
+  { value: "SLOT_14_15", label: "14:00 - 15:00" },
+  { value: "SLOT_15_16", label: "15:00 - 16:00" },
+  { value: "SLOT_16_17", label: "16:00 - 17:00" },
+];
+
 /**
  * Appointment status enum
  */

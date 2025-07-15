@@ -1,5 +1,5 @@
 import { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
-import { ChartAreaInteractive } from "@/components/testChart";
+import { ChartAreaInteractive } from "@/components/test-chart";
 import { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 

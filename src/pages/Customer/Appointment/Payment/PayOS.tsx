@@ -1,16 +1,17 @@
-// PayOS.tsx
-
 import { Button } from "@/components/ui/button";
 import { PayOSResponse } from "@/types/payment";
-import { Copy, AlertTriangle, CheckCircle } from "lucide-react";
+import { Copy, AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { usePaymentMutations } from "@/hooks/payment/usePaymentMutations";
 
-
-// --- Main Component: The "Clean & Airy Fintech" Payment Card ---
 export function PayOSResponseCard({ data, timeLeft }: { data: PayOSResponse; timeLeft: number }) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const { cancelPayment } = usePaymentMutations();
+  const navigate = useNavigate();
 
   const handleCopy = (text: string, fieldName: string) => {
     navigator.clipboard.writeText(text);
@@ -30,12 +31,24 @@ export function PayOSResponseCard({ data, timeLeft }: { data: PayOSResponse; tim
     { id: "description", label: "Transfer Content", value: data.description, isMono: true },
   ];
 
-  const navigate = useNavigate();
+  const handleConfirmCancel = () => {
+    cancelPayment.mutate({ orderCode: data.orderCode.toString() }, {
+      onSuccess: () => {
+        navigate("/booking-info");
+      },
+    });
+  };
+
+
 
   return (
-    <div className="w-full max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 bg-white shadow-2xl rounded-3xl border border-slate-200 overflow-hidden animate-fade-in-up">
+    <div className="relative mx-auto grid grid-cols-1 md:grid-cols-2 bg-white shadow-2xl rounded-3xl border border-slate-200 animate-fade-in-up">
+      <div className="absolute top-6 left-6 z-10 rounded-md bg-green-100 px-2 py-0.5 text-sm font-semibold text-green-900 shadow-sm border border-green-600">
+        {data.orderCode}
+      </div>
+
       {/* ===== QR Code and Timer ===== */}
-      <div className="relative p-8 flex flex-col items-center justify-center text-center bg-slate-50 border-r border-slate-200">
+      <div className="relative rounded-l-3xl p-8 flex flex-col items-center justify-center text-center bg-slate-50 border-r border-slate-200">
         {/* Dotted BG */}
         <div
           className="absolute inset-0 z-0 opacity-16"
@@ -55,19 +68,46 @@ export function PayOSResponseCard({ data, timeLeft }: { data: PayOSResponse; tim
             <p className="text-4xl font-mono text-slate-800 tracking-widest mt-2 text-shadow-lg/10">{minutes}:{seconds}</p>
           </div>
 
-          <Button
-            variant="outline"
-            className="mt-6 px-8 py-2 text-xl text-red-600 border-red-600 bg-red-100 hover:bg-red-200 hover:text-red-700 transition-all duration-300 active:scale-95"
-            onClick={() => navigate("/") }
-          >
-            Cancel
-          </Button> 
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="mt-6 px-8 py-2 text-lg text-red-600 border-red-600 bg-red-100 hover:bg-red-200 hover:text-red-700 transition-all duration-300 active:scale-95"
+              >
+                Cancel
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to cancel?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will cancel the current payment attempt and you will be returned to the homepage. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={cancelPayment.isPending}>Continue Payment</AlertDialogCancel>
+                <Button
+                  variant="destructive"
+                  onClick={handleConfirmCancel}
+                  disabled={cancelPayment.isPending}
+                >
+                  {cancelPayment.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Canceling...
+                    </>
+                  ) : (
+                    "Confirm Cancel"
+                  )}
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
-
       </div>
 
       {/* ===== Payment Details ===== */}
-      <div className="p-8 flex flex-col space-y-4">
+      <div className="p-6 md:p-8 flex flex-col md:space-y-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Manual Payment</h2>
           <p className="text-slate-500">Click a row to copy the information.</p>
@@ -79,7 +119,7 @@ export function PayOSResponseCard({ data, timeLeft }: { data: PayOSResponse; tim
               key={row.id}
               onClick={() => handleCopy(row.value, row.id)}
               className={`group p-3 rounded-lg cursor-pointer border-2 transition-all duration-300 ${copiedField === row.id
-                ? 'border-blue-400 bg-blue-50' 
+                ? 'border-blue-400 bg-blue-50'
                 : 'border-transparent hover:bg-slate-100'
                 }`}
             >

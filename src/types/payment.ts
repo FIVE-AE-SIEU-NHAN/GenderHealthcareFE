@@ -11,3 +11,11 @@ export type PayOSResponse = {
   checkoutUrl: string
   qrCode: string
 }
+
+export interface CancelPaymentPayload {
+  orderCode: string;
+}
+
+export interface CancelPaymentResponse {
+  message: string;
+}

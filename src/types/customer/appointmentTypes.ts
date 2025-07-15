@@ -1,6 +1,7 @@
 // =================== BOOK AN APPOINTMENT ===================
 
 import { AppointmentStatus, TimeSlot, Topic } from "@/Application/constants/appointment";
+import { PayOSResponse } from "../payment";
 
 /**
  * The payload required when a customer books a new appointment.
@@ -17,6 +18,7 @@ export interface BookAppointmentPayload {
  */
 export interface BookAppointmentResponse {
   message: string;
+  result: PayOSResponse; 
 }
 
 /**
