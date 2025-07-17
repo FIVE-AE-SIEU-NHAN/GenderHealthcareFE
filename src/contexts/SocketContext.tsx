@@ -1,37 +1,42 @@
 // src/contexts/SocketContext.tsx
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { socket } from '@/utils/socket'; // Import our socket instance
+import { useQueryClient } from '@tanstack/react-query'; // Import this
+import { socket } from '@/utils/socket';
 import { useAuth } from './AuthContext';
+import { toast } from 'sonner';
 
 const SocketContext = createContext(socket);
 
-// Custom hook to easily access the socket instance in any component
 export const useSocket = () => {
   return useContext(SocketContext);
 };
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (user && !socket.connected) {
-      // BE expects the user_id in `socket.handshake.auth`.
       socket.auth = { userId: user.user_id };
-      
       socket.connect();
     }
 
-    // --- Cleanup function ---
-    // Run when the user logs out (the `user` object changes)
-    // or when the component unmounts.
+    // --- GLOBAL LISTENER FOR NOTIFICATION ---
+    const onNewNotification = (data: { notification_id: string; content: string }) => {
+      toast.info("You have a new notification!", { description: data.content });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    };
+
+    socket.on('notify:send', onNewNotification);
+    
     return () => {
+      socket.off('notify:send', onNewNotification); // Clean up the listener
       if (socket.connected) {
         socket.disconnect();
-        console.log('Socket disconnected.');
       }
     };
-  }, [user]); // Re-runs whenever the user object changes (e.g., login/logout)
+  }, [user, queryClient]); 
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

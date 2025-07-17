@@ -7,7 +7,7 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {}
 
-const URL = import.meta.env.VITE_API_URL; 
+const URL = import.meta.env.VITE_BASE_URL; 
 
 // The 'autoConnect: false' is important. 
 // Manually connect only when we have the user's ID.

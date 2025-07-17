@@ -67,7 +67,7 @@ export default function Notification() {
         </div>
 
         {/* Footer */}
-        {notifications.length > 2 && (
+        {notifications.length > 5 && (
           <div className="text-center p-2 border-t border-gray-200 bg-gray-50">
             <p className="w-full text-primary font-semibold cursor-pointer hover:text-blue-700 transition-colors duration-300">
               View All Notifications
