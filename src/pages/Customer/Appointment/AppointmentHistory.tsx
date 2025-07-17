@@ -25,7 +25,7 @@ export default function AppointmentHistory() {
   }, [setBreadcrumb]);
 
   // ================ USE APPOINTMENTS HISTORY HOOK ===============
-  const { data: bookingHistory, isLoading, isError, error } = useCustomerAppointments();
+  const { data: bookingHistory, isLoading, isError } = useCustomerAppointments();
 
   const renderContent = () => {
     if (isLoading) {
@@ -42,7 +42,7 @@ export default function AppointmentHistory() {
       return (
         <div className="text-red-600 bg-red-50 p-4 rounded-lg flex items-center gap-2">
           <AlertCircle className="w-5 h-5" />
-          <p>Error fetching history: {error.message}</p>
+          <p>Cannot check your Booking History right now</p>
         </div>
       );
     }

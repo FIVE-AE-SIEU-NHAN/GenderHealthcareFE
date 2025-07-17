@@ -3,6 +3,7 @@ import {
   CalendarClock,
   CalendarDays,
   Clock,
+  PencilLine,
   Phone,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +36,7 @@ export function ConsultantBookingCard({ booking, className, isHighlighted = fals
   return (
     <Card
       className={cn(
-        "relative shadow-sm bg-white border-blue-100 p-3 w-full md:w-90",
+        "relative shadow-sm bg-white border-blue-100 p-3 w-full md:w-93",
         isHighlighted ? "border-2 border-blue-400" : "",
         className
       )}
@@ -68,9 +69,9 @@ export function ConsultantBookingCard({ booking, className, isHighlighted = fals
           <Clock className="w-4 h-4 text-blue-500" />
           <span>Time: <strong>{formattedTime}</strong></span>
         </p>
-        <p className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-blue-500" />
-          <span>Note: <strong>{booking.note}</strong></span>
+        <p className="flex gap-2">
+          <PencilLine className="min-w-4 max-w-4 text-blue-500" />
+          <span>Note: <span className="italic font-semibold">{booking.note || <span className="text-red-800">Not provided</span>}</span></span>
         </p>
         <div className="flex items-center gap-2">
           <StatusBadge status={booking.status} />
