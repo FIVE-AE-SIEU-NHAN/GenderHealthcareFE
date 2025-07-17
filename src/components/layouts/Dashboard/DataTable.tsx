@@ -5,11 +5,11 @@ import { Pagination } from "@/components/layouts/pagin/Pagination";
 import { EmptyState } from "./EmptyState";
 
 type Column<T> = {
-  key: keyof T;
+  key: keyof T | string;
   label: string;
   visible: boolean;
   sortable?: boolean;
-  render?: (item: T) => React.ReactNode;
+  render?: (item: T, index: number) => React.ReactNode;
   cellClassName?: string;
 };
 
@@ -68,7 +68,7 @@ export function DataTable<T extends { id: string }>({
                   col.visible && (
                     <th
                       key={String(col.key)}
-                      onClick={() => col.sortable !== false && handleSort(col.key)}
+                      onClick={() => col.sortable !== false && handleSort(col.key as keyof T)}
                       className={cn(
                         "px-4 py-3 whitespace-nowrap",
                         col.sortable !== false && "cursor-pointer select-none"
@@ -89,7 +89,7 @@ export function DataTable<T extends { id: string }>({
           </thead>
           <tbody className="text-center">
             {data.length > 0 ? (
-              data.map((item) => (
+              data.map((item, index) => (
                 <tr key={item.id} className="border-t hover:bg-blue-50/70 transition-colors">
                   {columns.map((col) => {
                     if (!col.visible) return null;
@@ -98,7 +98,7 @@ export function DataTable<T extends { id: string }>({
                         key={String(col.key)}
                         className={cn("px-4 py-3 align-middle font-medium", col.cellClassName)}
                       >
-                        {col.render ? col.render(item) : String(item[col.key] ?? '')}
+                        {col.render ? col.render(item, index) : String(item[col.key as keyof T] ?? '')}
                       </td>
                     );
                   })}

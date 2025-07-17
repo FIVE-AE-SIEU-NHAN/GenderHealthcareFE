@@ -6,6 +6,7 @@ import QuestionListDashboard from "@/pages/Manager/Questions/QuestionList";
 import ManagerDashboard from "@/pages/Manager/Dashboard";
 import ConsultantListDashboard from "@/pages/Manager/ConsultantManagement/ConsultantsList";
 import AppointmentCalendar from "@/pages/Manager/Appointments/AppointmentCalendar";
+import BlogListDashboard from "@/pages/Manager/Blogs/BlogList";
 
 export const ManagerRoutes = (
   <Route 
@@ -17,6 +18,7 @@ export const ManagerRoutes = (
       <Route path="questions" element={<QuestionListDashboard />} />
       <Route path="consultants" element={<ConsultantListDashboard />} />
       <Route path="appointments" element={<AppointmentCalendar />} />
+      <Route path="blogs" element={<BlogListDashboard />} />
 
     </Route>
   </Route>

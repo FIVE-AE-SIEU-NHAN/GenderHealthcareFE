@@ -1,4 +1,4 @@
-import { CalendarCheck, FileText, ShieldUser } from "lucide-react"
+import { CalendarCheck, FileText, NotebookPen, ShieldUser } from "lucide-react"
 import type { NavMainProps } from "@/components/layouts/Dashboard/nav-main"
 
 export const managerSidebarItems: NavMainProps["items"] = [
@@ -17,6 +17,11 @@ export const managerSidebarItems: NavMainProps["items"] = [
     url: "/manager/appointments",
     icon: CalendarCheck, 
   },
+  {
+    title: "Blogs",
+    url: "/manager/blogs",
+    icon: NotebookPen, 
+  }
   // {
   //   title: "Consultant Management",
   //   url: "/manager/consultants",

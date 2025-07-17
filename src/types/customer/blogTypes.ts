@@ -9,7 +9,6 @@ export interface BackendBlogDetailResponse {
   };
 }
 
-// =================== BLOGLIST FETCHING ===================
 export interface BackendBlogsListResponse {
   message: string;
   result: {
@@ -18,7 +17,8 @@ export interface BackendBlogsListResponse {
   };
 }
 
-// --------- Response for paginated Blogs List ---------
+
+// --------- Response for paginated questions ---------
 export interface PaginatedBlogsListResponse {
   data: Blog[];
   total: number;
@@ -29,11 +29,17 @@ export interface BlogsListOptions {
   page: number;
   limit: number;
   search: {
-    field: 'title'; 
+    field: string; 
     value: string;
   };
   sort: {
-    field: 'created_at';
+    field: keyof Blog;
     direction: 'asc' | 'desc';
+  };
+  filters?: Record<string, ( string | number ) | ( string | number )[] >; 
+    dateRange?: {
+    field?: string; 
+    from?: Date;
+    to?: Date;
   };
 }
