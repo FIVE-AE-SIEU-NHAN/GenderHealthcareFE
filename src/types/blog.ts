@@ -10,4 +10,5 @@ export interface Blog {
   main_image?: string
   sub_image?: string
   created_at: string
+  status: 'PUBLISHED' | 'ARCHIVED' | 'DRAFT'
 }

@@ -28,13 +28,18 @@ export interface PaginatedBlogsListResponse {
 export interface BlogsListOptions {
   page: number;
   limit: number;
-  search?: {
-    field: 'title'; 
+  search: {
+    field: string; 
     value: string;
   };
   sort: {
-    field: 'created_at';
+    field: keyof Blog;
     direction: 'asc' | 'desc';
   };
-  
+  filters?: Record<string, ( string | number ) | ( string | number )[] >; 
+    dateRange?: {
+    field?: string; 
+    from?: Date;
+    to?: Date;
+  };
 }

@@ -31,9 +31,9 @@ export const fetchBlogsList = async ({ page, limit, search, sort }: BlogsListOpt
   };
 
   // Search 
-  // if (search.value) {
-  //   params._title_like = search.value;
-  // }
+  if (search.value) {
+    params._title_like = search.value;
+  }
   
   const response = await api.get<BackendBlogsListResponse>('/blog/customer', { params }); 
   const result = response.data?.result; 

@@ -4,6 +4,7 @@ import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"; //
 import CustomerDashboard from "@/pages/Customer/Dashboard";
 import { managerSidebarItems } from "@/Application/constants/manager/managerSidebarItems";
 import QuestionListDashboard from "@/pages/Manager/Questions/QuestionList";
+import BlogListDashboard from "@/pages/Manager/blog/BlogList";
 
 export const ManagerRoutes = (
   <Route 
@@ -13,6 +14,8 @@ export const ManagerRoutes = (
     <Route element={<ProtectedRoute allowedRoles={['Manager']} />}>
       <Route index element={<CustomerDashboard />} />
       <Route path="questions" element={<QuestionListDashboard />} />
+      <Route path="blogs" element={<BlogListDashboard />} />
+      
 
     </Route>
   </Route>

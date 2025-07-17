@@ -1,12 +1,7 @@
-import { BarChart2, CalendarCheck, ClipboardList, FileText, Settings, User, Users } from "lucide-react"
+import { BarChart2, CalendarCheck, ClipboardList, Settings, User, Users } from "lucide-react"
 import type { NavMainProps } from "@/components/nav-main"
 
 export const adminSidebarItems: NavMainProps["items"] = [
-  {
-    title: "Blog Management",
-    url: "/dashboard/blogs",
-    icon: FileText, 
-  },
   {
     title: "User Management",
     url: "/dashboard/users",

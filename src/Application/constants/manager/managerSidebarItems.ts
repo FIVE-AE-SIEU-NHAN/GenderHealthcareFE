@@ -1,4 +1,4 @@
-import { FileText } from "lucide-react"
+import { FileText, NotebookPen } from "lucide-react"
 import type { NavMainProps } from "@/components/nav-main"
 
 export const managerSidebarItems: NavMainProps["items"] = [
@@ -6,6 +6,11 @@ export const managerSidebarItems: NavMainProps["items"] = [
     title: "Questions Management",
     url: "/manager/questions",
     icon: FileText, 
+  },
+  {
+    title: "Blogs Management",
+    url: "/manager/blogs",
+    icon: NotebookPen, 
   },
   // {
   //   title: "Consultant Management",
