@@ -35,7 +35,6 @@ export const useConsultantMutations = () => {
   >({
     mutationFn: updateConsultantProfileAPI,
     
-    // This onSuccess block provides an amazing UX.
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['consultants'] });
       toast.success(data.message || 'Profile updated successfully!');
@@ -46,7 +45,6 @@ export const useConsultantMutations = () => {
   });
 
 
-  // All available mutations
   return {
     editStatus: editStatusMutation,
     updateProfile: updateProfileMutation,
