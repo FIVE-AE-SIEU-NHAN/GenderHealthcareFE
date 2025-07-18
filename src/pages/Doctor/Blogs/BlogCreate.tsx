@@ -12,8 +12,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { CreateBlogPayload } from "@/types/customer/blogTypes"; // Ensure path is correct
+import { CreateBlogPayload, UpdateBlogPayload } from "@/types/customer/blogTypes"; // Ensure path is correct
 import { useBlogMutations } from "@/hooks/doctor/useBlogsMutations";
+import { Blog } from "@/types";
 
 const blogSchema = z.object({
   title: z.string().min(1, "Article Title is required."),
@@ -36,6 +37,7 @@ const mockRecentBlogs = [
 
 // Props interface for communication with the parent dialog
 interface CreateBlogDialogContentProps {
+  initialData?: Blog | null;
   onSuccess: () => void;
   onCancel: () => void;
   onSubmittingChange: (isSubmitting: boolean) => void;
@@ -46,21 +48,48 @@ interface CreateBlogDialogContentProps {
  * on the left and a live preview on the right.
  */
 export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = ({
+  initialData,
   onSuccess,
   onCancel,
   onSubmittingChange,
 }) => {
-  const { createBlog } = useBlogMutations();
+  const { createBlog, updateBlog } = useBlogMutations();
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<BlogFormData>({
+  const isUpdateMode = !!initialData;
+  const { register, handleSubmit, watch, formState: { errors }, reset } = useForm<BlogFormData>({
     resolver: zodResolver(blogSchema),
     mode: 'onBlur',
+    // Use initialData for default values if in update mode
     defaultValues: {
-      title: "", summary: "", content: "",
-      section_1: "", section_2: "",
-      cover_image: "", main_image: "", sub_image: ""
+      title: initialData?.title || "",
+      summary: initialData?.summary || "",
+      content: initialData?.content || "",
+      section_1: initialData?.section_1 || "",
+      section_2: initialData?.section_2 || "",
+      cover_image: initialData?.cover_image || "",
+      main_image: initialData?.main_image || "",
+      sub_image: initialData?.sub_image || "",
     }
   });
+
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData);
+    } else {
+      reset({ 
+        title: "", 
+        summary: "", 
+        content: "", 
+        section_1: "", 
+        section_2: "", 
+        cover_image: "", 
+        main_image: "", 
+        sub_image: "" 
+      });
+    }
+  }, [initialData, reset]);
+
+  const isSubmitting = createBlog.isPending || updateBlog.isPending;
 
   const watchedValues = watch();
   const placeholderImg = "/images/placeholder-image.svg";
@@ -69,29 +98,35 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
   const currentDate = new Date();
 
   useEffect(() => {
-    onSubmittingChange(createBlog.isPending);
-  }, [createBlog.isPending, onSubmittingChange]);
+    onSubmittingChange(isSubmitting);
+  }, [isSubmitting, onSubmittingChange]);
 
   const onSubmit = (data: BlogFormData) => {
-    createBlog.mutate(data as CreateBlogPayload, {
-      onSuccess: () => {
-        onSuccess(); 
-      }
-    });
+    if (isUpdateMode && initialData) {
+      // ===== UPDATE =====
+      updateBlog.mutate(
+        { blogId: initialData.id, payload: data as UpdateBlogPayload },
+        { onSuccess: () => onSuccess() }
+      );
+    } else {
+      // ===== CREATE =====
+      createBlog.mutate(data as CreateBlogPayload, {
+        onSuccess: () => onSuccess(),
+      });
+    }
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-6">
-
       {/* ===== Left Column: The Form ===== */}
-      <aside className="lg:col-span-1 bg-white dark:bg-slate-950 rounded-xl shadow-xl p-6 lg:p-8">
+      <aside className="lg:col-span-1 bg-white dark:bg-slate-950 rounded-xl shadow-xl/20 border border-slate-200 p-6 lg:p-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <div className="space-y-4">
             <h3 className="flex items-center gap-3 text-xl font-medium text-slate-800 dark:text-slate-200"><Info className="h-6 w-6 text-slate-400" /> Primary Information</h3>
             <div className="space-y-4 rounded-lg border bg-slate-50 dark:bg-slate-900 p-6">
               <div className="space-y-2">
                 <Label htmlFor="title" className="text-base">Article Title</Label>
-                <Input id="title" {...register("title")} disabled={createBlog.isPending} />
+                <Input id="title" {...register("title")} disabled={isSubmitting} />
                 {errors.title && <p className="text-sm text-red-500 mt-1">{errors.title.message}</p>}
               </div>
             </div>
@@ -101,7 +136,7 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
             <div className="space-y-6 rounded-lg border bg-slate-50 dark:bg-slate-900 p-6">
               <div className="space-y-2">
                 <Label htmlFor="summary" className="text-base">Summary</Label>
-                <Textarea id="summary" {...register("summary")} className="h-24" disabled={createBlog.isPending} />
+                <Textarea id="summary" {...register("summary")} className="h-24" disabled={isSubmitting} />
                 <div className="flex justify-between items-center">
                   {errors.summary ? <p className="text-sm text-red-500">{errors.summary.message}</p> : <div />}
                   <p className={cn("text-sm text-slate-500 ml-auto", (watchedValues.summary?.length || 0) > 100 && "text-red-500 font-bold")}>
@@ -111,7 +146,7 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
               </div>
               <div className="space-y-2">
                 <Label htmlFor="content" className="text-base">Main Content</Label>
-                <Textarea id="content" {...register("content")} className="h-40" disabled={createBlog.isPending} />
+                <Textarea id="content" {...register("content")} className="h-40" disabled={isSubmitting} />
                 <div className="flex justify-between items-center">
                   {errors.content ? <p className="text-sm text-red-500">{errors.content.message}</p> : <div />}
                   <p className={cn("text-sm text-slate-500 ml-auto", (watchedValues.content?.length || 0) > 1000 && "text-red-500 font-bold")}>
@@ -121,7 +156,7 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
               </div>
               <div className="space-y-2">
                 <Label htmlFor="section1" className="text-base">Section 1</Label>
-                <Textarea id="section1" {...register("section_1")} className="h-32" disabled={createBlog.isPending} />
+                <Textarea id="section1" {...register("section_1")} className="h-32" disabled={isSubmitting} />
                 <div className="flex justify-between items-center">
                   {errors.section_1 ? <p className="text-sm text-red-500">{errors.section_1.message}</p> : <div />}
                   <p className={cn("text-sm text-slate-500 ml-auto", (watchedValues.section_1?.length || 0) > 500 && "text-red-500 font-bold")}>
@@ -131,7 +166,7 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
               </div>
               <div className="space-y-2">
                 <Label htmlFor="section2" className="text-base">Section 2</Label>
-                <Textarea id="section2" {...register("section_2")} className="h-32" disabled={createBlog.isPending} />
+                <Textarea id="section2" {...register("section_2")} className="h-32" disabled={isSubmitting} />
                 <div className="flex justify-between items-center">
                   {errors.section_2 ? <p className="text-sm text-red-500">{errors.section_2.message}</p> : <div />}
                   <p className={cn("text-sm text-slate-500 ml-auto", (watchedValues.section_2?.length || 0) > 500 && "text-red-500 font-bold")}>
@@ -151,10 +186,10 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
           </div>
 
           <div className="flex justify-end gap-4 pt-6 border-t dark:border-slate-800">
-            <Button type="button" variant="ghost" onClick={onCancel} disabled={createBlog.isPending}>
+            <Button type="button" variant="ghost" onClick={onCancel} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" disabled={createBlog.isPending} className="min-w-[120px]">
+            <Button type="submit" disabled={isSubmitting} className="min-w-[120px]">
               {createBlog.isPending ? <Loader2 className="animate-spin" /> : 'Save Article'}
             </Button>
           </div>
@@ -162,7 +197,7 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
       </aside>
 
       {/* ===== Right Column: Live Preview ===== */}
-      <main className="hidden lg:block lg:col-span-1 h-fit bg-white dark:bg-slate-950 rounded-xl shadow-xl p-4">
+      <main className="hidden lg:block lg:col-span-1 h-fit bg-white dark:bg-slate-950 rounded-xl shadow-xl/20 p-4 border border-slate-200">
         <div className="w-full h-full overflow-y-auto">
           <div className="w-full h-[350px] mb-8">
             <img src={coverImagePreview} alt={watchedValues.title || "Cover Image"} className="w-full h-full object-cover rounded-lg bg-slate-200 dark:bg-slate-800" onError={(e) => { e.currentTarget.src = placeholderImg; }} />

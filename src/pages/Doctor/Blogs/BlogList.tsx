@@ -12,6 +12,7 @@ import {
   XCircle,
   Pencil,
   NotepadText,
+  Loader2,
 } from "lucide-react";
 
 import type { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
@@ -27,6 +28,7 @@ import { BLOG_STATUS } from "@/Application/constants/manager/manager.blogConstan
 import { useBlogs } from "@/hooks/doctor/useBlogs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CreateBlogDialogContent } from "./BlogCreate";
+import { useBlogDetail } from "@/hooks/customer/useBlogs";
 
 
 // ========== FACET FILTERS ==========
@@ -135,13 +137,16 @@ export default function BlogListDashboard() {
   const [visibleColumns, setVisibleColumns] = useState<string[]>(allBlogColumns.filter(col => col.defaultVisible !== false).map((col) => col.key));
 
   const visibleColumnCount = allBlogColumns.filter(c => visibleColumns.includes(c.key)).length;
-  
+
   const [dateConfig, setDateConfig] = useState<{ field: string; from?: Date; to?: Date; }>({
     field: 'created_at'
   });
 
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
+  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+
+   const [selectedBlogIdForEdit, setSelectedBlogIdForEdit] = useState<string | null>(null);
 
   // ========== SET BREADCRUMB ==========
   useEffect(() => {
@@ -182,6 +187,16 @@ export default function BlogListDashboard() {
     dateRange: dateConfig,
   });
 
+  const { data: blogDetail, isLoading: isFetchingDetail } = useBlogDetail(selectedBlogIdForEdit);
+
+  useEffect(() => {
+    if (blogDetail) {
+      setEditingBlog(blogDetail);      
+      setIsFormDialogOpen(true);       
+      setSelectedBlogIdForEdit(null); // Reset ID to make the hook idle again.
+    }
+  }, [blogDetail]);
+
   const blogs = data?.data ?? [];
   const totalBlogs = data?.total ?? 0;
   const totalPages = Math.ceil(totalBlogs / ROWS_PER_PAGE);
@@ -198,23 +213,40 @@ export default function BlogListDashboard() {
     }));
   }, [visibleColumns, allBlogColumns]);
 
-
+  // Handler to open the dialog in "create" mode
+  const handleOpenCreateDialog = () => {
+    setEditingBlog(null); // Ensure no blog is being edited
+    setIsFormDialogOpen(true);
+  };
 
 
   // ========== ACTIONS ==========
   const renderBlogActions = ((blog: Blog) => {
+    const isThisBlogLoading = isFetchingDetail && selectedBlogIdForEdit === blog.id;
+
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button variant="ghost" className="h-8 w-8 p-0" disabled={isThisBlogLoading}>
             <span className="sr-only">Open menu</span>
+            {isThisBlogLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
               <MoreHorizontal className="h-4 w-4" />
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => alert(`Editing blog: ${blog.title}`)}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Update this Blog
+          <DropdownMenuItem 
+            onClick={() => setSelectedBlogIdForEdit(blog.id)} // This triggers the fetch
+            disabled={isThisBlogLoading || blog.status === 'ARCHIVED'}
+          >
+            {isThisBlogLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Pencil className="mr-2 h-4 w-4" />
+            )}
+            <span>Update this Blog</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -260,7 +292,7 @@ export default function BlogListDashboard() {
           setDateConfig({ field: 'created_at' });
           setVisibleColumns(allBlogColumns.map((c) => c.key));
         }}
-        onCreate={() => setIsCreateDialogOpen(true)}
+        onCreate={handleOpenCreateDialog}
         createButtonLabel="+ Create Blog"
       />
 
@@ -288,7 +320,7 @@ export default function BlogListDashboard() {
         />
       )}
 
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+      <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
         <DialogContent
           className="sm:max-w-none w-[95vw] h-[90vh] md:w-[80vw] lg:w-[70vw] xl:w-[85vw] 2xl:w-[75vw] flex flex-col p-0 data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out"
           onInteractOutside={(e) => {
@@ -305,19 +337,20 @@ export default function BlogListDashboard() {
               </div>
               <div className="flex flex-col">
                 <DialogTitle className="text-3xl font-bold tracking-tight text-foreground">
-                  Create New Blog
+                  {editingBlog ? 'Update Blog Post' : 'Create New Blog'}
                 </DialogTitle>
                 <DialogDescription className="text-base text-muted-foreground mt-1">
-                  Fill out the details below to publish a new article for our community.
+                  {editingBlog ? 'Modify the details below.' : 'Fill out the form below to create a new blog.'}
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto p-6 bg-slate-100" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0)`, backgroundSize: '2rem 2rem' }}>
+          <div className="flex-1 overflow-y-auto p-6" >
             <CreateBlogDialogContent
-              onSuccess={() => setIsCreateDialogOpen(false)}
-              onCancel={() => setIsCreateDialogOpen(false)}
+              initialData={editingBlog}
+              onSuccess={() => setIsFormDialogOpen(false)}
+              onCancel={() => setIsFormDialogOpen(false)}
               onSubmittingChange={setIsFormSubmitting}
             />
           </div>

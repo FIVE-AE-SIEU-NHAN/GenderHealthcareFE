@@ -1,6 +1,6 @@
 import api from '@/apis/axiosConfig';
 import { BLOG_SEARCH_FIELDS, BLOG_STATUS } from '@/Application/constants/manager/manager.blogConstants';
-import { BackendBlogsListResponse, BlogsListOptions, CreateBlogPayload, CreateBlogResponse, PaginatedBlogsListResponse } from '@/types/customer/blogTypes';
+import { BackendBlogsListResponse, BlogsListOptions, CreateBlogPayload, CreateBlogResponse, PaginatedBlogsListResponse, UpdateBlogPayload, UpdateBlogResponse } from '@/types/customer/blogTypes';
 import { format } from 'date-fns';
 
 // =============== BLOGS FETCHING ===============
@@ -55,8 +55,21 @@ export const fetchBlogs = async ({ page, limit, filters, search, sort, dateRange
 
 
 
-// // =============== BLOG CREATION ===============
+// =============== BLOG CREATION ===============
 export const createBlogAPI = async (payload: CreateBlogPayload): Promise<CreateBlogResponse> => {
   const response = await api.post<CreateBlogResponse>('/blog/create', payload);
+  return response.data;
+};
+
+
+
+// =================== BLOG UPDATE ===================
+/**
+ * Updates an existing blog post.
+ * @param blogId The ID of the blog to update.
+ * @param payload The data to update.
+ */
+export const updateBlogAPI = async ({ blogId, payload }: { blogId: string; payload: UpdateBlogPayload }): Promise<UpdateBlogResponse> => {
+  const response = await api.patch<UpdateBlogResponse>(`/blog/detail/${blogId}`, payload);
   return response.data;
 };

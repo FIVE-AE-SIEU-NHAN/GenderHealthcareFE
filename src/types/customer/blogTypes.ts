@@ -74,3 +74,10 @@ export interface CreateBlogResponse {
   message: string;
   result: Blog; 
 }
+
+
+// =================== BLOG UPDATE ===================
+export type UpdateBlogPayload = Partial<CreateBlogPayload>;
+export interface UpdateBlogResponse {
+  message: string;
+}

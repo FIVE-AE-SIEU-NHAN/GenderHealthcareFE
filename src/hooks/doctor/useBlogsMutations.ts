@@ -1,5 +1,5 @@
-import { createBlogAPI } from '@/apis/doctor/blogsApi';
-import { CreateBlogPayload, CreateBlogResponse } from '@/types/customer/blogTypes';
+import { createBlogAPI, updateBlogAPI } from '@/apis/doctor/blogsApi';
+import { CreateBlogPayload, CreateBlogResponse, UpdateBlogPayload, UpdateBlogResponse } from '@/types/customer/blogTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner'; 
 
@@ -24,8 +24,27 @@ export const useBlogMutations = () => {
     },
   });
 
+
+  // =============== BLOG UPDATE ===============
+  const updateBlogMutation = useMutation<
+    UpdateBlogResponse, 
+    Error, 
+    { blogId: string; payload: UpdateBlogPayload }
+  >({
+    mutationFn: updateBlogAPI,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+      toast.success(data.message || 'Blog updated successfully!');
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to update blog.');
+    },
+  });
+
+
   return {
     createBlog: createBlogMutation,
+    updateBlog: updateBlogMutation
   };
 };
 

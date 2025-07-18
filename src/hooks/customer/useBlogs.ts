@@ -8,7 +8,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 /**
  * A custom Tanstack Query hook to fetch BlogDetail.
  */
-function useBlogDetail(blogId: string | undefined) {
+function useBlogDetail(blogId: string | null | undefined) {
   return useQuery<Blog, Error>({
     // Query key phải duy nhất cho từng bài blog
     queryKey: ['blog', blogId],
@@ -16,6 +16,8 @@ function useBlogDetail(blogId: string | undefined) {
     // Truyền blogId vào hàm fetchBlogDetail
     queryFn: () => fetchBlogDetail(blogId!),
     
+    enabled: !!blogId,
+
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
