@@ -14,8 +14,9 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   'chat:joinRoom': (room_id: string) => void;
   'chat:leaveRoom': (room_id: string) => void;
-  'chat:message': (data: { sender_id: string; message: string }) => void;
-  'chat:typing': (data: { sender_id: string; is_typing: boolean }) => void;
+  
+  'chat:message': (data: { room_id: string; sender_id: string; message: string }) => void;
+  'chat:typing': (data: { room_id: string; sender_id: string; is_typing: boolean }) => void;
   
   'call:joinRoom': (room_id: string) => void;
   'call:leaveRoom': (room_id: string) => void;
