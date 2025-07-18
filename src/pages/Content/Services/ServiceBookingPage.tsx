@@ -148,7 +148,7 @@ const ServiceBookingPage = () => {
 
   return (
     <div
-      className="flex items-center justify-center max-[1125px]:min-h-[90vh] min-[1125px]:min-h-[93vh]
+      className="flex items-center justify-center max-[1125px]:min-h-[90vh] min-[1125px]:min-h-[94vh]
                   relative bg-blend-overlay bg-cover bg-center bg-no-repeat
                   bg-[url('https://benhviengreen.com/wp-content/uploads/2016/05/doctor-health-wellness-1200x480.jpg')]"
     >

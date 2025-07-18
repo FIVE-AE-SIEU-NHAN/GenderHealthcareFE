@@ -20,7 +20,7 @@ import {
 import { authApi } from "@/apis/authApi";
 import { toast } from "sonner";
 import GoogleLoginButton from "../GoogleLogin";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 
@@ -166,7 +166,7 @@ export default function SignupForm() {
           Hello there!
         </CardTitle>
         <p className="text-gray-500 text-shadow-md">
-          Already have an account? <a href="/login" className="text-[#0066ff] hover:underline">Log in</a>
+          Already have an account? <Link to="/login" className="text-[#0066ff] hover:underline">Log in</Link>
         </p>
       </CardHeader>
 

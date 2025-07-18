@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 // --- Interfaces and Mock Data (Unchanged) ---
 interface Service {
@@ -210,15 +211,14 @@ const ServiceList: React.FC = () => {
                     </div>
 
                     <div className="flex-1"></div>
-                    <Button
+                    <Link
+                      to="/book-service"
                       className="w-full mt-auto"
-                      variant={pkg.level === 'advanced' ? 'default' : 'outline'}
-                      onClick={() => {
-                        window.location.href = `/services/testing/book?package=${pkg.id}&name=${encodeURIComponent(pkg.name)}&price=${pkg.price}`;
-                      }}
                     >
-                      Book Now
-                    </Button>
+                      <Button variant={pkg.level === "advanced" ? "default" : "outline"} className="w-full cursor-pointer">
+                        Book Now
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               ))}

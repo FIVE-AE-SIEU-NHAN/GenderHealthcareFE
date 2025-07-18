@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, AtSign, Lock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils"; 
 
@@ -117,7 +117,7 @@ export default function LoginForm() {
           Welcome Back
         </CardTitle>
         <p className="text-gray-500 text-shadow-md">
-          Don't have an account? <a href="/signup" className="text-[#0066ff] hover:underline">Sign up</a>
+          Don't have an account? <Link to="/signup" className="text-[#0066ff] hover:underline">Sign up</Link>
         </p>
       </CardHeader>
       <CardContent className="mb-7">

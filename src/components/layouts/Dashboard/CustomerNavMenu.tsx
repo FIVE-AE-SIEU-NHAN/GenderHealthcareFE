@@ -3,8 +3,6 @@ import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -23,66 +21,23 @@ export const CustomerNavMenu = () => {
         <NavigationMenu>
           <NavigationMenuList className="flex gap-6 font-medium items-center">
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className="nav-text text-xl">
-                <Link to="/" onClick={ToTop}>
+              <NavigationMenuLink className="nav-text text-xl" asChild>
+                <Link
+                  to="/"
+                  onClick={ToTop}
+                >
                   Home
                 </Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="nav-text text-xl">
-                <Link to="/services">Services</Link>
-              </NavigationMenuTrigger>
-              <NavigationMenuContent className="bg-white shadow-md rounded-lg p-4">
-                <ul className="grid gap-3 w-[200px]">
-                  <li>
-                    <NavigationMenuLink
-                      href="/services#gynecology"
-                      className="block text-lg font-semibold rounded-md p-2 hover:bg-gray-100"
-                    >
-                      Gynecology
-                    </NavigationMenuLink>
-                  </li>
-                  <li>
-                    <NavigationMenuLink
-                      href="/services#cardiology"
-                      className="block text-lg font-semibold rounded-md p-2 hover:bg-gray-100"
-                    >
-                      Cardiology
-                    </NavigationMenuLink>
-                  </li>
-                  <li>
-                    <NavigationMenuLink
-                      href="/services#neurology"
-                      className="block text-lg font-semibold rounded-md p-2 hover:bg-gray-100"
-                    >
-                      Neurology
-                    </NavigationMenuLink>
-                  </li>
-                  <li>
-                    <NavigationMenuLink
-                      href="/services#dermatology"
-                      className="block text-lg font-semibold rounded-md p-2 hover:bg-gray-100"
-                    >
-                      Dermatology
-                    </NavigationMenuLink>
-                  </li>
-                </ul>
-              </NavigationMenuContent>
+              <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/services">Services</Link></NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className="nav-text text-xl">
-                <Link to="/blogs" onClick={ToTop}>
-                  Blog
-                </Link>
-              </NavigationMenuLink>
+              <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/blogs">Blog</Link></NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className="nav-text text-xl">
-                <Link to="/about-us" onClick={ToTop}>
-                  About
-                </Link>
-              </NavigationMenuLink>
+              <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/about-us">About</Link></NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
@@ -116,23 +71,9 @@ export const CustomerNavMenu = () => {
                       Home
                     </Link>
                   </NavigationMenuItem>
-                  {/* Note: ShadCN triggers don't work well inside the mobile sheet.
-                      It's better to list the links directly. */}
-                  <NavigationMenuItem className="w-full">
-                    <Link
-                      to="/services"
-                      className="nav-text text-xl font-bold block w-full py-2"
-                    >
-                      Services
-                    </Link>
-                    <ul className="pl-4">
-                      <li><a href="/services#gynecology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Gynecology</a></li>
-                      <li><a href="/services#cardiology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Cardiology</a></li>
-                      <li><a href="/services#neurology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Neurology</a></li>
-                      <li><a href="/services#dermatology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Dermatology</a></li>
-                    </ul>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink className="nav-text text-xl hover:bg-muted-foreground/20 block w-75"><Link onClick={ToTop} to="/services">Services</Link></NavigationMenuLink>
                   </NavigationMenuItem>
-
                   <NavigationMenuItem className="w-full">
                     <Link
                       to="/blogs"

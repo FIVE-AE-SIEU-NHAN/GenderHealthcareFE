@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { FaCalendarAlt, FaHeartbeat } from "react-icons/fa";
 import Autoplay from "embla-carousel-autoplay";
 import news from "@/assets/images/new1.jpg"; 
+import { Link } from "react-router-dom";
 
 const newsPosts = [
   {
@@ -137,8 +138,8 @@ export function News() {
         ]}
         className="w-full mb-4"
         data-sal="fade"
-        data-sal-duration="800"
-        data-sal-delay="400"
+        data-sal-duration="600"
+        data-sal-delay="300"
       >
         <CarouselContent className="flex h-86 pb-132 -ml-10">
           {newsPosts.map((post, index) => (
@@ -174,7 +175,9 @@ export function News() {
                     href="#"
                     className="group relative inline-block text-light-blue text-sm font-bold transition-all duration-300"
                   >
-                    <span className="transition-all duration-300 group-hover:px-2">Read More</span>
+                    <Link to="/blogs">
+                      <span className="transition-all duration-300 group-hover:px-2">Read More</span>
+                    </Link>
                     <span className="ml-1 transition-all duration-300 group-hover:ml-2 group-hover:opacity-0">
                       &rsaquo;
                     </span>
@@ -186,7 +189,6 @@ export function News() {
                 </div>
               </Card>
             </CarouselItem>
-
           ))}
         </CarouselContent>
       </Carousel>

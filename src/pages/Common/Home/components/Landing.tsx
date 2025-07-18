@@ -8,18 +8,19 @@ import slide3 from '@/assets/images/bs3.webp';
 
 
 import { FaArrowRightLong } from "react-icons/fa6";
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const sharedButtons = [
     {
       text: 'Find a Specialist',
-      link: '#consultant',
+      link: '/book-consultant',
       color:
         'text-xl bg-semi-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-900 transition duration-200 font-semibold',
     },
     {
       text: 'Meet Our Doctors',
-      link: '#doctors',
+      link: '/book-service',
       color:
         'text-xl border-2 border-white text-white px-4 py-2 rounded-button font-semibold',
     },
@@ -62,7 +63,7 @@ const Home: React.FC = () => {
         autoplay={{ delay: 3000 }}
         loop
         pagination={{ clickable: true }}
-        className="w-full h-[calc(100dvh-63px)]"
+        className="w-full h-[calc(100dvh-59px)]"
       >
         {slides.map((slide, index) => (
           <SwiperSlide
@@ -89,14 +90,14 @@ const Home: React.FC = () => {
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-4">
                 {slide.buttons.map((button, btnIndex) => (
-                  <a
+                  <Link
                     key={btnIndex}
-                    href={button.link}
+                    to={button.link}
                     className={`text-sm sm:text-base md:text-lg px-4 sm:px-5 md:px-6 py-2 md:py-3 rounded transition ${button.color}`}
                   >
                     {button.text}
                     <FaArrowRightLong className="inline-block ml-3 sm:ml-4" />
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

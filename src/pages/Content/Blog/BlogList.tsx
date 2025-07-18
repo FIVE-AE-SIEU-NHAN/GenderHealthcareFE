@@ -94,7 +94,9 @@ const BlogPage: React.FC = () => {
   if (isLoading) {
     return (
       <>
-        <section className="py-12 text-center h-[350px] relative flex flex-col items-center justify-center bg-blue-900">
+        <section
+          className="py-12 text-center bg-cover bg-center h-[150px] relative flex flex-col items-center justify-center bg-[url('@/assets/images/blog1.webp')]"
+        >
           <h2 className="text-5xl text-white font-bold">Our Blogs</h2>
           <p className="text-sm mt-2">
             <span className="text-white">Home</span>
@@ -126,7 +128,9 @@ const BlogPage: React.FC = () => {
   return (
     <div className="font-inter text-gray-800 bg-gray-100">
       {/* Banner */}
-      <section className="py-12 text-center h-[350px] relative flex flex-col items-center justify-center bg-blue-900">
+      <section
+        className="py-12 text-center bg-cover bg-center h-[150px] relative flex flex-col items-center justify-center bg-[url('@/assets/images/blog1.webp')]"
+      >
         <h2 className="text-5xl text-white font-bold">Our Blogs</h2>
         <p className="text-sm mt-2">
           <span className="text-white">Home</span>
