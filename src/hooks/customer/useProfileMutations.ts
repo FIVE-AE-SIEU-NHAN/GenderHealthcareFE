@@ -29,6 +29,8 @@ export function useProfileMutations() {
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['consultantProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['doctorProfile'] });
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "An unknown error occurred.");
@@ -47,6 +49,7 @@ export function useProfileMutations() {
       
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       queryClient.invalidateQueries({ queryKey: ['consultantProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['doctorProfile'] });
 
       toast.success(data.message || 'Profile updated successfully!');
     },

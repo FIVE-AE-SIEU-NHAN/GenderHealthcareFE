@@ -14,8 +14,14 @@ export interface DoctorProfile {
   specialization: string;
   created_at: string;
   status: number; // 0 for Inactive, 1 for Active
+  email: string;
+  phone_number: string;
 }
 
+export interface GetDoctorProfileResponse {
+  message: string;
+  staff: DoctorProfile;
+}
 /**
  * Represents the raw response structure from the `/staff/get-staff` API endpoint.
  */

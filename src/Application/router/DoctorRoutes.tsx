@@ -4,8 +4,8 @@ import DashboardLayout from "@/components/layouts/Dashboard/DashboardLayout"; //
 import CustomerDashboard from "@/pages/Customer/Dashboard";
 import BlogListDashboard from "@/pages/Doctor/Blogs/BlogList";
 import { doctorSidebarItems } from "../constants/doctor/doctorSidebarItems";
-import CustomerProfilePage from "@/pages/Customer/Profile/Profile";
 import ConsultantAppointmentCalendar from "@/pages/Consultant/Appointments/AppointmentCalendar";
+import DoctorProfilePage from "@/pages/Doctor/Profile/Profile";
 
 export const DoctorRoutes = (
   <Route 
@@ -16,8 +16,7 @@ export const DoctorRoutes = (
       <Route index element={<CustomerDashboard />} />
       <Route path="appointments" element={<ConsultantAppointmentCalendar />} />
       <Route path="blogs" element={<BlogListDashboard />} />
-      <Route path="profile" element={<CustomerProfilePage />} />
-
+      <Route path="profile" element={<DoctorProfilePage />} />
     </Route>
   </Route>
 );

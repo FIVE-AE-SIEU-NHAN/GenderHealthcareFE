@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/card";
 import { NewDatePicker } from "@/lib/DatePicker";
 import { ConsultantProfile } from "@/types/consultant/profileTypes";
+import { DoctorProfile } from "@/types/manager/doctorTypes";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -48,7 +49,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 interface EditProfileFormProps {
-  currentUser: User | ConsultantProfile;
+  currentUser: User | ConsultantProfile | DoctorProfile;
   onSuccess: () => void;
 }
 
