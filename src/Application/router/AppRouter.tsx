@@ -3,7 +3,7 @@ import SalWrapper from '@/components/sal-wrapper';
 
 import { AdminRoutes } from './AdminRoutes';
 import { ManagerRoutes } from './ManagerRoutes';
-// import { DoctorRoutes } from './DoctorRoutes';
+import { DoctorRoutes } from './DoctorRoutes';
 import { CustomerRoutes } from './CustomerRoutes';
 import { ConsultantRoutes } from './ConsultantRoutes';
 
@@ -65,7 +65,7 @@ export default function AppRouter() {
           {AdminRoutes}
           {ManagerRoutes}
           {ConsultantRoutes}
-          {/* {DoctorRoutes} */}
+          {DoctorRoutes}
           {CustomerRoutes}
         </Routes>
     </BrowserRouter>
