@@ -80,7 +80,7 @@ export function ConsultantBookingCard({ booking, className, isHighlighted = fals
         <p className="flex items-center gap-2">
           <span className="font-semibold">Room:</span>
           <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-bold font-mono">
-            {booking.socket_room_id || "N/A"}
+            {booking.chat_room_id || "N/A"}
           </code>
           {
             ["PENDING", "ONGOING"].includes(booking.status) && (

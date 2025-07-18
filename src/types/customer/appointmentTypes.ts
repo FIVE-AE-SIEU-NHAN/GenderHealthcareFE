@@ -48,7 +48,7 @@ export interface CustomerAppointment {
   time_slot: TimeSlot;
   note: string;
   status: AppointmentStatus;
-  socket_room_id: string | null;
+  chat_room_id: string | null;
 }
 
 // Type for the full API response structure

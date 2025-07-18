@@ -19,7 +19,7 @@ export function AppointmentCard({
   onStatusChange,
   isUpdating = false,
 }: AppointmentCardProps) {
-  const { topic, status, socket_room_id } = appointment;
+  const { topic, status, chat_room_id } = appointment;
   const topicStyle = TOPIC_STYLES_MAP.get(topic) || DEFAULT_TOPIC_STYLE;
 
   return (
@@ -67,7 +67,7 @@ export function AppointmentCard({
       {/* Room ID */}
       <div className="flex flex-col gap-2 text-xs text-gray-700">
         <code className="bg-gray-100 w-full px-1.5 py-0.5 rounded text-xs font-bold font-mono text-center border border-gray-400 truncate">
-          {socket_room_id || "N/A"}
+          {chat_room_id || "N/A"}
         </code>
 
         {["PENDING", "ONGOING"].includes(status) && (

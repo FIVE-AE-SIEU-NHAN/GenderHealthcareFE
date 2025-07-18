@@ -12,7 +12,7 @@ export interface Appointment {
   time_slot: TimeSlot;
   created_at?: string;
   status: AppointmentStatus;
-  socket_room_id: string;
+  chat_room_id: string;
 }
 
 // This type matches the API's `result` object for a list of appointments
