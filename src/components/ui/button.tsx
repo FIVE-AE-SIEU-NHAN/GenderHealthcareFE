@@ -126,7 +126,7 @@ function AskQuestionButton() {
         <button
           onClick={handleAskQuestion}
           className="h-12 group flex items-center justify-center bg-light-blue hover:semi-dark-blue text-white font-bold rounded-full p-3 shadow-lg"
-          aria-label="Đặt câu hỏi"
+          aria-label="Ask a question"
         >
           <HelpCircle className="h-6 w-6" />
 
@@ -139,7 +139,7 @@ function AskQuestionButton() {
             group-hover:ml-2  
             transition-all duration-600 ease-in-out
           ">
-            Đặt câu hỏi
+            Ask a question
           </span>
         </button>
       )}

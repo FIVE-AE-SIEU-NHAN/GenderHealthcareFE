@@ -2,8 +2,6 @@ import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -87,15 +85,7 @@ const Navbar = () => {
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <Link to="/services"><NavigationMenuTrigger className="nav-text text-xl">Services</NavigationMenuTrigger></Link>
-                  <NavigationMenuContent className="bg-white shadow-md rounded-lg p-4">
-                    <ul className="grid gap-3 w-[200px]">
-                      <li><NavigationMenuLink href="#gynecology" className="block text-lg font-semibold hover:bg-semi-dark-blue/8">Gynecology</NavigationMenuLink></li>
-                      <li><NavigationMenuLink href="#cardiology" className="block text-lg font-semibold hover:bg-semi-dark-blue/8">Cardiology</NavigationMenuLink></li>
-                      <li><NavigationMenuLink href="#neurology" className="block text-lg font-semibold hover:bg-semi-dark-blue/8">Neurology</NavigationMenuLink></li>
-                      <li><NavigationMenuLink href="#dermatology" className="block text-lg font-semibold hover:bg-semi-dark-blue/8">Dermatology</NavigationMenuLink></li>
-                    </ul>
-                  </NavigationMenuContent>
+                  <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/services">Services</Link></NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/blogs">Blog</Link></NavigationMenuLink>
@@ -122,16 +112,7 @@ const Navbar = () => {
                       <NavigationMenuLink className="nav-text text-xl hover:bg-muted-foreground/20 block w-75"><Link onClick={ToTop} to="/">Home</Link></NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuLink href="#gynecology" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">Gynecology</NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                      <NavigationMenuLink href="#cardiology" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">Cardiology</NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                      <NavigationMenuLink href="#neurology" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">Neurology</NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                      <NavigationMenuLink href="#dermatology" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">Dermatology</NavigationMenuLink>
+                      <NavigationMenuLink className="nav-text text-xl hover:bg-muted-foreground/20 block w-75"><Link onClick={ToTop} to="/services">Services</Link></NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                       <NavigationMenuLink href="#blog" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">Blog</NavigationMenuLink>
