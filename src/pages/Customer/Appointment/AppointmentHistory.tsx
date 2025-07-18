@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CalendarClock,
   Clock,
@@ -11,22 +11,41 @@ import { useOutletContext } from "react-router-dom";
 import { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
 import { useCustomerAppointments } from "@/hooks/customer/useAppointments";
 import { ConsultantBookingCard } from "./ConsultantBookingHistoryCard";
+import VideoChatRoom from "@/components/Chats/VideoChatRoom";
 
 
 export default function AppointmentHistory() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
 
+  const [activeCallRoomId, setActiveCallRoomId] = useState<string | null>(null);
+
   useEffect(() => {
-    setBreadcrumb({
-      title: "Apointments History",
-      parent: "Dashboard",
-      parentHref: "/user",
-    });
-  }, [setBreadcrumb]);
+     if (activeCallRoomId) {
+      setBreadcrumb({
+        title: "Live Consultation",
+        parent: "Appointments History",
+        parentHref: "/user/appointments", 
+      });
+    } else {
+      setBreadcrumb({
+        title: "Apointments History",
+        parent: "Dashboard",
+        parentHref: "/user",
+      });
+    }
+  }, [setBreadcrumb, activeCallRoomId]);
 
   // ================ USE APPOINTMENTS HISTORY HOOK ===============
   const { data: bookingHistory, isLoading, isError } = useCustomerAppointments();
 
+  const handleJoinCall = (roomId: string) => {
+    setActiveCallRoomId(roomId);
+  };
+
+  const handleLeaveCall = () => {
+    setActiveCallRoomId(null);
+  };
+  
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -57,11 +76,25 @@ export default function AppointmentHistory() {
     return (
       <div className="relative border-l-2 border-blue-200 space-y-6 pl-6 pb-6 max-h-[80vh] overflow-y-auto">
         {bookingHistory && bookingHistory.map((booking, index) => (
-            <ConsultantBookingCard key={index} booking={booking} isHighlighted={index === 0} />
+            <ConsultantBookingCard 
+              key={index} 
+              booking={booking} 
+              isHighlighted={index === 0}
+              onJoin={handleJoinCall}
+            />
           ))}
       </div>
     );
   };
+
+  if (activeCallRoomId) {
+    return (
+      <VideoChatRoom 
+        chat_room_id={activeCallRoomId}
+        onLeave={handleLeaveCall}
+      />
+    );
+  }
 
   return (
     <div className="relative flex flex-col lg:flex-row gap-6 overflow-hidden max-h-[calc(84vh)]">

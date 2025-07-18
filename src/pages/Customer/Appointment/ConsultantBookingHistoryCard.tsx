@@ -26,9 +26,15 @@ interface ConsultantBookingCardProps {
   booking: CustomerAppointment;
   className?: string;
   isHighlighted?: boolean;
+  onJoin: (roomId: string) => void;
 }
 
-export function ConsultantBookingCard({ booking, className, isHighlighted = false }: ConsultantBookingCardProps) {
+export function ConsultantBookingCard({ 
+  booking, 
+  className, 
+  isHighlighted = false,
+  onJoin
+}: ConsultantBookingCardProps) {
   const topicLabel = TOPIC_STYLES_MAP.get(booking.topic)?.label || booking.topic.replace(/_/g, " ");
   const formattedDate = formatDate(booking.booking_date, "MMMM d, yyyy");
   const formattedTime = formatTimeSlot(booking.time_slot);
@@ -83,12 +89,13 @@ export function ConsultantBookingCard({ booking, className, isHighlighted = fals
             {booking.chat_room_id || "N/A"}
           </code>
           {
-            ["PENDING", "ONGOING"].includes(booking.status) && (
+            ["PENDING", "ONGOING"].includes(booking.status) && booking.chat_room_id && (
               <span>
                 <Button
                   variant="default"
                   size="sm"
                   className="p-2 w-full cursor-pointer"
+                  onClick={() => onJoin(booking.chat_room_id)}
                 >
                   Join
                 </Button>
