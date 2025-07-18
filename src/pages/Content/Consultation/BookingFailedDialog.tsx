@@ -38,13 +38,6 @@ export function BookingFailedDialog({ onClose, errorMessage }: BookingFailedDial
           )}
 
           {/* Action Button */}
-          {/* <Button
-            className="w-full text-lg mt-8 py-6 bg-gradient-to-r from-[#1A3973] to-[#4F80E1] text-white"
-            onClick={onClose}
-          >
-            Try Again
-          </Button> */}
-
           <Button
             className="w-full mt-8 py-6 bg-gradient-to-r from-[#1A3973] to-[#4F80E1] 
                       hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg 

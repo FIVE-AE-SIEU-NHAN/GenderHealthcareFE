@@ -4,7 +4,6 @@ import React, { createContext, useContext, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query'; // Import this
 import { socket } from '@/utils/socket';
 import { useAuth } from './AuthContext';
-import { toast } from 'sonner';
 
 const SocketContext = createContext(socket);
 
@@ -24,7 +23,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     // --- GLOBAL LISTENER FOR NOTIFICATION ---
     const onNewNotification = (data: { notification_id: string; content: string }) => {
-      toast.info("You have a new notification!", { description: data.content });
+      // toast.info("You have a new notification!", { description: data.content });
+      console.log({ description: data.content })
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
     };
 

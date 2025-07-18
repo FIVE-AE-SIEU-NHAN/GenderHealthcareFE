@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { bookAppointmentAPI } from '@/apis/customer/appointmentApi';
-import type { BookAppointmentError, BookAppointmentPayload, BookAppointmentResponse } from '@/types/customer/appointmentTypes';
+import { bookAppointmentAPI, bookServicesAPI } from '@/apis/customer/appointmentApi';
+import type { BookAppointmentError, BookAppointmentPayload, BookAppointmentResponse, BookServicesPayload } from '@/types/customer/appointmentTypes';
 import { AxiosError } from 'axios';
 
 /**
@@ -21,7 +21,21 @@ export const useAppointmentMutations = () => {
     },
   });
 
+  // =============== BOOK A NEW SERVICE ===============
+  const bookServiceMutation = useMutation<
+    BookAppointmentResponse,
+    AxiosError<BookAppointmentError>,
+    BookServicesPayload
+  >({
+    mutationFn: bookServicesAPI,
+    onError: (error) => {
+      const message = error.response?.data?.message || 'Booking failed. Please try again.';
+      toast.error(message);
+    },
+  });
+
   return {
     bookAppointment: bookAppointmentMutation,
+    bookService: bookServiceMutation,
   };
 };

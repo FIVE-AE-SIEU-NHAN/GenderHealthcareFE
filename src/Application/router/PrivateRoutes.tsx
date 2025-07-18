@@ -3,10 +3,11 @@
 import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 
-import BookingForm from "@/pages/Content/Services/BookingForm";
 import NavFootLayout from "@/components/layouts/NavFoot/NavFootLayout";
 import AskQuestion from "@/pages/Customer/Question/AskQuestionForm";
 import BlogDetails from "@/pages/Content/Blog/BlogDetails";
+import ConsultantAppointmentPage from "@/pages/Content/Consultation/ConsultationBookingPage";
+import ServiceBookingPage from "@/pages/Content/Services/ServiceBookingPage";
 
 export const PrivateRoutes = (
   <Route
@@ -18,9 +19,11 @@ export const PrivateRoutes = (
     }
   >
     <Route element={<NavFootLayout />}>
-      <Route path="/book-service" element={<BookingForm />} />
       <Route path="/ask-question" element={<AskQuestion />} />
       <Route path="/blogs/:id" element={<BlogDetails />} />
+      <Route path="/book-service" element={<ServiceBookingPage />} />
+      <Route path="/book-consultant" element={<ConsultantAppointmentPage />} />
+
       {/* Add more private routes here */}
     </Route>
     <Route path="/hehe" element={<div>HEHEHEHHEHEHEHHE</div>} />

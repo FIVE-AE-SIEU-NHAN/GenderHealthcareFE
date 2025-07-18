@@ -15,6 +15,17 @@ export interface BookAppointmentPayload {
 }
 
 /**
+ * The payload required when a customer books a new appointment.
+ */
+export interface BookServicesPayload {
+  level: string;
+  target_gender: string;
+  booking_date: string;
+  time_slot: string;
+  note: string;
+}
+
+/**
  * The expected response from a successful appointment booking.
  */
 export interface BookAppointmentResponse {
