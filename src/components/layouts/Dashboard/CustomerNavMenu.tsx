@@ -8,7 +8,7 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Calendar, Menu } from "lucide-react";
 
 // Helper function to scroll to the top of the page
 const ToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -87,6 +87,13 @@ export const CustomerNavMenu = () => {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
+      <a
+        href="/booking-info"
+        className="mr-5 flex items-center gap-2 bg-gradient-to-r from-[#1c2359] via-[#1a3973] to-[#1977cc] text-white font-semibold px-5 py-2 rounded-full shadow-md hover:shadow-lg hover:brightness-110 transition-all duration-200"
+      >
+        <Calendar className="w-5 h-5" />
+        Book an Appointment
+      </a>
 
       {/* ===================================== */}
       {/* MOBILE NAVIGATION (HAMBURGER)         */}
@@ -112,17 +119,17 @@ export const CustomerNavMenu = () => {
                   {/* Note: ShadCN triggers don't work well inside the mobile sheet.
                       It's better to list the links directly. */}
                   <NavigationMenuItem className="w-full">
-                     <Link
+                    <Link
                       to="/services"
                       className="nav-text text-xl font-bold block w-full py-2"
                     >
                       Services
                     </Link>
                     <ul className="pl-4">
-                       <li><a href="/services#gynecology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Gynecology</a></li>
-                       <li><a href="/services#cardiology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Cardiology</a></li>
-                       <li><a href="/services#neurology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Neurology</a></li>
-                       <li><a href="/services#dermatology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Dermatology</a></li>
+                      <li><a href="/services#gynecology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Gynecology</a></li>
+                      <li><a href="/services#cardiology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Cardiology</a></li>
+                      <li><a href="/services#neurology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Neurology</a></li>
+                      <li><a href="/services#dermatology" className="nav-text text-lg hover:bg-gray-100 block w-full py-1 rounded-md">Dermatology</a></li>
                     </ul>
                   </NavigationMenuItem>
 

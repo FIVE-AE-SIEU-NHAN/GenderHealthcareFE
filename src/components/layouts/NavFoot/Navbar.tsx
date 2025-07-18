@@ -220,6 +220,13 @@ const Navbar = () => {
                     </DropdownMenuItem>
                   )}
 
+                  {user.role === 4 && (
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="w-4 h-4" />
+                      <a href="/doctor">Doctor Dashboard</a>
+                    </DropdownMenuItem>
+                  )}
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onSelect={handleLogout}

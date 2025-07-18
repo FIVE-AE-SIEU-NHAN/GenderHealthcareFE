@@ -16,10 +16,11 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import type { NavMainProps } from "@/components/layouts/Dashboard/nav-main";
-import { UserNav } from "@/components/layouts/Dashboard/user-nav";
+import { NavAvatar } from "@/components/layouts/Dashboard/user-nav";
 import WebLogo from "@/assets/images/logo1.png"
 import { useAuth } from "@/contexts/AuthContext";
 import { CustomerNavMenu } from "./CustomerNavMenu";
+import Notification from "@/components/Notification/Notification";
 
 
 // 1. Define breadcrumb type and outlet context type
@@ -61,8 +62,10 @@ export default function DashboardLayout({
       <header className="mt-2 max-w-[99%] mx-auto relative flex h-15 items-center justify-between rounded-xl border bg-card p-4 text-card-foreground shadow-sm">
         <AppLogo />
         {user && user.role === 3 && <CustomerNavMenu />}
-        <div className="flex items-center ml-auto">
-          <UserNav />
+        {user && [1,3,4].includes(user.role) && <div className="mr-5 ml-auto"><Notification /></div>}
+
+        <div className="flex items-center">
+          <NavAvatar />
         </div>
       </header>
       <div className="relative">
