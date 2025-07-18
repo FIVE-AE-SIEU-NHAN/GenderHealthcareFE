@@ -361,7 +361,7 @@ export default function TableToolbar({
           </div>
         )}
         {onCreate && (
-          <Button onClick={onCreate}>
+          <Button className="cursor-pointer" onClick={onCreate}>
             {createButtonLabel}
           </Button>
         )}

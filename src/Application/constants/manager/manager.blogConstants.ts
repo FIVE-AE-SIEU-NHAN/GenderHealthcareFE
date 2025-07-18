@@ -2,6 +2,8 @@
 // ==                      BLOG CONSTANTS                        ==
 // =================================================================
 
+import { Archive, FilePenLine, Upload } from "lucide-react";
+
 const STATUS_DEFINITIONS = [
   { id: 'PUBLISHED', key: 'Published', label: 'Published' },
   { id: 'ARCHIVED', key: 'Archived', label: 'Archived' },
@@ -73,4 +75,40 @@ export const BLOG_SEARCH_FIELDS = {
   content: '_content_like',
   section_1: '_section_1_like',
   section_2: '_section_2_like',
+};
+
+
+// *================================================================*
+// *                      BLOG STATUS ACTIONS                       *
+// *================================================================*
+
+/**
+ * Actions available for each blog status.
+ * Used in the status dropdown menu.
+ */
+const ALL_ACTIONS = {
+  PUBLISH: {
+    label: "Publish Blog",
+    icon: Upload,
+    targetStatus: 'PUBLISHED',
+    className: "text-blue-600 focus:bg-blue-50 focus:text-blue-700",
+  },
+  ARCHIVE: {
+    label: "Archive Blog",
+    icon: Archive,
+    targetStatus: 'ARCHIVED',
+    className: "text-red-600 focus:bg-red-50 focus:text-red-700",
+  },
+  TO_DRAFT: {
+    label: "Move to Drafts",
+    icon: FilePenLine,
+    targetStatus: 'DRAFT',
+    className: "text-yellow-600 focus:bg-yellow-50 focus:text-yellow-700",
+  },
+};
+
+export const statusActionMap = {
+  PUBLISHED: [ALL_ACTIONS.ARCHIVE, ALL_ACTIONS.TO_DRAFT],
+  ARCHIVED:  [ALL_ACTIONS.PUBLISH, ALL_ACTIONS.TO_DRAFT], 
+  DRAFT:     [ALL_ACTIONS.PUBLISH, ALL_ACTIONS.ARCHIVE],
 };

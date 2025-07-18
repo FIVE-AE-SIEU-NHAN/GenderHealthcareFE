@@ -21,21 +21,6 @@ export const consultantSidebarItems: NavMainProps["items"] = [
     title: "Appointments",
     url: "/consultant/appointments",
     icon: CalendarCheck, 
-  },
-  // {
-  //   title: "Báo Cáo Thống Kê",
-  //   url: "/consultant/reports",
-  //   icon: BarChart2, 
-  // },
-  // {
-  //   title: "Cấu Hình Tham Số",
-  //   url: "/consultant/settings",
-  //   icon: Settings, 
-  // },
-  // {
-  //   title: "Your Profile",
-  //   url: "/consultant/profile",
-  //   icon: User, 
-  // },
+  }
 ]
 

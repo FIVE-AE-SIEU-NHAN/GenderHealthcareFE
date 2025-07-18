@@ -1,9 +1,9 @@
 import api from '@/apis/axiosConfig';
 import { BLOG_SEARCH_FIELDS, BLOG_STATUS } from '@/Application/constants/manager/manager.blogConstants';
-import { BackendBlogsListResponse, BlogsListOptions, PaginatedBlogsListResponse } from '@/types/customer/blogTypes';
+import { BackendBlogsListResponse, BlogsListOptions, EditBlogStatusPayload, EditBlogStatusResponse, PaginatedBlogsListResponse } from '@/types/customer/blogTypes';
 import { format } from 'date-fns';
 
-// =============== USER FETCHING ===============
+// =============== BLOGS FETCHING ===============
 export const fetchBlogs = async ({ page, limit, filters, search, sort, dateRange }: BlogsListOptions): Promise<PaginatedBlogsListResponse> => {
   const params: Record<string, string | number | number[] | string[]> = {
     _page: page,
@@ -40,7 +40,6 @@ export const fetchBlogs = async ({ page, limit, filters, search, sort, dateRange
     }
 
     if (dates.length > 0) {
-      // Use the dynamic field key from the dateRange object to create the param name
       const dateKey = `_${dateRange.field}`; 
       params[dateKey] = dates;
     }
@@ -57,17 +56,9 @@ export const fetchBlogs = async ({ page, limit, filters, search, sort, dateRange
 
 
 
-// // =============== USER STATUS EDITING ===============
-// export const editUserStatusAPI = async ({ userId, status }: EditUserStatusPayload): Promise<EditUserStatusResponse> => {
-//   const body = { status };
-//   const response = await api.patch<EditUserStatusResponse>(`/user/${userId}/edit-status`, body);
-//   return response.data;
-// };
-
-
-
-// // =============== USER CREATION ===============
-// export const createUserAPI = async (payload: CreateUserPayload): Promise<CreateUserResponse> => {
-//   const response = await api.post<CreateUserResponse>('/user/create', payload);
-//   return response.data;
-// };
+// // =============== BLOGS STATUS EDITING ===============
+export const editBlogStatusAPI = async ({ blogId, status }: EditBlogStatusPayload): Promise<EditBlogStatusResponse> => {
+  const body = { status };
+  const response = await api.patch<EditBlogStatusResponse>(`/blog/manager/${blogId}/edit-status`, body);
+  return response.data;
+};

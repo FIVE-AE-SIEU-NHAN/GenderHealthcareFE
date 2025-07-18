@@ -43,3 +43,34 @@ export interface BlogsListOptions {
     to?: Date;
   };
 }
+
+
+// =================== BLOGS STATUS =================== 
+export interface EditBlogStatusPayload {
+  blogId: string;
+  status: string;
+}
+
+export interface EditBlogStatusResponse {
+  message: string;
+}
+
+
+
+// =================== BLOG CREATION ===================
+export interface CreateBlogPayload {
+  summary: string;
+  content: string;
+  section_1: string;
+  section_2: string;
+  title: string;
+  cover_image: string;
+  main_image?: string;
+  sub_image?: string;
+}
+
+// --------- Response for blog creation ---------
+export interface CreateBlogResponse {
+  message: string;
+  result: Blog; 
+}

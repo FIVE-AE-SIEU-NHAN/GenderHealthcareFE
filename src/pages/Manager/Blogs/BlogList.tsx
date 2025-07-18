@@ -11,10 +11,8 @@ import { Button } from "@/components/ui/button";
 import {
   Loader2,
   MoreHorizontal,
-  FilePlus2,
   XCircle,
-  Pencil,
-  Trash2,
+  Eye,
 } from "lucide-react";
 
 import type { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
@@ -25,12 +23,10 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 import { DataTableSkeleton } from "@/components/layouts/Dashboard/DataTableSkeleton";
-// import { useBlogMutations } from "@/hooks/admin/useBlogMutations"; // <-- Sẽ cần cho việc edit/delete
 import { formatDate } from "@/utils/formatDate";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CreateBlogForm } from "./CreateBlogForm";
-import { BLOG_STATUS } from "@/Application/constants/manager/manager.blogConstants";
+import { BLOG_STATUS, statusActionMap } from "@/Application/constants/manager/manager.blogConstants";
 import { useBlogs } from "@/hooks/manager/useBlogs";
+import { useBlogsMutations } from "@/hooks/manager/useBlogsMutations";
 
 
 
@@ -82,7 +78,7 @@ export default function BlogListDashboard() {
     {
       key: "no",
       label: "No.",
-      sortable: false, 
+      sortable: false,
       render: (_blog: Blog, index: number) => (
         <Badge variant="outline" className="font-mono bg-emerald-400/15 border-emerald-600">
           {(page - 1) * ROWS_PER_PAGE + index + 1}
@@ -151,8 +147,7 @@ export default function BlogListDashboard() {
     field: 'created_at'
   });
 
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  // const { deleteBlogMutation } = useBlogMutations(); // <-- Ví dụ
+  const { editStatus: editBlogStatusMutation } = useBlogsMutations();
 
   // ========== SET BREADCRUMB ==========
   useEffect(() => {
@@ -209,10 +204,14 @@ export default function BlogListDashboard() {
     }));
   }, [visibleColumns, allBlogColumns]);
 
+
+
+
   // ========== ACTIONS ==========
   const renderBlogActions = useCallback((blog: Blog) => {
-    // const isMutatingThisBlog = deleteBlogMutation.isPending && deleteBlogMutation.variables === blog.id;
-    const isMutatingThisBlog = false; // Placeholder
+    const isMutatingThisBlog =
+      editBlogStatusMutation.isPending &&
+      editBlogStatusMutation.variables?.blogId === blog.id;
 
     return (
       <DropdownMenu>
@@ -228,21 +227,24 @@ export default function BlogListDashboard() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => alert(`Editing blog: ${blog.title}`)}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit Blog
+            <Eye className="mr-2 h-4 w-4" />
+            View Blog Details
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="text-red-600 focus:bg-red-50 focus:text-red-700"
-            onClick={() => confirm(`Are you sure you want to delete "${blog.title}"?`)}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete Blog
-          </DropdownMenuItem>
+          {statusActionMap[blog.status]?.map((action) => (
+            <DropdownMenuItem
+              key={action.targetStatus}
+              className={action.className}
+              onClick={() => editBlogStatusMutation.mutate({ blogId: blog.id, status: action.targetStatus })}
+            >
+              <action.icon className="mr-2 h-4 w-4" />
+              {action.label}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
     );
-  }, [/* deleteBlogMutation */]);
+  }, [editBlogStatusMutation]);
 
   return (
     <>
@@ -283,8 +285,6 @@ export default function BlogListDashboard() {
           setDateConfig({ field: 'created_at' });
           setVisibleColumns(allBlogColumns.map((c) => c.key));
         }}
-        onCreate={() => setIsCreateDialogOpen(true)}
-        createButtonLabel="+ CREATE BLOG"
       />
 
       {isFetching && <div className="absolute inset-0 bg-white/50 z-10"></div>}
@@ -310,32 +310,6 @@ export default function BlogListDashboard() {
           renderActions={renderBlogActions}
         />
       )}
-
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent
-          className="sm:max-w-none w-[95vw] h-[90vh] md:w-[80vw] lg:w-[70vw] flex flex-col p-0 data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out"
-        >
-          <DialogHeader className="rounded-t-md border-b-slate-300 border-b-1 p-6 pb-4 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800/50">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-blue-700 flex items-center justify-center shrink-0">
-                <FilePlus2 className="h-8 w-8 text-white" />
-              </div>
-              <div className="flex flex-col">
-                <DialogTitle className="text-3xl font-bold tracking-tight text-foreground">
-                  Create a New Masterpiece
-                </DialogTitle>
-                <DialogDescription className="text-base text-muted-foreground mt-1">
-                  Fill out the details below to publish a new article for our community.
-                </DialogDescription>
-              </div>
-            </div>
-          </DialogHeader>
-
-          <div className="flex-1 overflow-y-auto px-6 py-4">
-            <CreateBlogForm onSuccess={() => setIsCreateDialogOpen(false)} />
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

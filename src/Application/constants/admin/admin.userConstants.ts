@@ -12,6 +12,7 @@ const ROLE_DEFINITIONS = [
   { id: 1, key: 'Consultant', label: 'Consultant' },
   { id: 2, key: 'Manager', label: 'Manager' },
   { id: 3, key: 'Customer', label: 'Customer' },
+  { id: 4, key: 'Doctor', label: 'Doctor' },
 ] as const;
 
 
