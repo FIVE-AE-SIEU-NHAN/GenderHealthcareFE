@@ -33,90 +33,7 @@ import { CreateUserForm } from "./CreateUserForm";
 import { USER_STATUS, USER_ROLE } from "@/Application/constants/admin/admin.userConstants";
 
 
-// =============== COLUMNS FORMAT ===============
-const allUserColumns = [
-  {
-    key: "id",
-    label: "ID",
-    toggleable: false,
-    cellclassName: "2xl:max-w-[220px]",
-    render: (user: User) => (
-      <Badge variant="outline" className="font-black font-mono bg-pink-600/15">
-        {user.id}
-      </Badge>
-    )
-  },
-  {
-    key: "name",
-    label: "Full Name",
-    render: (user: User) => {
-      return (
-        <p className="line-clamp-2">
-          {user.name}
-        </p>
-      );
-    },
-  },
-  { key: "gender", 
-    label: "Gender",
-    render: (user: User) => {
-      return (
-        <p className="capitalize"> {user.gender}</p>
-      )
-   },
-  },
-  {
-    key: "date_of_birth",
-    label: "Date of Birth",
-    render: (user: User) => {
-      return formatDate(user.date_of_birth);
-    }
-  },
-  { key: "email", label: "Email", sortable: false },
-  {
-    key: "role",
-    label: "Role",
-    sortable: false,
-    render: (user: User) => {
-      const roleString = USER_ROLE.UI_MAP[user.role] || 'Unknown';
-      return (
-        <Badge className={cn(
-          "font-medium text-xs",
-          roleString === "Admin" && "border-amber-500/50 bg-amber-500/10 text-amber-700",
-          roleString === "Manager" && "border-blue-500/50 bg-blue-500/10 text-blue-700",
-          roleString === "Customer" && "border-slate-500/50 bg-slate-500/10 text-slate-700",
-          roleString === "Consultant" && "border-purple-500/50 bg-purple-500/10 text-purple-700",
-        )}>
-          {roleString}
-        </Badge>
-      );
-    },
-  },
-  {
-    key: "created_at",
-    label: "Date Created",
-    render: (user: User) => {
-      return formatDate(user.created_at);
-    }
-  },
-  {
-    key: "verify",
-    label: "Status",
-    render: (user: User) => {
-      const statusString = USER_STATUS.UI_MAP[user.verify] || 'Unknown';
-      return (
-        <Badge className={cn(
-          "font-medium text-xs",
-          statusString === "Active" && "border-green-500/50 bg-green-500/10 text-green-700",
-          statusString === "Banned" && "border-red-500/50 bg-red-500/10 text-red-700",
-          statusString === "Suspended" && "border-orange-500/50 bg-orange-500/10 text-orange-700"
-        )}>
-          {statusString}
-        </Badge>
-      );
-    }
-  },
-];
+
 
 
 // ========== FACET FILTERS ==========
@@ -173,7 +90,92 @@ export default function UserListDashboard() {
 
   const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'all', value: '' });
 
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(allUserColumns.map((col) => col.key));
+
+  // =============== COLUMNS FORMAT ===============
+  const allUserColumns = useMemo(() => [
+    {
+      key: "no",
+      label: "No.",
+      sortable: false, // This column cannot be sorted
+      render: (_user: User, index: number) => (
+        <Badge variant="outline" className="font-mono bg-emerald-400/15 border-emerald-600">
+          {(page - 1) * ROWS_PER_PAGE + index + 1}
+        </Badge>
+      ),
+    },
+    {
+      key: "id",
+      label: "ID",
+      defaultVisible: false,
+      cellclassName: "2xl:max-w-[220px]",
+      render: (user: User) => (
+        <Badge variant="outline" className="font-black font-mono bg-pink-600/15">
+          {user.id}
+        </Badge>
+      )
+    },
+    {
+      key: "name",
+      label: "Full Name",
+      render: (user: User) => <p className="line-clamp-2">{user.name}</p>,
+    },
+    { 
+      key: "gender", 
+      label: "Gender",
+      render: (user: User) => <p className="capitalize">{user.gender}</p>,
+    },
+    {
+      key: "date_of_birth",
+      label: "Date of Birth",
+      render: (user: User) => formatDate(user.date_of_birth),
+    },
+    { key: "email", label: "Email", sortable: false },
+    {
+      key: "role",
+      label: "Role",
+      sortable: false,
+      render: (user: User) => {
+        const roleString = USER_ROLE.UI_MAP[user.role] || 'Unknown';
+        return (
+          <Badge className={cn(
+            "font-medium text-xs",
+            roleString === "Admin" && "border-amber-500/50 bg-amber-500/10 text-amber-700",
+            roleString === "Manager" && "border-blue-500/50 bg-blue-500/10 text-blue-700",
+            roleString === "Customer" && "border-slate-500/50 bg-slate-500/10 text-slate-700",
+            roleString === "Consultant" && "border-purple-500/50 bg-purple-500/10 text-purple-700",
+          )}>
+            {roleString}
+          </Badge>
+        );
+      },
+    },
+    {
+      key: "created_at",
+      label: "Date Created",
+      render: (user: User) => formatDate(user.created_at),
+    },
+    {
+      key: "verify",
+      label: "Status",
+      render: (user: User) => {
+        const statusString = USER_STATUS.UI_MAP[user.verify] || 'Unknown';
+        return (
+          <Badge className={cn(
+            "font-medium text-xs",
+            statusString === "Active" && "border-green-500/50 bg-green-500/10 text-green-700",
+            statusString === "Banned" && "border-red-500/50 bg-red-500/10 text-red-700",
+            statusString === "Suspended" && "border-orange-500/50 bg-orange-500/10 text-orange-700"
+          )}>
+            {statusString}
+          </Badge>
+        );
+      }
+    },
+  ], [page]);
+
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    allUserColumns.filter(col => col.defaultVisible !== false).map((col) => col.key)
+  );
   const visibleColumnCount = allUserColumns.filter(c => visibleColumns.includes(c.key)).length;
 
   const [dateConfig, setDateConfig] = useState<{
@@ -246,7 +248,7 @@ export default function UserListDashboard() {
       cellClassName: col.cellclassName,
       render: col.render,
     }));
-  }, [visibleColumns]);
+  }, [visibleColumns, allUserColumns]);
 
 
 

@@ -28,141 +28,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { EditConsultantForm } from "./EditConsultantProfile";
 
 
-// =============== COLUMNS FORMAT ===============
-const allConsultantColumns = [
-  {
-    key: "id",
-    label: "ID",
-    sortable: false,
-    toggleable: false,
-    render: (consultant: ConsultantProfile) => (
-      <Badge variant="outline" className="font-black font-mono bg-pink-600/15">
-        {consultant.id}
-      </Badge>
-    )
-  },
-  {
-    key: "name",
-    label: "Full Name",
-    cellClassName: "min-w-48",
-    render: (consultant: ConsultantProfile) => {
-      return (
-        <p className="line-clamp-1">
-          {consultant.name}
-        </p>
-      );
-    },
-  },
-  {
-    key: "gender",
-    label: "Gender",
-    render: (consultant: ConsultantProfile) => {
-      const gender = consultant.gender;
-
-      return (
-        <Badge
-          className={cn(
-            "font-medium text-xs capitalize",
-            gender === "male" && "border-blue-500/50 bg-blue-500/10 text-blue-700",
-            gender === "female" && "border-pink-500/50 bg-pink-500/10 text-pink-700",
-            gender === "other" && "border-gray-500/50 bg-gray-500/10 text-gray-700"
-          )}
-        >
-          {gender ?? "Unknown"}
-        </Badge>
-      );
-    },
-  },
-  {
-    key: "date_of_birth",
-    label: "Date of Birth",
-    defaultVisible: false,
-    render: (consultant: ConsultantProfile) => {
-      return formatDate(consultant.date_of_birth);
-    }
-  },
-  {
-    key: "specialization",
-    label: "Specializations",
-    cellClassName: "min-w-xs",
-    sortable: false,
-    render: (consultant: ConsultantProfile) => {
-      const specialization_1 = TOPIC_OPTIONS.find(opt => opt.value === consultant.specialization_1);
-      const specialization_2 = TOPIC_OPTIONS.find(opt => opt.value === consultant.specialization_2);
-      return (
-        <div className="flex justify-center gap-2">
-          <Badge
-            className={cn(
-              "font-medium text-xs",
-              specialization_1?.style ?? "border-muted bg-muted/10 text-muted-foreground"
-            )}
-          >
-            {specialization_1?.label ?? consultant.specialization_1}
-          </Badge>
-          <Badge
-            className={cn(
-              "font-medium text-xs",
-              specialization_2?.style ?? "border-muted bg-muted/10 text-muted-foreground"
-            )}
-          >
-            {specialization_2?.label ?? consultant.specialization_2}
-          </Badge>
-        </div>
-
-      );
-    }
-  },
-  {
-    key: "certifications",
-    label: "Certifications",
-    cellClassName: "min-w-66",
-    defaultVisible: false,
-    render: (consultant: ConsultantProfile) => {
-      return (
-        <p className="line-clamp-2">
-          {consultant.certifications}
-        </p>
-      );
-    },
-  },
-  {
-    key: "created_at",
-    label: "Joined Since",
-    defaultVisible: false,
-    render: (consultant: ConsultantProfile) => {
-      return formatDate(consultant.created_at);
-    }
-  },
-  {
-    key: "experienceYears",
-    label: "Experience",
-    cellClassName: "max-w-4",
-    render: (consultant: ConsultantProfile) => {
-      return (
-        <p className="font-mono text-sm font-semibold">
-          {consultant.experienceYears}
-        </p>
-      )
-    }
-  },
-  {
-    key: "status",
-    label: "Status",
-    render: (consultant: ConsultantProfile) => {
-      const statusString = CONSULTANT_STATUS.UI_MAP[consultant.status] || 'Unknown';
-      return (
-        <Badge className={cn(
-          "font-medium text-xs",
-          statusString === "Online" && "border-green-500/50 bg-green-500/10 text-green-700",
-          statusString === "Offline" && "border-red-500/50 bg-red-500/10 text-red-700",
-        )}>
-          {statusString}
-        </Badge>
-      );
-    }
-  },
-];
-
+// REMOVED: allConsultantColumns is now defined inside the component.
 
 // ========== FACET FILTERS ==========
 const consultantFacetFilters: FacetFilter[] = [
@@ -211,27 +77,127 @@ export default function ConsultantListDashboard() {
     direction: 'asc' | 'desc'
   }>({ field: 'created_at', direction: 'desc' });
 
+  // ... other state definitions
   const [activeFilterKey, setActiveFilterKey] = useState<string>('status');
   const [activeFilterValues, setActiveFilterValues] = useState<string[]>([]);
-
   const [uiSearchConfig, setUiSearchConfig] = useState({ field: 'all', value: '' });
-
   const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'all', value: '' });
+  const [dateConfig, setDateConfig] = useState<{ field: string; from?: Date; to?: Date; }>({ field: 'created_at' });
+
+  // =============== MODIFIED: COLUMNS FORMAT ===============
+  // Defined inside the component with useMemo to access `page` state
+  const allConsultantColumns = useMemo(() => [
+    {
+      key: "no",
+      label: "No.",
+      sortable: false,
+      render: (_consultant: ConsultantProfile, index: number) => (
+        <Badge variant="outline" className="font-mono bg-emerald-400/15 border-emerald-600">
+          {(page - 1) * ROWS_PER_PAGE + index + 1}
+        </Badge>
+      ),
+    },
+    {
+      key: "id",
+      label: "ID",
+      sortable: false,
+      defaultVisible: false, // Hidden by default
+      render: (consultant: ConsultantProfile) => (
+        <Badge variant="outline" className="font-black font-mono bg-pink-600/15">
+          {consultant.id}
+        </Badge>
+      )
+    },
+    {
+      key: "name",
+      label: "Full Name",
+      cellClassName: "min-w-48",
+      render: (consultant: ConsultantProfile) => <p className="line-clamp-1">{consultant.name}</p>,
+    },
+    {
+      key: "gender",
+      label: "Gender",
+      render: (consultant: ConsultantProfile) => {
+        const gender = consultant.gender;
+        return (
+          <Badge className={cn("font-medium text-xs capitalize",
+            gender === "male" && "border-blue-500/50 bg-blue-500/10 text-blue-700",
+            gender === "female" && "border-pink-500/50 bg-pink-500/10 text-pink-700",
+            gender === "other" && "border-gray-500/50 bg-gray-500/10 text-gray-700"
+          )}>
+            {gender ?? "Unknown"}
+          </Badge>
+        );
+      },
+    },
+    {
+      key: "date_of_birth",
+      label: "Date of Birth",
+      defaultVisible: false,
+      render: (consultant: ConsultantProfile) => formatDate(consultant.date_of_birth),
+    },
+    {
+      key: "specialization",
+      label: "Specializations",
+      cellClassName: "min-w-xs",
+      sortable: false,
+      render: (consultant: ConsultantProfile) => {
+        const specialization_1 = TOPIC_OPTIONS.find(opt => opt.value === consultant.specialization_1);
+        const specialization_2 = TOPIC_OPTIONS.find(opt => opt.value === consultant.specialization_2);
+        return (
+          <div className="flex justify-center gap-2">
+            <Badge className={cn("font-medium text-xs", specialization_1?.style ?? "border-muted bg-muted/10 text-muted-foreground")}>
+              {specialization_1?.label ?? consultant.specialization_1}
+            </Badge>
+            <Badge className={cn("font-medium text-xs", specialization_2?.style ?? "border-muted bg-muted/10 text-muted-foreground")}>
+              {specialization_2?.label ?? consultant.specialization_2}
+            </Badge>
+          </div>
+        );
+      }
+    },
+    {
+      key: "certifications",
+      label: "Certifications",
+      cellClassName: "min-w-66",
+      defaultVisible: false,
+      render: (consultant: ConsultantProfile) => <p className="line-clamp-2">{consultant.certifications}</p>,
+    },
+    {
+      key: "created_at",
+      label: "Joined Since",
+      defaultVisible: false,
+      render: (consultant: ConsultantProfile) => formatDate(consultant.created_at),
+    },
+    {
+      key: "experienceYears",
+      label: "Experience",
+      cellClassName: "max-w-4",
+      render: (consultant: ConsultantProfile) => <p className="font-mono text-sm font-semibold">{consultant.experienceYears}</p>
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (consultant: ConsultantProfile) => {
+        const statusString = CONSULTANT_STATUS.UI_MAP[consultant.status] || 'Unknown';
+        return (
+          <Badge className={cn("font-medium text-xs",
+            statusString === "Online" && "border-green-500/50 bg-green-500/10 text-green-700",
+            statusString === "Offline" && "border-red-500/50 bg-red-500/10 text-red-700",
+          )}>
+            {statusString}
+          </Badge>
+        );
+      }
+    },
+  ], [page]); // Recalculates when page changes
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>(allConsultantColumns.filter(col => col.defaultVisible !== false).map((col) => col.key));
   const visibleColumnCount = allConsultantColumns.filter(c => visibleColumns.includes(c.key)).length;
 
-  const [dateConfig, setDateConfig] = useState<{
-    field: string;
-    from?: Date;
-    to?: Date;
-  }>({ field: 'created_at' });
-
-
   const [editingConsultant, setEditingConsultant] = useState<ConsultantProfile | null>(null);
   const { editStatus: editConsultantStatusMutation } = useConsultantMutations();
 
-  // ========== SET BREADCRUMB ==========
   useEffect(() => {
     setBreadcrumb({
       title: "Consultants Management",
@@ -240,10 +206,6 @@ export default function ConsultantListDashboard() {
     });
   }, [setBreadcrumb]);
 
-
-
-
-  // ========== API FILTERS ==========
   const apiFilters = useMemo(() => {
     if (activeFilterValues.length === 0) return {};
     return { [activeFilterKey]: activeFilterValues };
@@ -257,46 +219,25 @@ export default function ConsultantListDashboard() {
     setApiSearchConfig(uiSearchConfig);
   };
 
-  // ========== USE CONSULTANTS HOOK ==========
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    isFetching,
-  } = useConsultants({
-    page,
-    limit: ROWS_PER_PAGE,
-    filters: apiFilters,
-    search: apiSearchConfig,
-    sort,
-    dateRange: dateConfig,
+  const { data, isLoading, isError, error, isFetching } = useConsultants({
+    page, limit: ROWS_PER_PAGE, filters: apiFilters, search: apiSearchConfig, sort, dateRange: dateConfig,
   });
 
   const consultants = data?.data ?? [];
   const totalConsultants = data?.total ?? 0;
   const totalPages = Math.ceil(totalConsultants / ROWS_PER_PAGE);
 
-
-
-
-
-  // ========== COLUMNS SETUP ==========
-  // Map all consultant columns to the format expected by DataTable
   const columns = useMemo(() => {
     return allConsultantColumns.map((col) => ({
       key: col.key as keyof ConsultantProfile,
       label: col.label,
-      visible: visibleColumns.includes(col.key),
+      visible: visibleColumns.includes(col.key as string),
       cellClassName: col.cellClassName,
       sortable: col.sortable,
       render: col.render,
     }));
-  }, [visibleColumns]);
+  }, [visibleColumns, allConsultantColumns]); // Add dependency
 
-
-
-  // ========== ACTIONS ==========
   const renderConsultantActions = useCallback((consultant: ConsultantProfile) => {
     const statusString = CONSULTANT_STATUS.UI_MAP[consultant.status] || 'Unknown';
     const isMutatingThisConsultant =
@@ -308,11 +249,7 @@ export default function ConsultantListDashboard() {
         <DropdownMenuTrigger asChild disabled={isMutatingThisConsultant}>
           <Button variant="ghost" className="h-8 w-8 p-0">
             <span className="sr-only">Open menu</span>
-            {isMutatingThisConsultant ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <MoreHorizontal className="h-4 w-4" />
-            )}
+            {isMutatingThisConsultant ? <Loader2 className="h-4 w-4 animate-spin" /> : <MoreHorizontal className="h-4 w-4" />}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -320,7 +257,6 @@ export default function ConsultantListDashboard() {
             Edit Profile
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-
           {statusString === 'Offline' && (
             <DropdownMenuItem
               className="text-green-600 focus:bg-green-50 focus:text-green-700"
@@ -330,7 +266,6 @@ export default function ConsultantListDashboard() {
               Make Online
             </DropdownMenuItem>
           )}
-
           {statusString === 'Online' && (
             <DropdownMenuItem
               className="text-red-600 focus:bg-red-50 focus:text-red-700"
@@ -345,71 +280,44 @@ export default function ConsultantListDashboard() {
     );
   }, [editConsultantStatusMutation]);
 
-
-
-
   return (
     <>
       <TableToolbar
         isFetching={isFetching && !isLoading}
-
         facetFilters={consultantFacetFilters}
         activeFilterKey={activeFilterKey}
         onActiveFilterKeyChange={setActiveFilterKey}
         activeFilterValues={activeFilterValues}
         onActiveFilterValuesChange={setActiveFilterValues}
-
         searchValue={uiSearchConfig.value}
-        onSearchChange={(newValue) =>
-          setUiSearchConfig(current => ({ ...current, value: newValue }))
-        }
+        onSearchChange={(newValue) => setUiSearchConfig(current => ({ ...current, value: newValue }))}
         searchFieldOptions={searchableFields}
         searchFieldValue={uiSearchConfig.field}
-        onSearchFieldChange={(newField) =>
-          setUiSearchConfig(current => ({ ...current, field: newField }))
-        }
+        onSearchFieldChange={(newField) => setUiSearchConfig(current => ({ ...current, field: newField }))}
         onSearchSubmit={handleSearchSubmit}
-
         columns={allConsultantColumns}
         visibleColumns={visibleColumns}
         onVisibleColumnsChange={setVisibleColumns}
-
-
         dateFilterOptions={dateFilterOptions}
         activeDateFilterKey={dateConfig.field}
-        onActiveDateFilterKeyChange={(newField) =>
-          setDateConfig(current => ({ ...current, field: newField }))
-        }
+        onActiveDateFilterKeyChange={(newField) => setDateConfig(current => ({ ...current, field: newField }))}
         fromDate={dateConfig.from}
         toDate={dateConfig.to}
-        onDateRangeChange={(from, to) =>
-          setDateConfig(current => ({ ...current, from, to }))
-        }
-
+        onDateRangeChange={(from, to) => setDateConfig(current => ({ ...current, from, to }))}
         onResetFilters={() => {
           setPage(1);
           setSort({ field: 'created_at', direction: 'desc' });
-
           setActiveFilterKey('status');
           setActiveFilterValues([]);
-
           setUiSearchConfig({ field: 'all', value: '' });
           setApiSearchConfig({ field: 'all', value: '' });
-
           setDateConfig({ field: 'created_at' });
-
-          setVisibleColumns(allConsultantColumns.map((c) => c.key));
+          setVisibleColumns(allConsultantColumns.filter(col => col.defaultVisible !== false).map((col) => col.key));
         }}
       />
 
+      {isFetching && <div className="absolute inset-0 bg-white/50 z-10"></div>}
 
-      {/* ========== FETCHING OVERLAY ========== */}
-      {isFetching && (
-        <div className="absolute inset-0 bg-white/50 z-10"></div>
-      )}
-
-
-      {/* ========== HANDLE DATA RENDERING ========== */}
       {isLoading ? (
         <DataTableSkeleton columnCount={visibleColumnCount + 1} />
       ) : isError ? (
@@ -430,21 +338,15 @@ export default function ConsultantListDashboard() {
           sortField={sort.field}
           sortDirection={sort.direction}
           onSortChange={(field, direction) => setSort({ field: field as keyof ConsultantProfile, direction })}
-        renderActions={renderConsultantActions}
+          renderActions={renderConsultantActions}
         />
       )}
 
-      <Dialog 
-        open={!!editingConsultant} 
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            setEditingConsultant(null); // Close the dialog by clearing the state
-          }
-        }}
+      <Dialog
+        open={!!editingConsultant}
+        onOpenChange={(isOpen) => { if (!isOpen) setEditingConsultant(null); }}
       >
-        <DialogContent
-          className="sm:max-w-none w-[95vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex flex-col p-0"
-        >
+        <DialogContent className="sm:max-w-none w-[95vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] flex flex-col p-0">
           <DialogHeader className="rounded-t-lg border-b p-6 pb-4 bg-gradient-to-br from-slate-50 to-slate-100">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0">
@@ -460,13 +362,11 @@ export default function ConsultantListDashboard() {
               </div>
             </div>
           </DialogHeader>
-
           <div className="flex-1 overflow-y-auto px-6 py-4">
-            {/* The form only renders if a consultant is selected */}
             {editingConsultant && (
-              <EditConsultantForm 
+              <EditConsultantForm
                 consultant={editingConsultant}
-                onSuccess={() => setEditingConsultant(null)} // Close dialog on success
+                onSuccess={() => setEditingConsultant(null)}
               />
             )}
           </div>
