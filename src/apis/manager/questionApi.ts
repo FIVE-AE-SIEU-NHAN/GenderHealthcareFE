@@ -68,3 +68,15 @@ export const editQuestionStatusAPI = async ({ questionId, is_public }: EditQuest
   const response = await api.patch<EditQuestionStatusResponse>(`/question/${questionId}/edit`, body);
   return response.data;
 };
+
+// =============== DELETE A QUESTION ===============
+/**
+ * API call to delete a question.
+ * Corresponds to: DELETE /question/:id/delete
+ * @param questionId The ID of the question to delete.
+ * @returns A promise that resolves to the server's success message.
+ */
+export const deleteQuestionAPI = async (questionId: string): Promise<{ message: string }> => {
+  const response = await api.delete<{ message: string }>(`/question/${questionId}/delete`);
+  return response.data;
+};

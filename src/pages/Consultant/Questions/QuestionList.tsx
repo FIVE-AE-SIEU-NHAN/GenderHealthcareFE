@@ -3,7 +3,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 import {
+  CheckCircle,
   Eye,
+  Flag,
   Loader2,
   MoreHorizontal,
   XCircle,
@@ -22,70 +24,13 @@ import { DataTableSkeleton } from "@/components/layouts/Dashboard/DataTableSkele
 import { formatDate } from "@/utils/formatDate";
 import { QUESTION_STATUS } from "@/Application/constants/manager/manager.questionConstants";
 import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { AnswerQuestionDialog } from "./AnswerQuestion";
 import { useQuestionMutations } from "@/hooks/consultant/useQuestionMutations";
 
 
-// =============== COLUMNS FORMAT FOR QUESTIONS ===============
-const allQuestionColumns = [
-  {
-    key: "id",
-    label: "ID",
-    toggleable: false,
-    cellclassName: "2xl:max-w-[220px]",
-    render: (question: Question) => (
-      <Badge variant="outline" className="font-black font-mono bg-blue-600/15">
-        {question.id}
-      </Badge>
-    )
-  },
-  {
-    key: "question",
-    label: "Question",
-    sortable: false,
-    render: (question: Question) => (
-      <p className="line-clamp-2 font-medium">{question.question}</p>
-    ),
-  },
-  {
-    key: 'topic',
-    label: 'Topic',
-    render: (question: Question) => {
-      const topic = TOPIC_OPTIONS.find(opt => opt.value === question.topic);
-      return (
-        <Badge
-          className={cn('font-medium text-xs', topic?.style ?? 'border-muted bg-muted/10 text-muted-foreground')}
-        >
-          {topic?.label ?? question.topic}
-        </Badge>
-      );
-    },
-  },
-  {
-    key: "status",
-    label: "Status",
-    render: (question: Question) => {
-      const statusString = QUESTION_STATUS.UI_MAP[question.status] || 'Unknown';
-      return (
-        <Badge className={cn(
-          "font-medium text-xs",
-          statusString === "Answered" && "border-green-500/50 bg-green-500/10 text-green-700",
-          statusString === "Pending" && "border-orange-500/50 bg-orange-500/10 text-orange-700",
-        )}>
-          {statusString}
-        </Badge>
-      );
-    }
-  },
-  {
-    key: "created_at",
-    label: "Date Asked",
-    render: (question: Question) => formatDate(question.created_at),
-  },
-];
-
+// REMOVED: allQuestionColumns is now defined inside the component.
 
 // ========== FACET FILTERS FOR QUESTIONS ==========
 const questionFacetFilters: FacetFilter[] = [
@@ -129,18 +74,91 @@ export default function QuestionListDashboard() {
   const [uiSearchConfig, setUiSearchConfig] = useState({ field: 'question', value: '' });
   const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'question', value: '' });
 
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(allQuestionColumns.map((col) => col.key));
-  const visibleColumnCount = allQuestionColumns.filter(c => visibleColumns.includes(c.key)).length;
-
   const [dateConfig, setDateConfig] = useState<{
     field: string;
     from?: Date;
     to?: Date;
   }>({ field: 'created_at' });
 
+  // =============== MODIFIED: COLUMNS FORMAT FOR QUESTIONS ===============
+  // Defined inside the component with useMemo to access `page` state.
+  const allQuestionColumns = useMemo(() => [
+    {
+      key: "no",
+      label: "No.",
+      sortable: false, // This column cannot be sorted.
+      render: (_question: Question, index: number) => (
+        <Badge variant="outline" className="font-mono bg-emerald-400/15 border-emerald-600">
+          {(page - 1) * ROWS_PER_PAGE + index + 1}
+        </Badge>
+      ),
+    },
+    {
+      key: "id",
+      label: "ID",
+      defaultVisible: false, // Hidden by default.
+      cellclassName: "2xl:max-w-[220px]",
+      render: (question: Question) => (
+        <Badge variant="outline" className="font-black font-mono bg-blue-600/15">
+          {question.id}
+        </Badge>
+      )
+    },
+    {
+      key: "question",
+      label: "Question",
+      cellclassName: "max-w-xs",
+      sortable: false,
+      render: (question: Question) => (
+        <p className="line-clamp-2 font-medium">{question.question}</p>
+      ),
+    },
+    {
+      key: 'topic',
+      label: 'Topic',
+      render: (question: Question) => {
+        const topic = TOPIC_OPTIONS.find(opt => opt.value === question.topic);
+        return (
+          <Badge
+            className={cn('font-medium text-xs', topic?.style ?? 'border-muted bg-muted/10 text-muted-foreground')}
+          >
+            {topic?.label ?? question.topic}
+          </Badge>
+        );
+      },
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (question: Question) => {
+        const statusString = QUESTION_STATUS.UI_MAP[question.status] || 'Unknown';
+        return (
+          <Badge className={cn(
+            "font-medium text-xs",
+            statusString === "Answered" && "border-green-500/50 bg-green-500/10 text-green-700",
+            statusString === "Pending" && "border-orange-500/50 bg-orange-500/10 text-orange-700",
+            statusString === "Reported" && "border-purple-500/50 bg-purple-500/10 text-purple-700"
+          )}>
+            {statusString}
+          </Badge>
+        );
+      }
+    },
+    {
+      key: "created_at",
+      label: "Date Asked",
+      render: (question: Question) => formatDate(question.created_at),
+    },
+  ], [page]); // Recalculates when the page number changes.
+
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    allQuestionColumns.filter(col => col.defaultVisible !== false).map((col) => col.key)
+  );
+  const visibleColumnCount = allQuestionColumns.filter(c => visibleColumns.includes(c.key)).length;
+
   const [isAnswerDialogOpen, setIsAnswerDialogOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
-  const { answerQuestion, editAnswer } = useQuestionMutations();
+  const { answerQuestion, editAnswer, reportQuestion } = useQuestionMutations();
 
 
   // ========== SET BREADCRUMB ==========
@@ -191,23 +209,27 @@ export default function QuestionListDashboard() {
     return allQuestionColumns.map((col) => ({
       key: col.key as keyof Question,
       label: col.label,
-      visible: visibleColumns.includes(col.key),
+      visible: visibleColumns.includes(col.key as string),
       sortable: col.sortable,
       cellClassName: col.cellclassName,
       render: col.render,
     }));
-  }, [visibleColumns]);
+  }, [visibleColumns, allQuestionColumns]); // Added allQuestionColumns to dependency array.
 
   // ========== QUESTION ACTIONS ==========
   const handleViewDetailsClick = (question: Question) => {
     setSelectedQuestion(question);
     setIsAnswerDialogOpen(true);
   };
+
+  // ========== RENDER QUESTION ACTIONS ==========
   const renderQuestionActions = useCallback((question: Question) => {
-    // Disable button if a mutation is running for this specific question
     const isMutatingThisQuestion =
       (answerQuestion.isPending && answerQuestion.variables?.questionId === question.id) ||
-      (editAnswer.isPending && editAnswer.variables?.questionId === question.id);
+      (editAnswer.isPending && editAnswer.variables?.questionId === question.id) ||
+      (reportQuestion.isPending && reportQuestion.variables === question.id);
+
+    const isAlreadyReported = question.status === 2;
 
     return (
       <DropdownMenu>
@@ -226,11 +248,38 @@ export default function QuestionListDashboard() {
             <Eye className="mr-2 h-4 w-4" />
             {question.answer ? 'View & Edit Answer' : 'View & Answer'}
           </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem
+            // The button is disabled if a mutation is running OR if it's already reported
+            disabled={isMutatingThisQuestion || isAlreadyReported}
+            onClick={() => {
+              // We can add an extra check here to be safe
+              if (!isAlreadyReported) {
+                reportQuestion.mutate(question.id);
+              }
+            }}
+            className={cn(
+              // Conditionally apply styling for a better UX
+              isAlreadyReported
+                ? "text-muted-foreground" // A neutral, disabled-looking color
+                : "text-yellow-600 focus:bg-yellow-50 focus:text-yellow-700"
+            )}
+          >
+            {isAlreadyReported ? (
+              <CheckCircle className="mr-2 h-4 w-4" />
+            ) : (
+              <Flag className="mr-2 h-4 w-4" />
+            )}
+            <span>
+              {isAlreadyReported ? 'Already Reported' : 'Report this question'}
+            </span>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
-  }, [answerQuestion.isPending, answerQuestion.variables, editAnswer.isPending, editAnswer.variables]);
-
+  }, [answerQuestion, editAnswer, reportQuestion]);
 
   return (
     <>

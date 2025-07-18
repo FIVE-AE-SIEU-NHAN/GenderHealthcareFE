@@ -13,9 +13,10 @@ import {
   Loader2,
   MoreHorizontal,
   XCircle,
-  Eye,
   Lock,
   Unlock,
+  Trash,
+  AlertTriangle,
 } from "lucide-react";
 
 import type { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
@@ -32,80 +33,12 @@ import { DataTableSkeleton } from "@/components/layouts/Dashboard/DataTableSkele
 import { formatDate } from "@/utils/formatDate";
 import { QUESTION_STATUS } from "@/Application/constants/manager/manager.questionConstants";
 import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 
-// =============== NEW: COLUMNS FORMAT FOR QUESTIONS ===============
-const allQuestionColumns = [
-  {
-    key: "id",
-    label: "ID",
-    toggleable: false,
-    render: (question: Question) => (
-      <Badge variant="outline" className="font-black font-mono bg-blue-600/15">
-        {question.id}
-      </Badge>
-    )
-  },
-  {
-    key: "question",
-    label: "Question",
-    sortable: false,
-    cellClassName: "max-w-xs",
-    render: (question: Question) => (
-      <p className="line-clamp-1 font-medium">{question.question}</p>
-    ),
-  },
-  {
-    key: 'topic',
-    label: 'Topic',
-    render: (question: Question) => {
-      const topic = TOPIC_OPTIONS.find(opt => opt.value === question.topic);
-      return (
-        <Badge
-          className={cn('font-medium text-xs', topic?.style ?? 'border-muted bg-muted/10 text-muted-foreground')}
-        >
-          {topic?.label ?? question.topic}
-        </Badge>
-      );
-    },
-  },
-  {
-    key: "status",
-    label: "Status",
-    render: (question: Question) => {
-      const statusString = QUESTION_STATUS.UI_MAP[question.status] || 'Unknown';
-      return (
-        <Badge className={cn(
-          "font-medium text-xs",
-          statusString === "Answered" && "border-green-500/50 bg-green-500/10 text-green-700",
-          statusString === "Pending" && "border-orange-500/50 bg-orange-500/10 text-orange-700",
-        )}>
-          {statusString}
-        </Badge>
-      );
-    }
-  },
-  {
-    key: "is_public",
-    label: "Visibility",
-    render: (question: Question) => (
-      <Badge variant="outline"
-        className={cn(
-          question.is_public ? "border-blue-500/50 bg-blue-500/10 text-blue-700" : "border-red-500/50 bg-red-500/10 text-red-700"
-        )}>
-        {question.is_public ? "Public" : "Private"}
-      </Badge>
-    ),
-  },
-  {
-    key: "created_at",
-    label: "Date Asked",
-    render: (question: Question) => formatDate(question.created_at),
-  },
-];
+// REMOVED: allQuestionColumns is now defined inside the component
 
-
-// ========== NEW: FACET FILTERS FOR QUESTIONS ==========
+// ========== FACET FILTERS FOR QUESTIONS ==========
 const questionFacetFilters: FacetFilter[] = [
   {
     key: "status",
@@ -127,12 +60,12 @@ const questionFacetFilters: FacetFilter[] = [
   },
 ];
 
-// ========== NEW: DATE FILTERS FOR QUESTIONS ==========
+// ========== DATE FILTERS FOR QUESTIONS ==========
 const dateFilterOptions = [
   { value: 'created_at', label: 'Date Asked' },
 ];
 
-// ========== NEW: SEARCHABLE FIELDS FOR QUESTIONS ==========
+// ========== SEARCHABLE FIELDS FOR QUESTIONS ==========
 const searchableFields = [
   { value: 'question', label: 'Question' },
 ];
@@ -155,19 +88,103 @@ export default function QuestionListDashboard() {
   const [uiSearchConfig, setUiSearchConfig] = useState({ field: 'question', value: '' });
   const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'question', value: '' });
 
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(allQuestionColumns.map((col) => col.key));
-  const visibleColumnCount = allQuestionColumns.filter(c => visibleColumns.includes(c.key)).length;
-
   const [dateConfig, setDateConfig] = useState<{
     field: string;
     from?: Date;
     to?: Date;
   }>({ field: 'created_at' });
 
-  // NEW: Using question-specific mutations
-  const { editStatus: editQuestionStatusMutation } = useQuestionMutations();
+  // =============== MODIFIED: COLUMNS FORMAT FOR QUESTIONS ===============
+  // Defined inside the component with useMemo to access `page` state
+  const allQuestionColumns = useMemo(() => [
+    {
+      key: "no",
+      label: "No.",
+      sortable: false, // This column cannot be sorted
+      render: (_question: Question, index: number) => (
+        <Badge variant="outline" className="font-mono bg-emerald-400/15 border-emerald-600">
+          {(page - 1) * ROWS_PER_PAGE + index + 1}
+        </Badge>
+      ),
+    },
+    {
+      key: "id",
+      label: "ID",
+      defaultVisible: false, // Hidden by default
+      render: (question: Question) => (
+        <Badge variant="outline" className="font-mono bg-blue-600/15">
+          {question.id}
+        </Badge>
+      )
+    },
+    {
+      key: "question",
+      label: "Question",
+      sortable: false,
+      cellClassName: "max-w-xs",
+      render: (question: Question) => (
+        <p className="line-clamp-1 font-medium">{question.question}</p>
+      ),
+    },
+    {
+      key: 'topic',
+      label: 'Topic',
+      render: (question: Question) => {
+        const topic = TOPIC_OPTIONS.find(opt => opt.value === question.topic);
+        return (
+          <Badge
+            className={cn('font-medium text-xs', topic?.style ?? 'border-muted bg-muted/10 text-muted-foreground')}
+          >
+            {topic?.label ?? question.topic}
+          </Badge>
+        );
+      },
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (question: Question) => {
+        const statusString = QUESTION_STATUS.UI_MAP[question.status] || 'Unknown';
+        return (
+          <Badge className={cn(
+            "font-medium text-xs",
+            statusString === "Answered" && "border-green-500/50 bg-green-500/10 text-green-700",
+            statusString === "Pending" && "border-orange-500/50 bg-orange-500/10 text-orange-700",
+            statusString === "Reported" && "border-purple-500/50 bg-purple-500/10 text-purple-700",
+          )}>
+            {statusString}
+          </Badge>
+        );
+      }
+    },
+    {
+      key: "is_public",
+      label: "Visibility",
+      render: (question: Question) => (
+        <Badge variant="outline"
+          className={cn(
+            question.is_public ? "border-blue-500/50 bg-blue-500/10 text-blue-700" : "border-red-500/50 bg-red-500/10 text-red-700"
+          )}>
+          {question.is_public ? "Public" : "Private"}
+        </Badge>
+      ),
+    },
+    {
+      key: "created_at",
+      label: "Date Asked",
+      render: (question: Question) => formatDate(question.created_at),
+    },
+  ], [page]); // Dependency array ensures it recalculates when page changes
 
-  // ========== SET BREADCRUMB ==========
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    allQuestionColumns.filter(col => col.defaultVisible !== false).map((col) => col.key)
+  );
+  const visibleColumnCount = allQuestionColumns.filter(c => visibleColumns.includes(c.key)).length;
+
+  const [questionToDelete, setQuestionToDelete] = useState<Question | null>(null);
+
+  const { editStatus: editQuestionStatusMutation, deleteQuestion } = useQuestionMutations();
+
   useEffect(() => {
     setBreadcrumb({
       title: "Question Management",
@@ -176,7 +193,6 @@ export default function QuestionListDashboard() {
     });
   }, [setBreadcrumb]);
 
-  // API filter logic is generic and reusable
   const apiFilters = useMemo(() => {
     if (activeFilterValues.length === 0) return {};
     return { [activeFilterKey]: activeFilterValues };
@@ -190,14 +206,7 @@ export default function QuestionListDashboard() {
     setApiSearchConfig(uiSearchConfig);
   };
 
-  // ========== NEW: USE QUESTIONS HOOK ==========
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    isFetching,
-  } = useQuestions({
+  const { data, isLoading, isError, error, isFetching } = useQuestions({
     page,
     limit: ROWS_PER_PAGE,
     filters: apiFilters,
@@ -210,22 +219,23 @@ export default function QuestionListDashboard() {
   const totalQuestions = data?.total ?? 0;
   const totalPages = Math.ceil(totalQuestions / ROWS_PER_PAGE);
 
-  // ========== COLUMNS SETUP (Generic) ==========
   const columns = useMemo(() => {
     return allQuestionColumns.map((col) => ({
       key: col.key as keyof Question,
       label: col.label,
-      visible: visibleColumns.includes(col.key),
+      visible: visibleColumns.includes(col.key as string),
       sortable: col.sortable,
       cellClassName: col.cellClassName,
       render: col.render,
     }));
-  }, [visibleColumns]);
+  }, [visibleColumns, allQuestionColumns]);
 
-  // ========== NEW: QUESTION ACTIONS ==========
+
   const renderQuestionActions = useCallback((question: Question) => {
     const isMutatingThisQuestion =
-      (editQuestionStatusMutation.isPending && editQuestionStatusMutation.variables?.questionId === question.id);
+      (editQuestionStatusMutation.isPending && editQuestionStatusMutation.variables?.questionId === question.id) ||
+      (deleteQuestion.isPending && deleteQuestion.variables === question.id);
+
 
     return (
       <DropdownMenu>
@@ -240,10 +250,18 @@ export default function QuestionListDashboard() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => alert(`Viewing details for Q: ${question.id}`)}>
-            <Eye className="mr-2 h-4 w-4" />
-            View Details & Answer
-          </DropdownMenuItem>
+          <AlertDialogTrigger asChild>
+            <DropdownMenuItem
+              className="text-red-600 focus:bg-red-50 focus:text-red-700"
+              // `onSelect` prevents the dropdown from closing when we click the item
+              onSelect={(e) => e.preventDefault()}
+              onClick={() => setQuestionToDelete(question)}
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Delete this Question
+            </DropdownMenuItem>
+          </AlertDialogTrigger>
+
           <DropdownMenuSeparator />
 
           {question.is_public ? (
@@ -266,84 +284,103 @@ export default function QuestionListDashboard() {
         </DropdownMenuContent>
       </DropdownMenu>
     );
-  }, [editQuestionStatusMutation]);
+  }, [editQuestionStatusMutation, deleteQuestion]);
 
   return (
     <>
-      <TableToolbar
-        isFetching={isFetching && !isLoading}
-
-        facetFilters={questionFacetFilters}
-        activeFilterKey={activeFilterKey}
-        onActiveFilterKeyChange={setActiveFilterKey}
-        activeFilterValues={activeFilterValues}
-        onActiveFilterValuesChange={setActiveFilterValues}
-
-        searchValue={uiSearchConfig.value}
-        onSearchChange={(newValue) =>
-          setUiSearchConfig(current => ({ ...current, value: newValue }))
-        }
-        searchFieldOptions={searchableFields}
-        searchFieldValue={uiSearchConfig.field}
-        onSearchFieldChange={(newField) =>
-          setUiSearchConfig(current => ({ ...current, field: newField }))
-        }
-        onSearchSubmit={handleSearchSubmit}
-
-        columns={allQuestionColumns}
-        visibleColumns={visibleColumns}
-        onVisibleColumnsChange={setVisibleColumns}
-
-        dateFilterOptions={dateFilterOptions}
-        activeDateFilterKey={dateConfig.field}
-        onActiveDateFilterKeyChange={(newField) =>
-          setDateConfig(current => ({ ...current, field: newField }))
-        }
-        fromDate={dateConfig.from}
-        toDate={dateConfig.to}
-        onDateRangeChange={(from, to) =>
-          setDateConfig(current => ({ ...current, from, to }))
-        }
-
-        onResetFilters={() => {
-          setPage(1);
-          setSort({ field: 'created_at', direction: 'desc' });
-          setActiveFilterKey('status');
-          setActiveFilterValues([]);
-          setUiSearchConfig({ field: 'question', value: '' });
-          setApiSearchConfig({ field: 'question', value: '' });
-          setDateConfig({ field: 'created_at' });
-          setVisibleColumns(allQuestionColumns.map((c) => c.key));
-        }}
-      />
-
-      {isFetching && (
-        <div className="absolute inset-0 bg-white/50 z-10"></div>
-      )}
-
-      {isLoading ? (
-        <DataTableSkeleton columnCount={visibleColumnCount + 1} />
-      ) : isError ? (
-        <div className="min-h-[calc(77vh)] flex flex-col items-center justify-center text-center py-10 border rounded-xl bg-white shadow-sm">
-          <div className="bg-red-100 p-3 rounded-full">
-            <XCircle className="h-8 w-8 text-red-500" />
-          </div>
-          <h3 className="mt-4 text-lg font-semibold">Failed to Load Questions</h3>
-          <p className="text-muted-foreground mt-1">{error.message}</p>
-        </div>
-      ) : (
-        <DataTable
-          data={questions}
-          columns={columns}
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          sortField={sort.field}
-          sortDirection={sort.direction}
-          onSortChange={(field, direction) => setSort({ field: field as keyof Question, direction })}
-          renderActions={renderQuestionActions}
+      <AlertDialog>
+        <TableToolbar
+          isFetching={isFetching && !isLoading}
+          facetFilters={questionFacetFilters}
+          activeFilterKey={activeFilterKey}
+          onActiveFilterKeyChange={setActiveFilterKey}
+          activeFilterValues={activeFilterValues}
+          onActiveFilterValuesChange={setActiveFilterValues}
+          searchValue={uiSearchConfig.value}
+          onSearchChange={(newValue) => setUiSearchConfig(current => ({ ...current, value: newValue }))}
+          searchFieldOptions={searchableFields}
+          searchFieldValue={uiSearchConfig.field}
+          onSearchFieldChange={(newField) => setUiSearchConfig(current => ({ ...current, field: newField }))}
+          onSearchSubmit={handleSearchSubmit}
+          columns={allQuestionColumns}
+          visibleColumns={visibleColumns}
+          onVisibleColumnsChange={setVisibleColumns}
+          dateFilterOptions={dateFilterOptions}
+          activeDateFilterKey={dateConfig.field}
+          onActiveDateFilterKeyChange={(newField) => setDateConfig(current => ({ ...current, field: newField }))}
+          fromDate={dateConfig.from}
+          toDate={dateConfig.to}
+          onDateRangeChange={(from, to) => setDateConfig(current => ({ ...current, from, to }))}
+          onResetFilters={() => {
+            setPage(1);
+            setSort({ field: 'created_at', direction: 'desc' });
+            setActiveFilterKey('status');
+            setActiveFilterValues([]);
+            setUiSearchConfig({ field: 'question', value: '' });
+            setApiSearchConfig({ field: 'question', value: '' });
+            setDateConfig({ field: 'created_at' });
+            setVisibleColumns(allQuestionColumns.map((c) => c.key));
+          }}
         />
-      )}
+
+        {isFetching && (
+          <div className="absolute inset-0 bg-white/50 z-10"></div>
+        )}
+
+        {isLoading ? (
+          <DataTableSkeleton columnCount={visibleColumnCount + 1} />
+        ) : isError ? (
+          <div className="min-h-[calc(77vh)] flex flex-col items-center justify-center text-center py-10 border rounded-xl bg-white shadow-sm">
+            <div className="bg-red-100 p-3 rounded-full">
+              <XCircle className="h-8 w-8 text-red-500" />
+            </div>
+            <h3 className="mt-4 text-lg font-semibold">Failed to Load Questions</h3>
+            <p className="text-muted-foreground mt-1">{error.message}</p>
+          </div>
+        ) : (
+          <DataTable
+            data={questions}
+            columns={columns}
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            sortField={sort.field}
+            sortDirection={sort.direction}
+            onSortChange={(field, direction) => setSort({ field: field as keyof Question, direction })}
+            renderActions={renderQuestionActions}
+          />
+        )}
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-red-100 p-2">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <AlertDialogTitle className="text-xl">
+                Are you absolutely sure?
+              </AlertDialogTitle>
+            </div>
+            <AlertDialogDescription className="pt-2 pl-12">
+              This action cannot be undone. This will permanently delete the question
+              and any associated answers from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              // The action button calls the mutation with the stored question's ID
+              onClick={() => {
+                if (questionToDelete) {
+                  deleteQuestion.mutate(questionToDelete.id);
+                }
+              }}
+            >
+              Yes, delete question
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

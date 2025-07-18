@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { answerQuestionAPI, editAnswerAPI } from '@/apis/consultant/questionApi';
+import { answerQuestionAPI, editAnswerAPI, reportQuestionAPI } from '@/apis/consultant/questionApi';
 import type { AnswerQuestionPayload, QuestionMutationResponse } from '@/types/consultant/questionTypes';
 
 /**
@@ -44,9 +44,22 @@ export const useQuestionMutations = () => {
     onError: (error) => onMutationError(error, 'Failed to update answer.'),
   });
 
+  // =============== REPORTING A QUESTION (NEW) ===============
+  const reportQuestionMutation = useMutation<
+    QuestionMutationResponse,
+    Error,
+    string // The input variable is just the questionId string
+  >({
+    mutationFn: reportQuestionAPI,
+    onSuccess: (data) => onMutationSuccess(data, 'Question reported successfully!'),
+    onError: (error) => onMutationError(error, 'Failed to report question.'),
+  });
+
+
   // Expose all available mutations
   return {
     answerQuestion: answerQuestionMutation,
     editAnswer: editAnswerMutation,
+    reportQuestion: reportQuestionMutation,
   };
 };

@@ -1,6 +1,7 @@
 const QUESTION_DEFINITIONS = [
   { id: 0, key: 'Pending', label: 'Pending' },
   { id: 1, key: 'Answered', label: 'Answered' },
+  { id: 2, key: 'Reported', label: 'Reported' },
 ] as const;
 
 

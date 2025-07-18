@@ -92,3 +92,16 @@ export const editAnswerAPI = async ({
   const response = await api.patch<QuestionMutationResponse>(`/question/${questionId}/consultant-edit`, body);
   return response.data;
 };
+
+
+// =============== REPORT A QUESTION ===============
+/**
+ * API call to report a question.
+ * Corresponds to: POST /question/:id/report
+ * @param questionId - The ID of the question to report.
+ * @returns A promise that resolves to the server's success message.
+ */
+export const reportQuestionAPI = async (questionId: string): Promise<QuestionMutationResponse> => {
+  const response = await api.post<QuestionMutationResponse>(`/question/${questionId}/report`);
+  return response.data;
+};
