@@ -8,11 +8,14 @@ import { CalendarWeekView } from '@/components/Appointment Calendar/CalendarWeek
 import { Appointment } from '@/types/consultant/appointmentTypes';
 import { useOutletContext } from 'react-router-dom';
 import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout';
+import VideoChatRoom from '@/components/Chats/VideoChatRoom';
 
 export default function ConsultantAppointmentCalendar() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
 
   const [currentWeek, setCurrentWeek] = useState(new Date());
+
+  const [activeCallRoomId, setActiveCallRoomId] = useState<string | null>(null);
 
   // ========== SET BREADCRUMB ==========
   useEffect(() => {
@@ -59,6 +62,27 @@ export default function ConsultantAppointmentCalendar() {
     return { totalAppointments, pending, ongoing, completed, cancelled };
   }, [appointments]);
 
+
+
+  // ========== VIDEO CHAT ROOM ==========
+  const handleJoinCall = (roomId: string) => {
+    setActiveCallRoomId(roomId);
+  };
+
+  const handleLeaveCall = () => {
+    setActiveCallRoomId(null);
+  };
+
+  // --- 4. CONDITIONAL RENDER: VIDEO CHAT OR CALENDAR ---
+  if (activeCallRoomId) {
+    return (
+      <VideoChatRoom 
+        chat_room_id={activeCallRoomId} 
+        onLeave={handleLeaveCall} 
+      />
+    );
+  }
+
   return (
     <div className="relative">
       {/* ========= FLOATING ELEMENTS (EFFECTS) */}
@@ -87,6 +111,7 @@ export default function ConsultantAppointmentCalendar() {
             weeklyStats={weeklyStats}
             isFetching={isFetching}
             isLoading={isLoading}
+            onJoinCall={handleJoinCall}
           />
         </div>
       </div>

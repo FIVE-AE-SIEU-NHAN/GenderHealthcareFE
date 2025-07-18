@@ -11,6 +11,7 @@ interface AppointmentCardProps {
   className?: string;
   onStatusChange: (status: AppointmentStatus) => void;
   isUpdating?: boolean;
+  onJoin: (roomId: string) => void;
 }
 
 export function AppointmentCard({
@@ -18,6 +19,7 @@ export function AppointmentCard({
   className,
   onStatusChange,
   isUpdating = false,
+  onJoin,
 }: AppointmentCardProps) {
   const { topic, status, chat_room_id } = appointment;
   const topicStyle = TOPIC_STYLES_MAP.get(topic) || DEFAULT_TOPIC_STYLE;
@@ -70,12 +72,13 @@ export function AppointmentCard({
           {chat_room_id || "N/A"}
         </code>
 
-        {["PENDING", "ONGOING"].includes(status) && (
+        {["PENDING", "ONGOING"].includes(status) && chat_room_id && (
           <div>
             <Button
               variant="outline"
               size="sm"
               className="p-2 w-full cursor-pointer border border-gray-400 truncate"
+              onClick={() => onJoin(chat_room_id)}
             >
               Join
             </Button>
