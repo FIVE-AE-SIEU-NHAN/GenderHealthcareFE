@@ -10,6 +10,9 @@ import slide3 from '@/assets/images/bs3.webp';
 import { FaArrowRightLong } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
 
+
+const ToTop = () => window.scrollTo({ top: 0 });
+
 const Home: React.FC = () => {
   const sharedButtons = [
     {
@@ -91,6 +94,7 @@ const Home: React.FC = () => {
               <div className="flex flex-wrap justify-center gap-4 mt-4">
                 {slide.buttons.map((button, btnIndex) => (
                   <Link
+                    onClick={ToTop}
                     key={btnIndex}
                     to={button.link}
                     className={`text-sm sm:text-base md:text-lg px-4 sm:px-5 md:px-6 py-2 md:py-3 rounded transition ${button.color}`}

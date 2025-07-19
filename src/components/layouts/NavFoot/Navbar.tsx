@@ -178,7 +178,11 @@ export default function Navbar({ variant = 'public' }: NavbarProps) {
         <div className="flex flex-shrink-0 items-center gap-4">
           {user && user.role == 3 && (
             <Button asChild className="bg-gradient-to-r from-[#1c2359] via-[#1a3973] to-[#1977cc] hover:brightness-110 rounded-full">
-              <Link to="/booking-info" className="flex items-center gap-2">
+              <Link 
+                to="/booking-info" 
+                className="flex items-center gap-2"
+                onClick={ToTop}
+              >
                 <Calendar className="w-5 h-5" />
                 Book an Appointment
               </Link>
@@ -234,7 +238,10 @@ export default function Navbar({ variant = 'public' }: NavbarProps) {
             <>
               {user.role === 3 && (
                 <Button asChild className="bg-gradient-to-r from-[#1c2359] via-[#1a3973] to-[#1977cc] hover:brightness-110 rounded-full">
-                  <Link to="/booking-info">
+                  <Link 
+                    to="/booking-info"
+                    onClick={ToTop}
+                  >
                     <Calendar className="w-5 h-5 mr-2" />
                     Book an Appointment
                   </Link>

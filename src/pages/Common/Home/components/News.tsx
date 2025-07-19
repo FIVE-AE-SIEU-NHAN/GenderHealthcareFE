@@ -62,6 +62,8 @@ const newsPosts = [
   },
 ];
 
+const ToTop = () => window.scrollTo({ top: 0 });
+
 export function News() {
   const [api, setApi] = useState<CarouselApi>();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -175,7 +177,7 @@ export function News() {
                     href="#"
                     className="group relative inline-block text-light-blue text-sm font-bold transition-all duration-300"
                   >
-                    <Link to="/blogs">
+                    <Link to="/blogs" onClick={ToTop}>
                       <span className="transition-all duration-300 group-hover:px-2">Read More</span>
                     </Link>
                     <span className="ml-1 transition-all duration-300 group-hover:ml-2 group-hover:opacity-0">
