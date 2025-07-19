@@ -49,8 +49,11 @@ interface ServicesBookingFormProps {
 }
 
 export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubmit, isPending, form }) => {
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const maxDate = new Date(today);
+  const minDate = new Date();
+  minDate.setDate(minDate.getDate() + 2);
+  minDate.setHours(0, 0, 0, 0);
+
+  const maxDate = new Date();
   maxDate.setMonth(maxDate.getMonth() + 2);
 
   const selectedTopicValue = form.watch("topic");
@@ -59,18 +62,6 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
 
   const getSelectedPackage = () => STIS_TESTING_PACKAGES.find(p => p.value === selectedTopicValue);
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find(t => t.value === selectedTimeSlotValue)?.label;
-
-  const isTimeSlotDisabled = (slotValue: string) => {
-    if (!selectedDateValue) return true;
-    const now = new Date();
-    const isToday = format(selectedDateValue, "yyyy-MM-dd") === format(now, "yyyy-MM-dd");
-    if (isToday) {
-      const currentHour = now.getHours();
-      const slotHour = parseInt(slotValue.split("_")[1], 10);
-      return slotHour <= currentHour;
-    }
-    return false;
-  };
 
   return (
     <div className="relative z-10 flex justify-center w-full">
@@ -124,7 +115,7 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) => date < today || date > maxDate || date.getDay() === 0}
+                          disabled={(date) => date < minDate || date > maxDate || date.getDay() === 0}
                           autoFocus
                         />
                       </PopoverContent>
@@ -143,7 +134,7 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                       </FormControl>
                       <SelectContent>
                         {timeSlotOptions.map(slot => (
-                          <SelectItem key={slot.value} value={slot.value} disabled={isTimeSlotDisabled(slot.value)}>
+                          <SelectItem key={slot.value} value={slot.value}>
                             {slot.label}
                           </SelectItem>
                         ))}
