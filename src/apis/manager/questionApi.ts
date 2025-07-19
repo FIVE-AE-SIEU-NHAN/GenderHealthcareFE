@@ -65,7 +65,7 @@ export const fetchQuestions = async ({ page, limit, filters, search, sort, dateR
 // =============== QUESTION STATUS EDITING ===============
 export const editQuestionStatusAPI = async ({ questionId, is_public }: EditQuestionStatusPayload): Promise<EditQuestionStatusResponse> => {
   const body = { is_public };
-  const response = await api.patch<EditQuestionStatusResponse>(`/question/${questionId}/edit`, body);
+  const response = await api.patch<EditQuestionStatusResponse>(`/question/${questionId}/edit-state`, body);
   return response.data;
 };
 
