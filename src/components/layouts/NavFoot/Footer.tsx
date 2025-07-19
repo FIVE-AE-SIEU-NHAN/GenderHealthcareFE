@@ -1,109 +1,93 @@
-import React from 'react';
 import {
-  FaPhoneAlt,
-  FaEnvelope,
-  FaMapMarkerAlt,
-  FaFacebookF,
-  FaTwitter,
-  FaLinkedinIn,
-  FaInstagram,
-  FaYoutube,
-} from 'react-icons/fa';
+  FacebookIcon,
+  LinkedinIcon,
+  YoutubeIcon,
+  MailIcon,
+} from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
-const Footer: React.FC = () => {
+export default function Footer() {
   return (
-    <footer className="bg-[#1A2250] text-white pt-16 pb-8 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-10">
-     
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-blue-500 rounded-full" />
-            <div>
-              <h2 className="font-bold text-lg">Care4Gender</h2>
-              <p className="text-sm text-blue-200">Gender Healthcare</p>
-            </div>
-          </div>
-          <p className="text-sm text-gray-300 leading-relaxed mb-6">
-            Medova is a convenience services to the adaptability, Spacious modern villa living room with centrally placed swimming pool blending indoor-outdoor
+    <footer className="bg-[#1A2250] text-white text-sm">
+      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div>
+          <h2 className="font-semibold text-white mb-2">
+            CARE4GENDER VIETNAM CO., LTD
+          </h2>
+          <p className="text-gray-300">Office: 3/1 Thanh Thai, Ward 14, District 10, Ho Chi Minh City</p>
+          <p className="text-gray-300">
+            Hotline:{' '}
+            <span className="text-white font-medium">1900-2805</span> | 8:00 - 17:30 (Mon - Sat)
+          </p>
+          <p className="text-gray-300">Business Registration No. 0315268642 issued by Department of Planning and Investment of Ho Chi Minh City on September 14, 2018.</p>
+          <p className="text-gray-300">
+            Content Manager: <span className="text-blue-400 underline">Pharmacist Duong Anh Hoang</span>
           </p>
 
-          <div className="space-y-3 text-sm text-gray-300">
-            <div className="flex items-center gap-3">
-              <FaPhoneAlt className="text-blue-400" />
-              <span>+84 090 012 345</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <FaEnvelope className="text-blue-400" />
-              <span>infomail123@domain.com</span>
-            </div>
-            <div className="flex items-start gap-3">
-              <FaMapMarkerAlt className="text-blue-400 mt-1" />
-              <span>lorem ipsum 72 ffas, fasf fsa f City, fsdafsad Country</span>
+          {/* Social Media */}
+          <div className="mt-4">
+            <h4 className="font-semibold text-gray-300 mb-2">Connect with us</h4>
+            <div className="flex gap-3">
+              <Button variant="ghost" size="icon" className="hover:bg-white/10 text-white">
+                <FacebookIcon className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-white/10 text-white">
+                <LinkedinIcon className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-white/10 text-white">
+                <YoutubeIcon className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-white/10 text-white">
+                <MailIcon className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
 
         <div>
-          <h3 className="font-semibold text-white mb-4">Quick Links</h3>
-          <ul className="space-y-2 text-sm text-gray-300">
-            <li>+ Home</li>
-            <li>+ About Us</li>
-            <li>+ Services</li>
-            <li>+ Our Staff</li>
-            <li>+ Term & Conditions</li>
+          <h3 className="font-semibold text-white mb-2">About Care4Gender</h3>
+          <ul className="space-y-1 text-gray-300">
+            <li>About Care4Gender Health News</li>
+            <li>Care4Gender Management Board</li>
+            <li>Advisory Council</li>
+            <li>Editorial Team</li>
           </ul>
         </div>
 
         <div>
-          <h3 className="font-semibold text-white mb-4">Our Services</h3>
-          <ul className="space-y-2 text-sm text-gray-300">
-            <li>+ Lorem ipsum</li>
-            <li>+ Lorem ipsum</li>
-            <li>+ Lorem ipsum</li>
-            <li>+ Lorem ipsum</li>
-            <li>+ Lorem ipsum</li>
+          <h3 className="font-semibold text-white mb-2">Services</h3>
+          <ul className="space-y-1 text-gray-300">
+            <Link to="/book-consultant" className="hover:underline hover:text-white">Book Consultation</Link> <br />
+            <Link to="/book-service" className="hover:underline hover:text-white">Book Medical Service</Link> <br />
           </ul>
         </div>
 
         <div>
-          <h3 className="font-semibold text-white mb-4">Support</h3>
-          <ul className="space-y-2 text-sm text-gray-300">
-            <li>+ Contact Us</li>
-            <li>+ Live Chat</li>
+          <h3 className="font-semibold text-white mb-2">Support</h3>
+          <ul className="space-y-1 text-gray-300">
+            <Link to="/editorial-policy" className="hover:underline hover:text-white">Editorial Policy</Link> <br />
+            <Link to="/advertising-policy" className="hover:underline hover:text-white">Advertising Policy</Link> <br />
+            <Link to="/privacy-policy" className="hover:underline hover:text-white">Privacy Policy</Link> <br />
+            <Link to="/terms-of-use" className="hover:underline hover:text-white">Terms of Use</Link> <br />
+            <Link to="/contact" className="hover:underline hover:text-white">Contact Us</Link> <br />
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-gray-600 mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 max-w-7xl mx-auto">
-        <p className="text-sm text-gray-400">
-          Copyright © 2025 <span className="text-red-400">Care4Gender</span>. All Rights Reserved.
+      <Separator className="my-4 bg-gray-600" />
+
+      <div className="max-w-7xl mx-auto px-4 pb-10 text-center text-xs text-gray-400">
+        <p>
+          Information on Care4Gender is for reference and research purposes only and does not replace
+          medical diagnosis or treatment.
         </p>
-
-        <div className="flex items-center gap-6">
-          <p className="text-white font-semibold text-sm text-center">Explore Our Comprehensive Healthcare Solutions</p>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm">
-            Make Appointment →
-          </button>
-          <div className="flex items-center gap-2 text-sm text-white">
-            <span className="bg-white w-6 h-6 rounded-full" /> {/* Clock icon placeholder */}
-            <div>
-              <p className="text-xs font-semibold">Opening Hour</p>
-              <p className="text-xs">09:30AM - 10:30PM</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4 text-gray-400 mt-4 md:mt-0">
-          <span>Social Media:</span>
-          <FaFacebookF className="hover:text-white cursor-pointer" />
-          <FaTwitter className="hover:text-white cursor-pointer" />
-          <FaLinkedinIn className="hover:text-white cursor-pointer" />
-          <FaInstagram className="hover:text-white cursor-pointer" />
-          <FaYoutube className="hover:text-white cursor-pointer" />
-        </div>
+        <p>
+          It is essential to strictly follow the guidance of doctors and medical staff.
+        </p>
+        <p className="mt-2">Copyright © 2018 - 2025 Care4Gender Vietnam Co., Ltd.</p>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}
