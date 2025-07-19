@@ -10,6 +10,7 @@ import { FaHeartbeat, FaPhone, FaFacebookF, FaInfoCircle } from "react-icons/fa"
 import Autoplay from "embla-carousel-autoplay"
 import doctor from "@/assets/images/bacsi3.jpg"; 
 
+
 type Doctor = {
   name: string;
   specialty: string;
@@ -20,27 +21,27 @@ const doctors: Doctor[] = [
   {
     name: "Dr. Julia Jany",
     specialty: "Gynecology Specialist",
-    image: doctor,
+    image: "/images/bs3.webp",
   },
   {
     name: "Dr. Michel Liu",
     specialty: "Heart Specialist",
-    image: doctor,
+    image: "/images/bs4.webp",
   },
   {
     name: "Dr. Jesmine Ruby",
     specialty: "Neurology Specialist",
-    image: doctor,
+    image: "/images/bs5.webp",
   },
   {
     name: "Dr. bacsi3 Smith",
     specialty: "Cardiology Specialist",
-    image: doctor,
+    image: "/images/bs6.webp",
   },
   {
     name: "Dr. Julia Jany",
     specialty: "Gynecology Specialist",
-    image: doctor,
+    image: "/images/bs7.webp",
   },
   {
     name: "Dr. Michel Liu",

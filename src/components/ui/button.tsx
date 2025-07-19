@@ -125,7 +125,7 @@ function AskQuestionButton() {
       {isVisible && (
         <button
           onClick={handleAskQuestion}
-          className="h-12 group flex items-center justify-center bg-light-blue hover:semi-dark-blue text-white font-bold rounded-full p-3 shadow-lg"
+          className="cursor-pointer h-12 group flex items-center justify-center bg-light-blue hover:semi-dark-blue text-white font-bold rounded-full p-3 shadow-lg"
           aria-label="Ask a question"
         >
           <HelpCircle className="h-6 w-6" />
