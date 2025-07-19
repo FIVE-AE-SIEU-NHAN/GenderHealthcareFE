@@ -93,6 +93,9 @@ const Navbar = () => {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/about-us">About</Link></NavigationMenuLink>
                 </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild className="nav-text text-xl"><Link onClick={ToTop} to="/cycle">ManstrualCycle</Link></NavigationMenuLink>
+                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -119,6 +122,9 @@ const Navbar = () => {
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                       <NavigationMenuLink href="#about-us" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">About</NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href="#cycle" className="nav-text text-xl hover:bg-muted-foreground/20 block w-75">ManstrualCycle</NavigationMenuLink>
                     </NavigationMenuItem>
                   </NavigationMenuList>
                 </NavigationMenu>

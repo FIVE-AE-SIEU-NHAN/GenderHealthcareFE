@@ -21,6 +21,11 @@ export const consultantSidebarItems: NavMainProps["items"] = [
     title: "Your Profile",
     url: "/consultant/profile",
     icon: User, 
+  },
+   {
+    title: "Your Tracker",
+    url: "/consultant/ccycle",
+    icon: User, 
   }
 ]
 

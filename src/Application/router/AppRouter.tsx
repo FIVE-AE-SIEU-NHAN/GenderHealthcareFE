@@ -24,6 +24,8 @@ import About from '@/pages/Common/Home/components/About';
 import ServiceList from '@/pages/Content/Services/ServiceList';
 import ServiceDetail from '@/pages/Content/Services/ServiceDetails';
 import BlogPage from '@/pages/Content/Blog/BlogList';
+import CycleList from '@/pages/Content/Cycle/CycleList';
+import CycleNew from '@/pages/Content/Cycle/CycleForm';
 
 export default function AppRouter() {
   return (
@@ -41,7 +43,9 @@ export default function AppRouter() {
             <Route path="/services" element={<ServiceList />} />
             <Route path="/service-details" element={<ServiceDetail />} />
             <Route path="/blogs" element={<BlogPage />} />
-            
+          <Route path="/cyclenew" element={<CycleNew />} />
+          <Route path="/cycle" element={<CycleList />} />
+        
           </Route>
 
           {/* Auth Routes (things that's related to authen will be here)*/}

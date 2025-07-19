@@ -7,7 +7,7 @@ import ConsultantDashboard from "@/pages/Consultant/Dashboard";
 import ConsultantProfilePage from "@/pages/Consultant/Profile/Profile";
 import AppointmentCalendar from "@/pages/Consultant/Appointments/AppointmentCalendar";
 import Chats from "@/components/Chats/Chats";
-
+import CCycle from '@/pages/Content/Consultation/CCycle';
 export const ConsultantRoutes = (
   <Route 
     path="/consultant" 
@@ -19,6 +19,7 @@ export const ConsultantRoutes = (
       <Route path="profile" element={<ConsultantProfilePage />} />
       <Route path="appointments" element={<AppointmentCalendar />} />
       <Route path="chat" element={<Chats />} />
+      <Route path="ccycle" element={<CCycle />} />
     </Route>
   </Route>
 );

@@ -1,4 +1,4 @@
-import { BarChart2, CalendarCheck, ClipboardList, Settings, User, Users } from "lucide-react"
+import { BarChart2, CalendarCheck, ClipboardList, RefreshCw, Settings, User, Users } from "lucide-react"
 import type { NavMainProps } from "@/components/layouts/Dashboard/nav-main"
 
 export const adminSidebarItems: NavMainProps["items"] = [
@@ -31,6 +31,11 @@ export const adminSidebarItems: NavMainProps["items"] = [
     title: "Your Profile",
     url: "/dashboard/profile",
     icon: User, 
+  },
+  {
+    title: "Menstrual Cycle List",
+    url: "/dashboard/cyclenew",
+    icon: RefreshCw, 
   },
 ]
 
