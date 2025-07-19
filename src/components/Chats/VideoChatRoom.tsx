@@ -313,7 +313,7 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
                 <Webcam 
                   audio={!isMuted} 
                   ref={localVideoRef} 
-                  mirrored={true} 
+                  mirrored={false} 
                   className="w-full h-full object-cover" 
                   onUserMedia={handleUserMedia} 
                   onUserMediaError={(err) => console.error("Webcam Error:", err)}
@@ -348,7 +348,6 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
                     <span></span>
                     <span></span>
                   </div>
-                  <span>is typing...</span>
                 </div>
               )}
             </div>
