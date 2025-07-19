@@ -232,13 +232,17 @@ export default function Navbar({ variant = 'public' }: NavbarProps) {
         <div className="hidden lg:flex items-center gap-4">
           {user ? (
             <>
-              <Button asChild className="bg-gradient-to-r from-[#1c2359] via-[#1a3973] to-[#1977cc] hover:brightness-110 rounded-full">
-                <Link to="/booking-info">
-                  <Calendar className="w-5 h-5 mr-2" />
-                  Book an Appointment
-                </Link>
-              </Button>
-              <NotificationIcon />
+              {user.role === 3 && (
+                <Button asChild className="bg-gradient-to-r from-[#1c2359] via-[#1a3973] to-[#1977cc] hover:brightness-110 rounded-full">
+                  <Link to="/booking-info">
+                    <Calendar className="w-5 h-5 mr-2" />
+                    Book an Appointment
+                  </Link>
+                </Button>
+              )}
+              {[1, 3].includes(user.role) &&
+                <NotificationIcon />
+              }
               <UserAvatarDropdown user={user} onLogout={handleLogout} />
             </>
           ) : <AuthButtons />}
