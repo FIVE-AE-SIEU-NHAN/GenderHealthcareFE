@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Lock, Eye, EyeOff, KeyRound } from "lucide-react";
 import logo from "@/assets/images/logo1.png";
+import axios from "axios";
 
 type FormData = {
   password: string;

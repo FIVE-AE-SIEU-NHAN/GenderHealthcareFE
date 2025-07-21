@@ -17,7 +17,7 @@ interface CalendarWeekViewProps {
   weeklyStats: WeeklyStats;
   isLoading?: boolean;
   isFetching?: boolean;
-  onJoinCall: (roomId: string) => void; 
+  onJoinCall?: (roomId: string) => void; 
 }
 
 // Time slots mapping

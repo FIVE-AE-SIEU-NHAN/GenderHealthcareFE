@@ -11,7 +11,7 @@ interface AppointmentCardProps {
   className?: string;
   onStatusChange: (status: AppointmentStatus) => void;
   isUpdating?: boolean;
-  onJoin: (roomId: string) => void;
+  onJoin?: (roomId: string) => void;
 }
 
 export function AppointmentCard({
@@ -72,7 +72,7 @@ export function AppointmentCard({
           {chat_room_id || "N/A"}
         </code>
 
-        {["PENDING", "ONGOING"].includes(status) && chat_room_id && (
+        {onJoin && ["PENDING", "ONGOING"].includes(status) && chat_room_id && (
           <div>
             <Button
               variant="outline"
