@@ -1,16 +1,21 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "bundler",
-    "jsx": "react-jsx",  // nếu dùng React 17+
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "baseUrl": ".",
+    "module": "esnext",                          // Sử dụng module ESNext
+    "target": "esnext",                          // Mã nguồn TypeScript sẽ được chuyển sang ESNext
+    "moduleResolution": "bundler",               // Cách thức giải quyết module
+    "jsx": "react-jsx",                          // Nếu dùng React 17+
+    "esModuleInterop": true,                     // Hỗ trợ nhập khẩu module ES
+    "allowSyntheticDefaultImports": true,        // Hỗ trợ synthetic default imports
+    "skipLibCheck": true,                        // Bỏ qua kiểm tra loại tệp thư viện
+    "baseUrl": ".",                              // Thiết lập base URL cho việc giải quyết module
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"]                         // Định nghĩa alias cho src
     },
-    "strict": true
-  }
+    "strict": true,                              // Bật chế độ kiểm tra nghiêm ngặt
+    "outDir": "./dist",                          // Chỉ định thư mục đầu ra cho các tệp biên dịch
+    "rootDir": "./src"                           // Chỉ định thư mục chứa mã nguồn gốc
+  },
+  "include": [
+    "src/**/*"                                   // Bao gồm tất cả các tệp trong thư mục src
+  ]
 }
