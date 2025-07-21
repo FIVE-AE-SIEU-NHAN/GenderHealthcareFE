@@ -173,33 +173,7 @@ const BlogPage: React.FC = () => {
       <div className={`transition-opacity duration-300 ${isFetching ? 'opacity-50' : 'opacity-100'}`}>
         {blogs.length > 0 ? (
           <section className="p-5 pt-0 max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-              {topBlog && (
-                <section className="col-span-1 md:col-span-4 lg:col-span-1">
-                  <Link
-                    to={`/blogs/${topBlog.id}`}
-                    className="rounded-lg border bg-white border-gray-200 p-4 hover:shadow-lg transition-shadow flex flex-col h-full"
-                  >
-                    <img
-                      src={topBlog.main_image || topBlog.cover_image}
-                      alt={topBlog.title}
-                      className="w-full h-60 object-cover object-top rounded mb-3 overflow-hidden"
-                    />
-                    <h3 className="font-semibold text-2xl mb-3">{topBlog.title}</h3>
-                    <div className="flex flex-col text-sm text-gray-500 mb-3">
-                      <div className="font-medium text-gray-700">{topBlog.author_name}</div>
-                      <time dateTime={topBlog.created_at}>
-                        {new Date(topBlog.created_at).toLocaleString('vi-VN')}
-                      </time>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2 flex-grow">
-                      {topBlog.summary && topBlog.summary.length > 200
-                        ? topBlog.summary.slice(0, 200) + '...'
-                        : topBlog.summary}
-                    </p>
-                  </Link>
-                </section>
-              )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <section className="col-span-1 md:col-span-4 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                 {otherBlogs.map((blog) => (
                   <BlogCard key={blog.id} {...blog} />
