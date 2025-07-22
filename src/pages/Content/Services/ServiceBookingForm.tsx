@@ -14,32 +14,88 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { timeSlotOptions } from "@/Application/constants/appointment";
 import { CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
-// Updated STIS Testing Packages with gender and level
 export const STIS_TESTING_PACKAGES = [
-    { value: "basic-men", label: "Basic package for men", price: 500000, gender: "male", level: "basic" },
-    { value: "advanced-men", label: "Advanced package for men", price: 950000, gender: "male", level: "advanced" },
-    { value: "basic-women", label: "Basic package for women", price: 500000, gender: "female", level: "basic" },
-    { value: "advanced-women", label: "Advanced package for women", price: 1100000, gender: "female", level: "advanced" },
+    { 
+        value: "basic-men", label: "Basic package for men", price: 500000, gender: "male", level: "basic",
+        services: [ 
+            { id: "hiv_test", label: "HIV test" }, 
+            { id: "syphilis_test", label: "Syphilis test" },
+            { id: "gonorrhea_test", label: "Gonorrhea test" },
+            { id: "chlamydia_test", label: "Chlamydia test" },
+        ]
+    },
+    { 
+        value: "advanced-men", label: "Advanced package for men", price: 950000, gender: "male", level: "advanced",
+        services: [ 
+            { id: "hiv_test", label: "HIV test" }, 
+            { id: "syphilis_test", label: "Syphilis test" }, 
+            { id: "gonorrhea_test", label: "Gonorrhea test" }, 
+            { id: "chlamydia_test", label: "Chlamydia test" }, 
+            { id: "herpes_test", label: "Herpes test" },
+            { id: "hepatitis_b_test", label: "Hepatitis B test" },
+            { id: "hepatitis_c_test", label: "Hepatitis C test" },
+            { id: "mycoplasma_test", label: "Mycoplasma test" },
+        ]
+    },
+    { 
+        value: "basic-women", label: "Basic package for women", price: 500000, gender: "female", level: "basic",
+        services: [ 
+            { id: "hiv_test", label: "HIV test" }, 
+            { id: "syphilis_test", label: "Syphilis test" },
+            { id: "gonorrhea_test", label: "Gonorrhea test" },
+            { id: "chlamydia_test", label: "Chlamydia test" },
+        ]
+    },
+    { 
+        value: "advanced-women", label: "Advanced package for women", price: 1100000, gender: "female", level: "advanced",
+        services: [ 
+            { id: "hiv_test", label: "HIV test" }, 
+            { id: "syphilis_test", label: "Syphilis test" }, 
+            { id: "gonorrhea_test", label: "Gonorrhea test" }, 
+            { id: "chlamydia_test", label: "Chlamydia test" }, 
+            { id: "hpv_test", label: "HPV test" },
+            { id: "herpes_test", label: "Herpes test" },
+            { id: "hepatitis_b_test", label: "Hepatitis B test" },
+            { id: "hepatitis_c_test", label: "Hepatitis C test" },
+            { id: "trichomonas_test", label: "Trichomonas test" },
+        ]
+    },
 ];
 
-// Form validation schema (no changes needed here)
+const MAX_NOTE_LENGTH = 500;
+const MIN_NOTE_LENGTH = 20;
+
+// =================================================================
+// BƯỚC QUAN TRỌNG: CẬP NHẬT LOGIC VALIDATION CHO Ô NOTE
+// =================================================================
 export const formSchema = z.object({
   topic: z.string({ required_error: "Please select a testing package." }).min(1, "Please select a testing package."),
   booking_date: z.date({ required_error: "Please select a date." }),
   time_slot: z.string({ required_error: "Please select a time slot." }).min(1, "Please select a time slot."),
   note: z.string()
-    .trim()
+    .max(MAX_NOTE_LENGTH, { message: `Note cannot exceed ${MAX_NOTE_LENGTH} characters.` })
+    // Dùng refine để xử lý logic phức tạp
     .refine(value => {
-      if (!value) return true;
-      const wordCount = value.split(/\s+/).filter(word => word.length > 0).length;
-      return wordCount >= 8 && wordCount <= 50;
+        // Nếu không có giá trị (rỗng, undefined) hoặc chỉ toàn dấu cách, thì cho qua (hợp lệ)
+        if (!value || value.trim() === '') {
+            return true;
+        }
+        // Nếu có giá trị, sau khi cắt bỏ dấu cách, phải có ít nhất 20 ký tự
+        return value.trim().length >= MIN_NOTE_LENGTH;
     }, {
-      message: "The note must be between 8 and 50 words.",
-    }),
+        // Thông báo lỗi sẽ hiển thị khi người dùng nhập dưới 20 ký tự
+        message: `If provided, the note must be at least ${MIN_NOTE_LENGTH} characters.`
+    })
+    .optional()
+    .or(z.literal('')), // Đảm bảo trường optional hoạt động tốt
   agreed: z.boolean().refine(val => val === true, {
     message: "You must agree to the terms of use.",
   }),
+  selected_services: z.array(z.string()).refine(val => val.length > 0, {
+    message: "Please select at least one service."
+  })
 });
 
 interface ServicesBookingFormProps {
@@ -59,9 +115,16 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
   const selectedTopicValue = form.watch("topic");
   const selectedDateValue = form.watch("booking_date");
   const selectedTimeSlotValue = form.watch("time_slot");
+  const watchedNote = form.watch("note");
 
   const getSelectedPackage = () => STIS_TESTING_PACKAGES.find(p => p.value === selectedTopicValue);
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find(t => t.value === selectedTimeSlotValue)?.label;
+
+  React.useEffect(() => {
+    if (selectedTopicValue) {
+        form.setValue("selected_services", []);
+    }
+  }, [selectedTopicValue, form]);
 
   return (
     <div className="relative z-10 flex justify-center w-full">
@@ -97,6 +160,48 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                   <FormMessage />
                 </FormItem>
               )} />
+              
+              {getSelectedPackage() && (
+                 <FormField
+                    control={form.control}
+                    name="selected_services"
+                    render={() => (
+                    <FormItem className="mt-2 bg-blue-50/50 p-4 rounded-lg border border-blue-200">
+                        <div className="mb-4">
+                        <FormLabel className="text-base font-semibold text-[#1A3973]">Services Included</FormLabel>
+                        <p className="text-sm text-gray-600">Please select the services you wish to have.</p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+                        {getSelectedPackage()?.services.map((service) => (
+                            <FormField
+                            key={service.id}
+                            control={form.control}
+                            name="selected_services"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                                <FormControl>
+                                    <Checkbox
+                                    checked={field.value?.includes(service.id)}
+                                    onCheckedChange={(checked) => {
+                                        return checked
+                                        ? field.onChange([...(field.value || []), service.id])
+                                        : field.onChange(field.value?.filter((value) => value !== service.id));
+                                    }}
+                                    />
+                                </FormControl>
+                                <FormLabel className="font-normal cursor-pointer text-gray-800">
+                                    {service.label}
+                                </FormLabel>
+                                </FormItem>
+                            )}
+                            />
+                        ))}
+                        </div>
+                        <FormMessage className="mt-3" />
+                    </FormItem>
+                    )}
+                />
+              )}
 
               <div className="grid grid-cols-2 gap-2">
                 <FormField control={form.control} name="booking_date" render={({ field }) => (
@@ -151,14 +256,28 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Note for the Specialist (Optional)</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Please describe any relevant information... (8-50 words)"
-                        className="resize-none h-30"
-                        disabled={isPending}
-                        {...field}
-                      />
-                    </FormControl>
+                    <div className="relative">
+                      <FormControl>
+                        <Textarea
+                          placeholder={`Please describe any relevant information... (min ${MIN_NOTE_LENGTH} chars)`}
+                          className="resize-none h-30 pb-6 pr-14 break-all"
+                          disabled={isPending}
+                          maxLength={MAX_NOTE_LENGTH}
+                          {...field}
+                        />
+                      </FormControl>
+                      <p className={cn(
+                          "absolute bottom-2 right-3 text-xs",
+                          (watchedNote?.length || 0) >= MAX_NOTE_LENGTH
+                            ? "text-red-500 font-bold"
+                            : "text-slate-400"
+                      )}>
+                        {(watchedNote?.length || 0) >= MAX_NOTE_LENGTH
+                          ? "Limit reached"
+                          : `${watchedNote?.length || 0} / ${MAX_NOTE_LENGTH}`
+                        }
+                      </p>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

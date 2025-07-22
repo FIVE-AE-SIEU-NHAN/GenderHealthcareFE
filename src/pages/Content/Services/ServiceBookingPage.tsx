@@ -26,22 +26,22 @@ const ServiceBookingPage = () => {
 
   const [bookingDetails, setBookingDetails] = useState({ topic: "", date: "", time: "" });
   const [isPaymentDialogOpen, setPaymentDialogOpen] = useState(false);
-
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
   const [isFailedDialogOpen, setFailedDialogOpen] = useState(false);
   const [failureReason, setFailureReason] = useState("");
-
   const [paymentData, setPaymentData] = useState<PayOSResponse | null>(null);
   const [paymentDeadline, setPaymentDeadline] = useState<number>(0);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: 'onBlur',
     defaultValues: {
       topic: "",
       booking_date: undefined,
       time_slot: "",
       note: "",
       agreed: false,
+      selected_services: [],
     }
   });
 
@@ -100,18 +100,19 @@ const ServiceBookingPage = () => {
 
     const formattedDate = format(values.booking_date, "yyyy-MM-dd");
 
-    // Construct the new payload for the backend
     const payload = {
       booking_date: formattedDate,
       time_slot: values.time_slot,
       target_gender: selectedPackage.gender,
       level: selectedPackage.level,
-      note: values.note,
+      // === DÒNG SỬA Ở ĐÂY: Dùng "|| ''" để đảm bảo note luôn là string ===
+      note: values.note || '',
+      services: values.selected_services,
     };
 
     bookService.mutate(payload, {
       onSuccess: (data: BookAppointmentResponse) => {
-        const newDeadline = Date.now() + 1 * 30 * 1000; // 10 minutes
+        const newDeadline = Date.now() + 10 * 60 * 1000;
         sessionStorage.setItem(PAYMENT_DATA_KEY, JSON.stringify(data.result));
         sessionStorage.setItem(PAYMENT_DEADLINE_KEY, newDeadline.toString());
 
