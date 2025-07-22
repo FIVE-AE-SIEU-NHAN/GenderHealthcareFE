@@ -85,23 +85,18 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/doctors" className="hover:text-white transition-colors duration-200">
-                  + Find Specialist
-                </Link>
-              </li>
-              <li>
-                <Link to="/services" className="hover:text-white transition-colors duration-200">
-                  + Book Service
-                </Link>
-              </li>
-              <li>
-                <Link to="/blog" className="hover:text-white transition-colors duration-200">
+                <Link to="/blogs" className="hover:text-white transition-colors duration-200">
                   + Health Articles
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="hover:text-white transition-colors duration-200">
+                <Link to="/about-us" className="hover:text-white transition-colors duration-200">
                   + About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/ask-question" className="hover:text-white transition-colors duration-200">
+                  + Ask a Question
                 </Link>
               </li>
             </ul>
@@ -112,7 +107,7 @@ const Footer: React.FC = () => {
             <h3 className="font-semibold text-white mb-4">Our Services</h3>
             <ul className="space-y-3 text-sm text-gray-300">
               <li>
-                <Link to="/doctors" className="hover:text-white transition-colors duration-200">
+                <Link to="/book-consultant" className="hover:text-white transition-colors duration-200">
                   + Sexual Health Consultation
                 </Link>
               </li>
@@ -120,22 +115,12 @@ const Footer: React.FC = () => {
                 <Link to="/services" className="hover:text-white transition-colors duration-200">
                   + Reproductive Health Care
                 </Link>
-              </li>
+              </li>            
               <li>
-                <Link to="/doctors" className="hover:text-white transition-colors duration-200">
-                  + Online Consultation
+                <Link to="/book-service" className="hover:text-white transition-colors duration-200">
+                  + Book an STIS Test
                 </Link>
-              </li>
-              <li>
-                <Link to="/services" className="hover:text-white transition-colors duration-200">
-                  + Health Screening
-                </Link>
-              </li>
-              <li>
-                <Link to="/doctors" className="hover:text-white transition-colors duration-200">
-                  + Expert Advice
-                </Link>
-              </li>
+              </li>            
             </ul>
           </div>
 
@@ -146,7 +131,7 @@ const Footer: React.FC = () => {
               <img
                 src="https://payos.vn/docs/img/logo.svg"
                 alt="PayOS Logo"
-                className="h-12 object-contain bg-white rounded px-1 py-1"
+                className="h-12 object-contain bg-white rounded"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCA4MCAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzAwN0JGRiIvPgo8dGV4dCB4PSI0MCIgeT0iMjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSJib2xkIj5QYXlPUzwvdGV4dD4KPHN2Zz4=';
