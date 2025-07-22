@@ -82,35 +82,42 @@ const Home: React.FC = () => {
             />
             <div className="absolute inset-0 bg-black/50 z-10" /> {/* Màu nền tối */}
             
-            {/* Content container */}
-            <div className="relative z-20 flex flex-col justify-center h-full text-white pl-6 lg:pl-25 pr-4 space-y-8 max-w-3xl">
-              <div className="space-y-6">
-                <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[0.9] text-left text-shadow-lg">
-                  {slide.heading}
-                </h3>
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold leading-tight text-left opacity-95">
-                  {slide.title}
-                </h1>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-left max-w-2xl opacity-90 font-light">
-                  {slide.description}
-                </p>
-              </div>
-            </div>
+            {/* Content container - Centered vertically */}
+            <div className="relative z-20 flex flex-col justify-center h-full text-white pl-6 lg:pl-25 pr-4 py-20">
+              <div className="max-w-3xl">
+                
+                {/* Text Content + Buttons together */}
+                <div className="space-y-4">
+                  <div className="space-y-6">
+                    <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[0.9] text-left text-shadow-lg">
+                      {slide.heading}
+                    </h3>
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold leading-tight text-left opacity-95">
+                      {slide.title}
+                    </h1>
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-left max-w-2xl opacity-90 font-light">
+                      {slide.description}
+                    </p>
+                  </div>
 
-            {/* Fixed position buttons */}
-            <div className="absolute bottom-20 left-6 lg:left-25 z-30">
-              <div className="flex flex-wrap gap-4 sm:gap-6">
-                {slide.buttons.map((button, btnIndex) => (
-                  <Link
-                    onClick={ToTop}
-                    key={btnIndex}
-                    to={button.link}
-                    className={`text-sm sm:text-base lg:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-all duration-300 font-semibold shadow-lg ${button.color} hover:scale-105 hover:shadow-xl transform`}
-                  >
-                    {button.text}
-                    <FaArrowRightLong className="inline-block ml-2 sm:ml-4" />
-                  </Link>
-                ))}
+                  {/* Buttons - Fixed position with short gap */}
+                  <div className="pt-4">
+                    <div className="flex flex-wrap gap-4 sm:gap-6">
+                      {slide.buttons.map((button, btnIndex) => (
+                        <Link
+                          onClick={ToTop}
+                          key={btnIndex}
+                          to={button.link}
+                          className={`text-sm sm:text-base lg:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-all duration-300 font-semibold shadow-lg ${button.color} hover:scale-105 hover:shadow-xl transform`}
+                        >
+                          {button.text}
+                          <FaArrowRightLong className="inline-block ml-2 sm:ml-4" />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
 
