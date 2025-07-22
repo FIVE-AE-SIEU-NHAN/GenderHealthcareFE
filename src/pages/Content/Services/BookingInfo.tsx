@@ -73,7 +73,7 @@ export function BookingInfoPage() {
         </TabsList>
 
         {/* ========================================= */}
-        {/* === TAB 1: CONSULTATION - ĐẦY ĐỦ HƠN === */}
+        {/* === TAB 1: CONSULTATION === */}
         {/* ========================================= */}
         <TabsContent value="consultant" className="mt-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -103,10 +103,19 @@ export function BookingInfoPage() {
                     <ListOrdered />
                     <h3 className="text-xl font-bold">How It Works</h3>
                 </div>
-                <ol className="relative border-l border-gray-200 space-y-8 pl-6">
-                    <li><h4 className="font-semibold -ml-6 mb-1">1. Book Securely</h4><p className="text-sm text-gray-500 -ml-6">Choose a time that fits your schedule through our confidential online portal.</p></li>
-                    <li><h4 className="font-semibold -ml-6 mb-1">2. Connect & Share</h4><p className="text-sm text-gray-500 -ml-6">Engage in a one-on-one video or phone call with your dedicated specialist.</p></li>
-                    <li><h4 className="font-semibold -ml-6 mb-1">3. Receive Your Plan</h4><p className="text-sm text-gray-500 -ml-6">Get a personalized summary and clear next steps sent directly to you.</p></li>
+                <ol className="relative space-y-6">
+                    <li>
+                        <h4 className="font-semibold mb-1">1. Book Securely</h4>
+                        <p className="text-sm text-gray-500">Choose a time that fits your schedule through our confidential online portal.</p>
+                    </li>
+                    <li>
+                        <h4 className="font-semibold mb-1">2. Connect & Share</h4>
+                        <p className="text-sm text-gray-500">Engage in a one-on-one video or phone call with your dedicated specialist.</p>
+                    </li>
+                    <li>
+                        <h4 className="font-semibold mb-1">3. Receive Your Plan</h4>
+                        <p className="text-sm text-gray-500">Get a personalized summary and clear next steps sent directly to you.</p>
+                    </li>
                 </ol>
             </div>
 
@@ -126,7 +135,7 @@ export function BookingInfoPage() {
         </TabsContent>
 
         {/* ===================================== */}
-        {/* === TAB 2: SERVICES - ĐẦY ĐỦ HƠN === */}
+        {/* === TAB 2: SERVICES=== */}
         {/* ===================================== */}
         <TabsContent value="service" className="mt-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -155,12 +164,20 @@ export function BookingInfoPage() {
                         <h2 className="text-3xl font-bold mb-1">Take Control of Your Health</h2>
                         <p className="text-blue-200/90">Booking is simple, secure, and the first step to proactive care.</p>
                     </div>
-                    <div className="flex-shrink-0 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    <div className="flex-shrink-0 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
                         <Link to="/book-service" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-[#1A3973] rounded-full px-6 py-3 font-bold uppercase hover:bg-gray-200 transition-colors">
                             <CalendarDays size={20}/> Book Now
                         </Link>
-                        <Link to="/services" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-transparent border-2 border-white/60 rounded-full px-6 py-3 font-bold uppercase text-sm hover:bg-white/10 transition-colors">
+
+                        <Link to="/services" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-transparent border-2 border-white/60 hover:bg-white/10 rounded-full px-6 py-3 font-bold uppercase text-sm transition-colors">
                             <Users size={18}/> View All
+                        </Link>
+
+                        <Link 
+                            to="/cycles" 
+                            className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white/10 hover:bg-white/20 text-white rounded-full px-6 py-3 font-bold uppercase text-sm transition-colors"
+                        >
+                            <ClipboardList size={18}/> Diagnosis
                         </Link>
                     </div>
                 </div>
