@@ -1,18 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import logo from '@/assets/images/logo1.png'
+import logo from '/images/logo2.webp'
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa'
 
 const Footer: React.FC = () => {
   const currentUrl = encodeURIComponent(window.location.href)
+  const toTop = () => {
+    window.scrollTo(0, 0)
+  }
 
   return (
     <footer className='bg-[#1A2250] px-6 pt-16 pb-8 text-white'>
       <div className='mx-auto max-w-7xl'>
         {/* Main Footer Content */}
-        <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-12'>
+        <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-10 xl:gap-12'>
           {/* Company Info */}
-          <div>
+          <div className='lg:pr-4'>
             <div className='mb-4 flex items-center gap-3'>
               <img src={logo} alt='Care4Gender Logo' className='h-12 w-12 object-contain' />
               <div>
@@ -60,77 +63,62 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className='lg:pr-2 lg:pl-22'>
             <h3 className='mb-4 font-semibold text-white'>Quick Links</h3>
             <ul className='space-y-3 text-sm text-gray-300'>
               <li>
-                <Link to='/' className='transition-colors duration-200 hover:text-white'>
-                  + Home
+                <Link onClick={toTop} to='/' className='transition-colors duration-200 hover:text-white'>
+                  Home
                 </Link>
               </li>
               <li>
-                <Link to='/doctors' className='transition-colors duration-200 hover:text-white'>
-                  + Find Specialist
+                <Link onClick={toTop} to='/blogs' className='transition-colors duration-200 hover:text-white'>
+                  Health Articles
                 </Link>
               </li>
               <li>
-                <Link to='/services' className='transition-colors duration-200 hover:text-white'>
-                  + Book Service
+                <Link onClick={toTop} to='/about-us' className='transition-colors duration-200 hover:text-white'>
+                  About Us
                 </Link>
               </li>
               <li>
-                <Link to='/blog' className='transition-colors duration-200 hover:text-white'>
-                  + Health Articles
-                </Link>
-              </li>
-              <li>
-                <Link to='/about' className='transition-colors duration-200 hover:text-white'>
-                  + About Us
+                <Link onClick={toTop} to='/ask-question' className='transition-colors duration-200 hover:text-white'>
+                  Ask a Question
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Our Services */}
-          <div>
+          <div className='lg:pr-6 lg:pl-2'>
             <h3 className='mb-4 font-semibold text-white'>Our Services</h3>
             <ul className='space-y-3 text-sm text-gray-300'>
               <li>
-                <Link to='/doctors' className='transition-colors duration-200 hover:text-white'>
-                  + Sexual Health Consultation
+                <Link onClick={toTop} to='/book-consultant' className='transition-colors duration-200 hover:text-white'>
+                  Sexual Health Consultation
                 </Link>
               </li>
               <li>
-                <Link to='/services' className='transition-colors duration-200 hover:text-white'>
-                  + Reproductive Health Care
+                <Link onClick={toTop} to='/services' className='transition-colors duration-200 hover:text-white'>
+                  Reproductive Health Care
                 </Link>
               </li>
               <li>
-                <Link to='/doctors' className='transition-colors duration-200 hover:text-white'>
-                  + Online Consultation
-                </Link>
-              </li>
-              <li>
-                <Link to='/services' className='transition-colors duration-200 hover:text-white'>
-                  + Health Screening
-                </Link>
-              </li>
-              <li>
-                <Link to='/doctors' className='transition-colors duration-200 hover:text-white'>
-                  + Expert Advice
+                <Link onClick={toTop} to='/book-service' className='transition-colors duration-200 hover:text-white'>
+                  Book an STIS Test
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Payment Partner */}
-          <div>
+          <div className='lg:pl-4'>
             <h3 className='mb-4 font-semibold text-white'>Payment Partner</h3>
             <div className='mb-4'>
               <img
                 src='https://payos.vn/docs/img/logo.svg'
                 alt='PayOS Logo'
-                className='h-12 rounded bg-white object-contain px-1 py-1'
+                className='h-12 rounded bg-white object-contain'
                 onError={(e) => {
                   const target = e.target as HTMLImageElement
                   target.src =
@@ -155,47 +143,48 @@ const Footer: React.FC = () => {
 
         {/* Bottom Section */}
         <div className='mt-12 border-t border-gray-600 pt-8'>
-          <div className='flex flex-col items-center justify-between gap-6 lg:flex-row'>
+          <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-10 xl:gap-12'>
             {/* Copyright */}
-            <div className='text-center lg:text-left'>
-              <p className='text-sm text-gray-400'>
+            <div className='lg:pr-4'>
+              <p className='text-sm whitespace-nowrap text-gray-400'>
                 Copyright © 2025 <span className='font-semibold text-red-400'>Care4Gender</span>. All Rights Reserved.
               </p>
             </div>
 
-            {/* Center Content */}
-            <div className='flex flex-col items-center gap-4 sm:flex-row sm:gap-6'>
-              <p className='text-center text-sm font-semibold text-white'>
+            {/* Tagline */}
+            <div className='lg:pr-2 lg:pl-12'>
+              <p className='text-sm font-semibold whitespace-nowrap text-white'>
                 Your Health, Our Priority - Professional Care Anytime
               </p>
+            </div>
 
-              <div className='flex items-center gap-3 text-sm text-white'>
-                <img src={logo} alt='Care4Gender Logo' className='h-8 w-8 object-contain' />
-                <div className='text-center sm:text-left'>
-                  <p className='text-xs font-semibold'>Available 7AM - 5PM</p>
-                  <p className='text-xs text-gray-300'>Online Consultation</p>
-                </div>
+            {/* Operating Hours & Logo */}
+            <div className='flex items-center justify-center gap-3 text-sm text-white lg:justify-end lg:pr-6 lg:pl-2'>
+              <img src={logo} alt='Care4Gender Logo' className='h-8 w-8 flex-shrink-0 object-contain' />
+              <div className='text-center lg:text-right'>
+                <p className='text-xs font-semibold whitespace-nowrap'>Available 7AM - 5PM</p>
+                <p className='text-xs whitespace-nowrap text-gray-300'>Online Consultation</p>
               </div>
             </div>
 
             {/* Social Share */}
-            <div className='flex items-center gap-4'>
-              <span className='text-sm text-gray-400'>Share:</span>
+            <div className='flex items-center justify-start gap-4 lg:pl-4'>
+              <span className='text-sm whitespace-nowrap text-gray-400'>Share:</span>
               <div className='flex items-center gap-3'>
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='p-1 text-gray-400 transition-colors duration-200 hover:text-blue-400'
+                  className='rounded-full p-2 text-gray-400 transition-colors duration-200 hover:bg-blue-400/10 hover:text-blue-400'
                   title='Share on Facebook'
                 >
                   <FaFacebookF size={16} />
                 </a>
                 <a
-                  href={`https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent('Check out Care4Gender - Professional Gender Healthcare Services!')}`}
+                  href={`https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent('Check out Care4Gender - Professional Care Anytime!')}`}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='p-1 text-gray-400 transition-colors duration-200 hover:text-blue-300'
+                  className='rounded-full p-2 text-gray-400 transition-colors duration-200 hover:bg-blue-300/10 hover:text-blue-300'
                   title='Share on Twitter'
                 >
                   <FaTwitter size={16} />
@@ -204,7 +193,7 @@ const Footer: React.FC = () => {
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='p-1 text-gray-400 transition-colors duration-200 hover:text-blue-500'
+                  className='rounded-full p-2 text-gray-400 transition-colors duration-200 hover:bg-blue-500/10 hover:text-blue-500'
                   title='Share on LinkedIn'
                 >
                   <FaLinkedinIn size={16} />

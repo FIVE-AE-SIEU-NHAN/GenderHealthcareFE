@@ -11,6 +11,7 @@ interface PaginationProps {
   className?: string
   maxPageButtons?: number
   showJump?: boolean
+  toTop?: boolean
 }
 
 export function Pagination({
@@ -19,28 +20,39 @@ export function Pagination({
   onPageChange,
   className = '',
   maxPageButtons = 3,
-  showJump = true
+  showJump = true,
+  toTop = false
 }: PaginationProps) {
   const [jumpPage, setJumpPage] = useState('')
 
   const safeTotalPages = Math.max(totalPages, 1)
   const safeCurrentPage = Math.max(1, Math.min(currentPage, safeTotalPages))
 
+  const handlePageChange = useCallback(
+    (page: number) => {
+      onPageChange(page)
+      if (toTop) {
+        window.scrollTo(0, 0)
+      }
+    },
+    [onPageChange, toTop]
+  )
+
   const handlePrev = useCallback(() => {
-    if (safeCurrentPage > 1) onPageChange(safeCurrentPage - 1)
-  }, [safeCurrentPage, onPageChange])
+    if (safeCurrentPage > 1) handlePageChange(safeCurrentPage - 1)
+  }, [safeCurrentPage, handlePageChange])
 
   const handleNext = useCallback(() => {
-    if (safeCurrentPage < safeTotalPages) onPageChange(safeCurrentPage + 1)
-  }, [safeCurrentPage, safeTotalPages, onPageChange])
+    if (safeCurrentPage < safeTotalPages) handlePageChange(safeCurrentPage + 1)
+  }, [safeCurrentPage, safeTotalPages, handlePageChange])
 
   const handleJump = useCallback(() => {
     const num = Number(jumpPage)
     if (!Number.isNaN(num) && num >= 1 && num <= safeTotalPages) {
-      onPageChange(num)
+      handlePageChange(num)
       setJumpPage('')
     }
-  }, [jumpPage, safeTotalPages, onPageChange])
+  }, [jumpPage, safeTotalPages, handlePageChange])
 
   const pageNumbers = useMemo(() => {
     const pages: (number | '...')[] = []
@@ -100,7 +112,7 @@ export function Pagination({
               key={`page-${p}`}
               size='sm'
               variant={p === safeCurrentPage ? 'default' : 'outline'}
-              onClick={() => onPageChange(p)}
+              onClick={() => handlePageChange(p)}
               className='w-9'
               aria-label={`Go to page ${p}`}
             >

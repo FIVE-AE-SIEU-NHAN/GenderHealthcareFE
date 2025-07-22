@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap');
 
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 
 @import 'tw-animate-css';
 
@@ -36,6 +37,23 @@ body {
   --animate-accordion-up: accordion-up 0.3s ease-in;
   --animate-fade-in-zoom: fadeInScale 0.3s ease-out;
   --animate-fade-out-zoom: fadeOutScale 0.3s ease-in;
+  --animate-blob: blob 8s infinite;
+
+  @keyframes blob {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(20px, -30px) scale(1.1);
+    }
+    50% {
+      transform: translate(0, 40px) scale(0.9);
+    }
+    75% {
+      transform: translate(-30px, -20px) scale(1.05);
+    }
+  }
 
   @keyframes accordion-down {
     0% {

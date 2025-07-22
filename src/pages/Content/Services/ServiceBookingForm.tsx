@@ -14,35 +14,98 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { timeSlotOptions } from '@/Application/constants/appointment'
 import { CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
+import { cn } from '@/lib/utils'
 
-// Updated STIS Testing Packages with gender and level
 export const STIS_TESTING_PACKAGES = [
-  { value: 'basic-men', label: 'Basic package for men', price: 500000, gender: 'male', level: 'basic' },
-  { value: 'advanced-men', label: 'Advanced package for men', price: 950000, gender: 'male', level: 'advanced' },
-  { value: 'basic-women', label: 'Basic package for women', price: 500000, gender: 'female', level: 'basic' },
-  { value: 'advanced-women', label: 'Advanced package for women', price: 1100000, gender: 'female', level: 'advanced' }
+  {
+    value: 'basic-men',
+    label: 'Basic package for men',
+    price: 500000,
+    gender: 'male',
+    level: 'basic',
+    services: [
+      { id: 'hiv_test', label: 'HIV test' },
+      { id: 'syphilis_test', label: 'Syphilis test' },
+      { id: 'gonorrhea_test', label: 'Gonorrhea test' },
+      { id: 'chlamydia_test', label: 'Chlamydia test' }
+    ]
+  },
+  {
+    value: 'advanced-men',
+    label: 'Advanced package for men',
+    price: 950000,
+    gender: 'male',
+    level: 'advanced',
+    services: [
+      { id: 'hiv_test', label: 'HIV test' },
+      { id: 'syphilis_test', label: 'Syphilis test' },
+      { id: 'gonorrhea_test', label: 'Gonorrhea test' },
+      { id: 'chlamydia_test', label: 'Chlamydia test' },
+      { id: 'herpes_test', label: 'Herpes test' },
+      { id: 'hepatitis_b_test', label: 'Hepatitis B test' },
+      { id: 'hepatitis_c_test', label: 'Hepatitis C test' },
+      { id: 'mycoplasma_test', label: 'Mycoplasma test' }
+    ]
+  },
+  {
+    value: 'basic-women',
+    label: 'Basic package for women',
+    price: 500000,
+    gender: 'female',
+    level: 'basic',
+    services: [
+      { id: 'hiv_test', label: 'HIV test' },
+      { id: 'syphilis_test', label: 'Syphilis test' },
+      { id: 'gonorrhea_test', label: 'Gonorrhea test' },
+      { id: 'chlamydia_test', label: 'Chlamydia test' }
+    ]
+  },
+  {
+    value: 'advanced-women',
+    label: 'Advanced package for women',
+    price: 1100000,
+    gender: 'female',
+    level: 'advanced',
+    services: [
+      { id: 'hiv_test', label: 'HIV test' },
+      { id: 'syphilis_test', label: 'Syphilis test' },
+      { id: 'gonorrhea_test', label: 'Gonorrhea test' },
+      { id: 'chlamydia_test', label: 'Chlamydia test' },
+      { id: 'hpv_test', label: 'HPV test' },
+      { id: 'herpes_test', label: 'Herpes test' },
+      { id: 'hepatitis_b_test', label: 'Hepatitis B test' },
+      { id: 'hepatitis_c_test', label: 'Hepatitis C test' },
+      { id: 'trichomonas_test', label: 'Trichomonas test' }
+    ]
+  }
 ]
 
-// Form validation schema (no changes needed here)
+const MAX_NOTE_LENGTH = 500
+const MIN_NOTE_LENGTH = 20
+
 export const formSchema = z.object({
   topic: z.string({ required_error: 'Please select a testing package.' }).min(1, 'Please select a testing package.'),
   booking_date: z.date({ required_error: 'Please select a date.' }),
   time_slot: z.string({ required_error: 'Please select a time slot.' }).min(1, 'Please select a time slot.'),
   note: z
     .string()
-    .trim()
+    .max(MAX_NOTE_LENGTH, { message: `Note cannot exceed ${MAX_NOTE_LENGTH} characters.` })
     .refine(
       (value) => {
-        if (!value) return true
-        const wordCount = value.split(/\s+/).filter((word) => word.length > 0).length
-        return wordCount >= 8 && wordCount <= 50
+        if (!value || value.trim() === '') return true
+        return value.trim().length >= MIN_NOTE_LENGTH
       },
       {
-        message: 'The note must be between 8 and 50 words.'
+        message: `If provided, the note must be at least ${MIN_NOTE_LENGTH} characters.`
       }
-    ),
+    )
+    .optional()
+    .or(z.literal('')),
   agreed: z.boolean().refine((val) => val === true, {
     message: 'You must agree to the terms of use.'
+  }),
+  selected_services: z.array(z.string()).min(1, {
+    message: 'Please select at least one service.'
   })
 })
 
@@ -63,18 +126,26 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
   const selectedTopicValue = form.watch('topic')
   const selectedDateValue = form.watch('booking_date')
   const selectedTimeSlotValue = form.watch('time_slot')
+  const watchedNote = form.watch('note')
 
   const getSelectedPackage = () => STIS_TESTING_PACKAGES.find((p) => p.value === selectedTopicValue)
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find((t) => t.value === selectedTimeSlotValue)?.label
 
+  React.useEffect(() => {
+    if (selectedTopicValue) {
+      form.setValue('selected_services', [])
+    }
+  }, [selectedTopicValue, form])
+
   return (
-    <div className='relative z-10 flex w-full justify-center'>
+    <div className='relative z-10 flex w-full justify-center py-16'>
       <div className='w-full max-w-3xl px-4 md:px-0'>
         <div className='mb-12 text-center'>
           <CardTitle className='mb-3 text-4xl font-bold text-[#1A3973] md:text-5xl'>Services Booking</CardTitle>
           <div className='mx-auto h-1 w-60 bg-gradient-to-r from-[#1A3973] to-[#4F80E1]'></div>
         </div>
-        <div className='rounded-2xl border border-gray-200 bg-white p-8 text-black shadow-xl transition-all duration-300'>
+
+        <div className='rounded-2xl border border-gray-200 bg-white p-8 text-black shadow-xl'>
           <div className='mb-6 text-center'>
             <div className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#1A3973] p-3 shadow-sm'>
               <FaHeartbeat className='text-3xl text-white' />
@@ -111,6 +182,53 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                   </FormItem>
                 )}
               />
+
+              <div
+                className={cn(
+                  'overflow-hidden transition-all duration-500 ease-in-out',
+                  getSelectedPackage() ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+                )}
+              >
+                <FormField
+                  control={form.control}
+                  name='selected_services'
+                  render={() => (
+                    <FormItem className='rounded-lg border border-blue-200 bg-blue-50/50 p-4'>
+                      <div className='mb-4'>
+                        <FormLabel className='text-base font-semibold text-[#1A3973]'>Services Included</FormLabel>
+                        <p className='text-sm text-gray-600'>Please select the services you wish to have.</p>
+                      </div>
+                      <div className='grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2'>
+                        {getSelectedPackage()?.services.map((service) => (
+                          <FormField
+                            key={service.id}
+                            control={form.control}
+                            name='selected_services'
+                            render={({ field }) => (
+                              <FormItem className='flex flex-row items-center space-y-0 space-x-3'>
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(service.id)}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([...(field.value || []), service.id])
+                                        : field.onChange(field.value?.filter((value) => value !== service.id))
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className='cursor-pointer font-normal text-gray-800'>
+                                  {service.label}
+                                </FormLabel>
+                              </FormItem>
+                            )}
+                          />
+                        ))}
+                      </div>
+                      <FormMessage className='mt-3' />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <div className='grid grid-cols-2 gap-2'>
                 <FormField
@@ -172,6 +290,7 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                 />
               </div>
 
+              {/* === KHỐI GHI CHÚ ĐÃ ĐƯỢC SỬA LẠI === */}
               <FormField
                 control={form.control}
                 name='note'
@@ -180,16 +299,28 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                     <FormLabel>Note for the Specialist (Optional)</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder='Please describe any relevant information... (8-50 words)'
+                        placeholder={`Please describe any relevant information...`}
                         className='h-30 resize-none'
                         disabled={isPending}
+                        maxLength={MAX_NOTE_LENGTH + 5}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <div className='mt-2 flex h-5 items-start'>
+                      <FormMessage />
+                      <p
+                        className={cn(
+                          'ml-auto text-sm', // Đã thêm ml-auto để đẩy sang phải
+                          (watchedNote?.length || 0) > MAX_NOTE_LENGTH ? 'font-bold text-red-500' : 'text-slate-400'
+                        )}
+                      >
+                        {`${watchedNote?.length || 0} / ${MAX_NOTE_LENGTH}`}
+                      </p>
+                    </div>
                   </FormItem>
                 )}
               />
+              {/* === KẾT THÚC KHỐI CHỈNH SỬA === */}
 
               {getSelectedPackage() && (
                 <div className='mt-4 rounded-md bg-blue-50 p-4'>
@@ -250,7 +381,7 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                 <Button
                   type='submit'
                   disabled={isPending}
-                  className='group relative w-full cursor-pointer overflow-hidden rounded-lg bg-gradient-to-r from-[#1A3973] to-[#4F80E1] py-3 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-[#15305f] hover:to-[#3a6ad0] hover:shadow-xl'
+                  className='group relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-[#1A3973] to-[#4F80E1] py-3 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-[#15305f] hover:to-[#3a6ad0] hover:shadow-xl'
                 >
                   <span className='absolute inset-0 h-full w-full -translate-x-full -skew-x-12 bg-white/10 transition-transform duration-700 group-hover:translate-x-full'></span>
                   <div className='relative flex items-center justify-center'>

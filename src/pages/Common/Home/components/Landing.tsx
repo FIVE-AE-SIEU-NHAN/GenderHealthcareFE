@@ -69,34 +69,40 @@ const Home: React.FC = () => {
               }}
             />
             <div className='absolute inset-0 z-10 bg-black/50' /> {/* Màu nền tối */}
-            {/* Content container */}
-            <div className='relative z-20 flex h-full max-w-3xl flex-col justify-center space-y-8 pr-4 pl-6 text-white lg:pl-25'>
-              <div className='space-y-6'>
-                <h3 className='text-left text-3xl leading-[0.9] font-black text-shadow-lg sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl'>
-                  {slide.heading}
-                </h3>
-                <h1 className='text-left text-xl leading-tight font-semibold opacity-95 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'>
-                  {slide.title}
-                </h1>
-                <p className='max-w-2xl text-left text-base leading-relaxed font-light opacity-90 sm:text-lg md:text-xl lg:text-2xl'>
-                  {slide.description}
-                </p>
-              </div>
-            </div>
-            {/* Fixed position buttons */}
-            <div className='absolute bottom-20 left-6 z-30 lg:left-25'>
-              <div className='flex flex-wrap gap-4 sm:gap-6'>
-                {slide.buttons.map((button, btnIndex) => (
-                  <Link
-                    onClick={ToTop}
-                    key={btnIndex}
-                    to={button.link}
-                    className={`rounded-xl px-6 py-3 text-sm font-semibold shadow-lg transition-all duration-300 sm:px-8 sm:py-4 sm:text-base lg:text-lg ${button.color} transform hover:scale-105 hover:shadow-xl`}
-                  >
-                    {button.text}
-                    <FaArrowRightLong className='ml-2 inline-block sm:ml-4' />
-                  </Link>
-                ))}
+            {/* Content container - Centered vertically */}
+            <div className='relative z-20 flex h-full flex-col justify-center py-20 pr-4 pl-6 text-white lg:pl-25'>
+              <div className='max-w-3xl'>
+                {/* Text Content + Buttons together */}
+                <div className='space-y-4'>
+                  <div className='space-y-6'>
+                    <h3 className='text-left text-3xl leading-[0.9] font-black text-shadow-lg sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl'>
+                      {slide.heading}
+                    </h3>
+                    <h1 className='text-left text-xl leading-tight font-semibold opacity-95 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'>
+                      {slide.title}
+                    </h1>
+                    <p className='max-w-2xl text-left text-base leading-relaxed font-light opacity-90 sm:text-lg md:text-xl lg:text-2xl'>
+                      {slide.description}
+                    </p>
+                  </div>
+
+                  {/* Buttons - Fixed position with short gap */}
+                  <div className='pt-4'>
+                    <div className='flex flex-wrap gap-4 sm:gap-6'>
+                      {slide.buttons.map((button, btnIndex) => (
+                        <Link
+                          onClick={ToTop}
+                          key={btnIndex}
+                          to={button.link}
+                          className={`rounded-xl px-6 py-3 text-sm font-semibold shadow-lg transition-all duration-300 sm:px-8 sm:py-4 sm:text-base lg:text-lg ${button.color} transform hover:scale-105 hover:shadow-xl`}
+                        >
+                          {button.text}
+                          <FaArrowRightLong className='ml-2 inline-block sm:ml-4' />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </SwiperSlide>

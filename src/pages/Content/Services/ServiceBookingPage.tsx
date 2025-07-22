@@ -147,7 +147,13 @@ const ServiceBookingPage = () => {
   }
 
   return (
-    <div className="relative flex items-center justify-center bg-[url('https://benhviengreen.com/wp-content/uploads/2016/05/doctor-health-wellness-1200x480.jpg')] bg-cover bg-center bg-no-repeat bg-blend-overlay max-[1125px]:min-h-[90vh] min-[1125px]:min-h-[94vh]">
+    <div className='relative flex items-center justify-center overflow-hidden bg-gray-300 max-[1125px]:min-h-[90vh] min-[1125px]:min-h-[94vh]'>
+      {/* Background Blobs */}
+      <div className='absolute top-0 left-0 z-0 h-full w-full'>
+        <div className='animate-blob absolute top-14 left-3/4 h-96 w-96 rounded-full bg-blue-200 opacity-40 blur-3xl filter'></div>
+        <div className='animate-blob animation-delay-2000 absolute h-96 w-96 rounded-full bg-purple-200 opacity-40 blur-3xl filter'></div>
+        <div className='animate-blob animation-delay-4000 absolute bottom-1/4 left-1/3 h-96 w-96 rounded-full bg-pink-200 opacity-40 blur-3xl filter'></div>
+      </div>
       <div className='absolute inset-0 z-0 bg-white/40 backdrop-blur-sm'></div>
       <ServicesBookingForm onSubmit={onSubmit} isPending={bookService.isPending} form={form} />
 

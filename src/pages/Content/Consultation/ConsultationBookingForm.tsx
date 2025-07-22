@@ -47,9 +47,11 @@ interface AppointmentFormProps {
 }
 
 export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPending, form }) => {
-  const today = new Date(new Date().setHours(0, 0, 0, 0))
-  const maxDate = new Date(today)
-  maxDate.setMonth(maxDate.getMonth() + 2) // Allow booking up to 2 months in advance
+  const minDate = new Date()
+  minDate.setDate(minDate.getDate() + 2) // Allow booking from 2 days in advance
+  minDate.setHours(0, 0, 0, 0)
+  const maxDate = new Date()
+  maxDate.setMonth(maxDate.getMonth() + 2)
 
   const selectedTopicValue = form.watch('topic')
   const selectedDateValue = form.watch('booking_date')
@@ -131,7 +133,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                             mode='single'
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) => date < today || date > maxDate || date.getDay() === 0}
+                            disabled={(date) => date < minDate || date > maxDate || date.getDay() === 0}
                             autoFocus
                           />
                         </PopoverContent>

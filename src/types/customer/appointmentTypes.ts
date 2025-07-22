@@ -22,7 +22,7 @@ export interface BookServicesPayload {
   target_gender: string
   booking_date: string
   time_slot: string
-  note: string
+  note?: string
 }
 
 /**

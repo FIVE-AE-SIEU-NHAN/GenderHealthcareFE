@@ -125,7 +125,7 @@ const BlogPage: React.FC = () => {
   const otherBlogs = blogs.slice(1)
 
   return (
-    <div className='font-inter bg-gray-100 text-gray-800'>
+    <div className='font-inter min-h-[calc(100dvh-64px)] bg-gray-100 text-gray-800'>
       {/* Banner */}
       <section className="relative flex h-[150px] flex-col items-center justify-center bg-[url('@/assets/images/blog1.webp')] bg-cover bg-center py-12 text-center">
         <h2 className='text-5xl font-bold text-white'>Our Blogs</h2>
@@ -203,6 +203,7 @@ const BlogPage: React.FC = () => {
           totalPages={totalPages}
           onPageChange={setPage}
           showJump={false}
+          toTop={true}
           className='flex w-full items-center justify-center px-16'
         />
       </div>

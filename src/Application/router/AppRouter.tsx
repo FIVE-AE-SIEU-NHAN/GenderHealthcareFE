@@ -19,11 +19,11 @@ import ForgotPassword from '@/pages/Auth/ForgotPassword/ForgotPassword'
 import NotFound from '@/pages/Common/NotFound'
 import { Toaster } from '@/components/ui/sonner'
 import BookingInfoPage from '@/pages/Content/Services/BookingInfo'
-import About from '@/pages/Common/Home/components/About'
 import ServiceList from '@/pages/Content/Services/ServiceList'
 import ServiceDetail from '@/pages/Content/Services/ServiceDetails'
 import BlogPage from '@/pages/Content/Blog/BlogList'
 import FloatingButtons from '@/components/layouts/FloatingButtons/FloatingButtons'
+import AboutUsPage from '@/pages/Common/AboutUs'
 
 export default function AppRouter() {
   return (
@@ -37,7 +37,7 @@ export default function AppRouter() {
         <Route element={<PublicLayout />}>
           <Route path='/' element={<HomePage />} />
           <Route path='/booking-info' element={<BookingInfoPage />} />
-          <Route path='/about-us' element={<About />} />
+          <Route path='/about-us' element={<AboutUsPage />} />
           <Route path='/services' element={<ServiceList />} />
           <Route path='/service-details' element={<ServiceDetail />} />
           <Route path='/blogs' element={<BlogPage />} />
