@@ -98,18 +98,28 @@ export function BookingInfoPage() {
             </div>
 
             {/* CARD QUY TRÌNH */}
+                        {/* CARD QUY TRÌNH */}
             <div className="rounded-2xl p-8 bg-white shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-center gap-3 mb-4 text-[#1A3973]">
                     <ListOrdered />
                     <h3 className="text-xl font-bold">How It Works</h3>
                 </div>
-                <ol className="relative border-l border-gray-200 space-y-8 pl-6">
-                    <li><h4 className="font-semibold -ml-6 mb-1">1. Book Securely</h4><p className="text-sm text-gray-500 -ml-6">Choose a time that fits your schedule through our confidential online portal.</p></li>
-                    <li><h4 className="font-semibold -ml-6 mb-1">2. Connect & Share</h4><p className="text-sm text-gray-500 -ml-6">Engage in a one-on-one video or phone call with your dedicated specialist.</p></li>
-                    <li><h4 className="font-semibold -ml-6 mb-1">3. Receive Your Plan</h4><p className="text-sm text-gray-500 -ml-6">Get a personalized summary and clear next steps sent directly to you.</p></li>
+                {/* Thay thế <ol> và <li> bên dưới */}
+                <ol className="relative space-y-6"> {/* Bỏ border-l, pl-6. Giảm space-y một chút */}
+                    <li>
+                        <h4 className="font-semibold mb-1">1. Book Securely</h4>
+                        <p className="text-sm text-gray-500">Choose a time that fits your schedule through our confidential online portal.</p>
+                    </li>
+                    <li>
+                        <h4 className="font-semibold mb-1">2. Connect & Share</h4>
+                        <p className="text-sm text-gray-500">Engage in a one-on-one video or phone call with your dedicated specialist.</p>
+                    </li>
+                    <li>
+                        <h4 className="font-semibold mb-1">3. Receive Your Plan</h4>
+                        <p className="text-sm text-gray-500">Get a personalized summary and clear next steps sent directly to you.</p>
+                    </li>
                 </ol>
             </div>
-
             {/* CARD CTA LỚN */}
             <div className="lg:col-span-2 relative rounded-2xl p-8 bg-gradient-to-br from-[#1A3973] to-[#122850] text-white shadow-xl shadow-blue-900/20 transition-all duration-300 hover:shadow-2xl flex flex-col items-center text-center justify-center">
                  <SubtleGridPattern />
