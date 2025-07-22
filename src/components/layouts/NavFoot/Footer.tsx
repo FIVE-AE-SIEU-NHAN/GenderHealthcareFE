@@ -17,9 +17,9 @@ const Footer: React.FC = () => {
     <footer className="bg-[#1A2250] text-white pt-16 pb-8 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 xl:gap-12">
           {/* Company Info */}
-          <div>
+          <div className="lg:pr-4">
             <div className="flex items-center gap-3 mb-4">
               <img
                 src={logo}
@@ -76,56 +76,56 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="lg:pl-12 lg:pr-2">
             <h3 className="font-semibold text-white mb-4">Quick Links</h3>
             <ul className="space-y-3 text-sm text-gray-300">
               <li>
                 <Link to="/" className="hover:text-white transition-colors duration-200">
-                  + Home
+                  Home
                 </Link>
               </li>
               <li>
                 <Link to="/blogs" className="hover:text-white transition-colors duration-200">
-                  + Health Articles
+                  Health Articles
                 </Link>
               </li>
               <li>
                 <Link to="/about-us" className="hover:text-white transition-colors duration-200">
-                  + About Us
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link to="/ask-question" className="hover:text-white transition-colors duration-200">
-                  + Ask a Question
+                  Ask a Question
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Our Services */}
-          <div>
+          <div className="lg:pl-2 lg:pr-6">
             <h3 className="font-semibold text-white mb-4">Our Services</h3>
             <ul className="space-y-3 text-sm text-gray-300">
               <li>
                 <Link to="/book-consultant" className="hover:text-white transition-colors duration-200">
-                  + Sexual Health Consultation
+                  Sexual Health Consultation
                 </Link>
               </li>
               <li>
                 <Link to="/services" className="hover:text-white transition-colors duration-200">
-                  + Reproductive Health Care
+                  Reproductive Health Care
                 </Link>
-              </li>            
+              </li>
               <li>
                 <Link to="/book-service" className="hover:text-white transition-colors duration-200">
-                  + Book an STIS Test
+                  Book an STIS Test
                 </Link>
-              </li>            
+              </li>
             </ul>
           </div>
 
           {/* Payment Partner */}
-          <div>
+          <div className="lg:pl-4">
             <h3 className="font-semibold text-white mb-4">Payment Partner</h3>
             <div className="mb-4">
               <img
@@ -154,51 +154,52 @@ const Footer: React.FC = () => {
 
         {/* Bottom Section */}
         <div className="border-t border-gray-600 mt-12 pt-8">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 xl:gap-12">
             {/* Copyright */}
-            <div className="text-center lg:text-left">
-              <p className="text-sm text-gray-400">
+            <div className="lg:pr-4">
+              <p className="text-sm text-gray-400 whitespace-nowrap">
                 Copyright © 2025 <span className="text-red-400 font-semibold">Care4Gender</span>. All Rights Reserved.
               </p>
             </div>
 
-            {/* Center Content */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-              <p className="text-white font-semibold text-sm text-center">
+            {/* Tagline */}
+            <div className="lg:pl-12 lg:pr-2">
+              <p className="text-white font-semibold text-sm whitespace-nowrap">
                 Your Health, Our Priority - Professional Care Anytime
               </p>
+            </div>
 
-              <div className="flex items-center gap-3 text-sm text-white">
-                <img
-                  src={logo}
-                  alt="Care4Gender Logo"
-                  className="w-8 h-8 object-contain"
-                />
-                <div className="text-center sm:text-left">
-                  <p className="text-xs font-semibold">Available 7AM - 5PM</p>
-                  <p className="text-xs text-gray-300">Online Consultation</p>
-                </div>
+            {/* Operating Hours & Logo */}
+            <div className="lg:pl-2 lg:pr-6 flex items-center justify-center lg:justify-end gap-3 text-sm text-white">
+              <img
+                src={logo}
+                alt="Care4Gender Logo"
+                className="w-8 h-8 object-contain flex-shrink-0"
+              />
+              <div className="text-center lg:text-right">
+                <p className="text-xs font-semibold whitespace-nowrap">Available 7AM - 5PM</p>
+                <p className="text-xs text-gray-300 whitespace-nowrap">Online Consultation</p>
               </div>
             </div>
 
             {/* Social Share */}
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-400">Share:</span>
+            <div className="lg:pl-4 flex items-center justify-start gap-4">
+              <span className="text-sm text-gray-400 whitespace-nowrap">Share:</span>
               <div className="flex items-center gap-3">
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-400 transition-colors duration-200 p-1"
+                  className="text-gray-400 hover:text-blue-400 transition-colors duration-200 p-2 hover:bg-blue-400/10 rounded-full"
                   title="Share on Facebook"
                 >
                   <FaFacebookF size={16} />
                 </a>
                 <a
-                  href={`https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent("Check out Care4Gender - Professional Gender Healthcare Services!")}`}
+                  href={`https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent("Check out Care4Gender - Professional Care Anytime!")}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-300 transition-colors duration-200 p-1"
+                  className="text-gray-400 hover:text-blue-300 transition-colors duration-200 p-2 hover:bg-blue-300/10 rounded-full"
                   title="Share on Twitter"
                 >
                   <FaTwitter size={16} />
@@ -207,7 +208,7 @@ const Footer: React.FC = () => {
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-500 transition-colors duration-200 p-1"
+                  className="text-gray-400 hover:text-blue-500 transition-colors duration-200 p-2 hover:bg-blue-500/10 rounded-full"
                   title="Share on LinkedIn"
                 >
                   <FaLinkedinIn size={16} />
