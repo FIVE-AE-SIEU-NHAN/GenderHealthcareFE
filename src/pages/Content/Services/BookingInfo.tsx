@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FaHeartbeat } from "react-icons/fa";
 
 // --- Dữ liệu dịch vụ được mở rộng ---
 const serviceCategories = [
@@ -125,9 +126,9 @@ export function BookingInfoPage() {
                  <div className="relative z-10">
                     <h2 className="text-4xl font-extrabold mb-3">Ready to Gain Clarity?</h2>
                     <p className="text-blue-200/80 max-w-md mx-auto mb-8">Take the first step towards peace of mind. Our specialists are waiting to help.</p>
-                    <Link to="/book-consultant" className="inline-flex items-center justify-center gap-3 bg-white text-[#1A3973] rounded-full px-8 py-4 font-bold uppercase text-lg hover:bg-gray-200 transition-colors">
-                        <PhoneCall size={20}/>
-                        Book a Consultation
+                    <Link to="/book-consultant" className="inline-flex items-center justify-center gap-2 bg-white text-[#1A3973] rounded-full px-8 py-4 font-bold text-xl hover:bg-gray-200 transition-colors">
+                        <FaHeartbeat />
+                        <span>Book Consultant</span>
                     </Link>
                  </div>
             </div>
@@ -165,17 +166,17 @@ export function BookingInfoPage() {
                         <p className="text-blue-200/90">Booking is simple, secure, and the first step to proactive care.</p>
                     </div>
                     <div className="flex-shrink-0 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                        <Link to="/book-service" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-[#1A3973] rounded-full px-6 py-3 font-bold uppercase hover:bg-gray-200 transition-colors">
-                            <CalendarDays size={20}/> Book Now
+                        <Link to="/book-service" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-[#1A3973] rounded-full px-6 py-3 font-bold text-lg hover:bg-gray-200 transition-colors">
+                            <><FaHeartbeat/><span>Book Service</span></>
                         </Link>
 
-                        <Link to="/services" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-transparent border-2 border-white/60 hover:bg-white/10 rounded-full px-6 py-3 font-bold uppercase text-sm transition-colors">
+                        <Link to="/services" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-transparent border-2 border-white/60 hover:bg-white/10 rounded-full px-6 py-3 font-bold text-lg transition-colors">
                             <Users size={18}/> View All
                         </Link>
 
                         <Link 
                             to="/cycles" 
-                            className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white/10 hover:bg-white/20 text-white rounded-full px-6 py-3 font-bold uppercase text-sm transition-colors"
+                            className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white/10 hover:bg-white/20 text-white rounded-full px-6 py-3 font-bold text-lg transition-colors"
                         >
                             <ClipboardList size={18}/> Diagnosis
                         </Link>

@@ -111,23 +111,21 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
   const getSelectedPackage = () => STIS_TESTING_PACKAGES.find(p => p.value === selectedTopicValue);
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find(t => t.value === selectedTimeSlotValue)?.label;
 
-  // === DÒNG SỬA Ở ĐÂY: Khi đổi gói, reset (làm trống) danh sách lựa chọn ===
   React.useEffect(() => {
-    // Chỉ cần set về mảng rỗng khi topic thay đổi
-    // Để người dùng có thể tự chọn từ đầu
     if (selectedTopicValue) {
       form.setValue("selected_services", []);
     }
   }, [selectedTopicValue, form]);
 
   return (
-    <div className="relative z-10 flex justify-center w-full">
+    <div className="relative z-10 flex justify-center w-full py-16">
       <div className="w-full max-w-3xl px-4 md:px-0">
         <div className="text-center mb-12">
           <CardTitle className="text-4xl md:text-5xl font-bold text-[#1A3973] mb-3">Services Booking</CardTitle>
           <div className="w-60 h-1 bg-gradient-to-r from-[#1A3973] to-[#4F80E1] mx-auto"></div>
         </div>
-        <div className="bg-white rounded-2xl p-8 text-black shadow-xl border border-gray-200 transition-all duration-300">
+        
+        <div className="bg-white rounded-2xl p-8 text-black shadow-xl border border-gray-200">
           <div className="text-center mb-6">
             <div className="bg-[#1A3973] rounded-full p-3 w-14 h-14 mx-auto mb-3 flex items-center justify-center shadow-sm">
               <FaHeartbeat className="text-3xl text-white" />
@@ -155,47 +153,52 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                 </FormItem>
               )} />
               
-              {getSelectedPackage() && (
-                 <FormField
+              <div
+                className={cn(
+                  "transition-all duration-500 ease-in-out overflow-hidden",
+                  getSelectedPackage() ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                )}
+              >
+                <FormField
                     control={form.control}
                     name="selected_services"
                     render={() => (
                     <FormItem className="mt-2 bg-blue-50/50 p-4 rounded-lg border border-blue-200">
                         <div className="mb-4">
-                        <FormLabel className="text-base font-semibold text-[#1A3973]">Services Included</FormLabel>
-                        <p className="text-sm text-gray-600">Please select the services you wish to have.</p>
+                          <FormLabel className="text-base font-semibold text-[#1A3973]">Services Included</FormLabel>
+                          <p className="text-sm text-gray-600">Please select the services you wish to have.</p>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-                        {getSelectedPackage()?.services.map((service) => (
-                            <FormField
-                            key={service.id}
-                            control={form.control}
-                            name="selected_services"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                                <FormControl>
-                                    <Checkbox
-                                    checked={field.value?.includes(service.id)}
-                                    onCheckedChange={(checked) => {
-                                        return checked
-                                        ? field.onChange([...(field.value || []), service.id])
-                                        : field.onChange(field.value?.filter((value) => value !== service.id));
-                                    }}
-                                    />
-                                </FormControl>
-                                <FormLabel className="font-normal cursor-pointer text-gray-800">
-                                    {service.label}
-                                </FormLabel>
-                                </FormItem>
-                            )}
-                            />
-                        ))}
+                          {getSelectedPackage()?.services.map((service) => (
+                              <FormField
+                                key={service.id}
+                                control={form.control}
+                                name="selected_services"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                                      <FormControl>
+                                          <Checkbox
+                                            checked={field.value?.includes(service.id)}
+                                            onCheckedChange={(checked) => {
+                                                return checked
+                                                ? field.onChange([...(field.value || []), service.id])
+                                                : field.onChange(field.value?.filter((value) => value !== service.id));
+                                            }}
+                                          />
+                                      </FormControl>
+                                      <FormLabel className="font-normal cursor-pointer text-gray-800">
+                                          {service.label}
+                                      </FormLabel>
+                                    </FormItem>
+                                )}
+                              />
+                          ))}
                         </div>
                         <FormMessage className="mt-3" />
                     </FormItem>
                     )}
                 />
-              )}
+              </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <FormField control={form.control} name="booking_date" render={({ field }) => (
@@ -244,38 +247,38 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                 )} />
               </div>
 
+              {/* === KHỐI GHI CHÚ ĐÃ ĐƯỢC SỬA LẠI === */}
               <FormField
                 control={form.control}
                 name="note"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Note for the Specialist (Optional)</FormLabel>
-                    <div className="relative">
-                      <FormControl>
-                        <Textarea
-                          placeholder={`Please describe any relevant information... (${MIN_NOTE_LENGTH} - ${MAX_NOTE_LENGTH} chars)`}
-                          className="resize-none h-30 pb-6 pr-14 break-all"
-                          disabled={isPending}
-                          maxLength={MAX_NOTE_LENGTH}
-                          {...field}
-                        />
-                      </FormControl>
-                      <p className={cn(
-                          "absolute bottom-2 right-3 text-xs",
-                          (watchedNote?.length || 0) >= MAX_NOTE_LENGTH
-                            ? "text-red-500 font-bold"
-                            : "text-slate-400"
-                      )}>
-                        {(watchedNote?.length || 0) >= MAX_NOTE_LENGTH
-                          ? "Limit reached"
-                          : `${watchedNote?.length || 0} / ${MAX_NOTE_LENGTH}`
-                        }
-                      </p>
+                    <FormControl>
+                      <Textarea
+                        placeholder={`Please describe any relevant information...`}
+                        className="resize-none h-30"
+                        disabled={isPending}
+                        maxLength={MAX_NOTE_LENGTH + 5} 
+                        {...field}
+                      />
+                    </FormControl>
+                    <div className="flex items-start mt-2 h-5">
+                        <FormMessage />
+                        <p className={cn(
+                            "text-sm ml-auto", // Đã thêm ml-auto để đẩy sang phải
+                            (watchedNote?.length || 0) > MAX_NOTE_LENGTH
+                                ? "text-red-500 font-bold"
+                                : "text-slate-400"
+                        )}>
+                            {`${watchedNote?.length || 0} / ${MAX_NOTE_LENGTH}`}
+                        </p>
                     </div>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
+              {/* === KẾT THÚC KHỐI CHỈNH SỬA === */}
+
 
               {getSelectedPackage() && (
                 <div className="mt-4 bg-blue-50 p-4 rounded-md">
@@ -310,7 +313,7 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg font-semibold rounded-lg py-3 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer"
+                  className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg font-semibold rounded-lg py-3 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span className="absolute inset-0 w-full h-full bg-white/10 -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
                   <div className="relative flex items-center justify-center">

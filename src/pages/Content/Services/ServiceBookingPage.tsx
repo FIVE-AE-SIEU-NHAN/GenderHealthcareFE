@@ -151,7 +151,7 @@ const ServiceBookingPage = () => {
     <div
       className="flex items-center justify-center max-[1125px]:min-h-[90vh] min-[1125px]:min-h-[94vh]
                   relative bg-blend-overlay bg-cover bg-center bg-no-repeat
-                  bg-[url('https://benhviengreen.com/wp-content/uploads/2016/05/doctor-health-wellness-1200x480.jpg')]"
+                  bg-[url('@/assets/images/ser-bg.webp')]"
     >
       <div className="absolute inset-0 bg-white/40 z-0 backdrop-blur-sm"></div>
       <ServicesBookingForm

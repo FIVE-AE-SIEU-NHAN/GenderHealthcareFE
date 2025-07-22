@@ -206,7 +206,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                       </>
                     ) : (
                       <>
-                        <FaHeartbeat className="mr-2" />
+                        <FaHeartbeat className="mr-2"/>
                         <span>Book Consultant</span>
                       </>
                     )}
