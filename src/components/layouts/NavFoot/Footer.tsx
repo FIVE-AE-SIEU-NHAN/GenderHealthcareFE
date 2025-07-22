@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import logo from '@/assets/images/logo1.png';
 import {
   FaPhoneAlt,
   FaEnvelope,
@@ -6,39 +8,43 @@ import {
   FaFacebookF,
   FaTwitter,
   FaLinkedinIn,
-  FaInstagram,
-  FaYoutube,
+
 } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
+  const currentUrl = encodeURIComponent(window.location.href);
+
   return (
     <footer className="bg-[#1A2250] text-white pt-16 pb-8 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-10">
-     
         <div className="md:col-span-2">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-blue-500 rounded-full" />
+            <img 
+              src={logo} 
+              alt="Care4Gender Logo" 
+              className="w-14 h-14 object-contain"
+            />
             <div>
               <h2 className="font-bold text-lg">Care4Gender</h2>
               <p className="text-sm text-blue-200">Gender Healthcare</p>
             </div>
           </div>
           <p className="text-sm text-gray-300 leading-relaxed mb-6">
-            Medova is a convenience services to the adaptability, Spacious modern villa living room with centrally placed swimming pool blending indoor-outdoor
+            Care4Gender provides comprehensive sexual and reproductive health services with professional medical consultation, dedicated support, and convenient appointment booking for your healthcare journey.
           </p>
 
           <div className="space-y-3 text-sm text-gray-300">
             <div className="flex items-center gap-3">
               <FaPhoneAlt className="text-blue-400" />
-              <span>+84 090 012 345</span>
+              <span>+84 28 7300 5588</span>
             </div>
             <div className="flex items-center gap-3">
               <FaEnvelope className="text-blue-400" />
-              <span>infomail123@domain.com</span>
+              <span>care4gender@fpt.edu.vn</span>
             </div>
             <div className="flex items-start gap-3">
               <FaMapMarkerAlt className="text-blue-400 mt-1" />
-              <span>lorem ipsum 72 ffas, fasf fsa f City, fsdafsad Country</span>
+              <span>Lot E2a-7, Street D1, D. D1, Long Thanh My, Thu Duc City, Ho Chi Minh City 700000, Vietnam</span>
             </div>
           </div>
         </div>
@@ -46,31 +52,59 @@ const Footer: React.FC = () => {
         <div>
           <h3 className="font-semibold text-white mb-4">Quick Links</h3>
           <ul className="space-y-2 text-sm text-gray-300">
-            <li>+ Home</li>
-            <li>+ About Us</li>
-            <li>+ Services</li>
-            <li>+ Our Staff</li>
-            <li>+ Term & Conditions</li>
+            <li>
+              <Link to="/" className="hover:text-white cursor-pointer transition-colors">+ Home</Link>
+            </li>
+            <li>
+              <Link to="/book-consultant" className="hover:text-white cursor-pointer transition-colors">+ Find Specialist</Link>
+            </li>
+            <li>
+              <Link to="/book-service" className="hover:text-white cursor-pointer transition-colors">+ Book Service</Link>
+            </li>
           </ul>
         </div>
 
         <div>
           <h3 className="font-semibold text-white mb-4">Our Services</h3>
           <ul className="space-y-2 text-sm text-gray-300">
-            <li>+ Lorem ipsum</li>
-            <li>+ Lorem ipsum</li>
-            <li>+ Lorem ipsum</li>
-            <li>+ Lorem ipsum</li>
-            <li>+ Lorem ipsum</li>
+            <li>
+              <Link to="/book-consultant" className="hover:text-white cursor-pointer transition-colors">+ Sexual Health Consultation</Link>
+            </li>
+            <li>
+              <Link to="/book-service" className="hover:text-white cursor-pointer transition-colors">+ Reproductive Health Care</Link>
+            </li>
+            <li>
+              <Link to="/book-consultant" className="hover:text-white cursor-pointer transition-colors">+ Online Consultation</Link>
+            </li>
           </ul>
         </div>
 
         <div>
-          <h3 className="font-semibold text-white mb-4">Support</h3>
+          <h3 className="font-semibold text-white mb-4">Contact</h3>
           <ul className="space-y-2 text-sm text-gray-300">
-            <li>+ Contact Us</li>
-            <li>+ Live Chat</li>
+            <li>
+              <a href="tel:+842873005588" className="hover:text-white cursor-pointer transition-colors">+ Call Us</a>
+            </li>
+            <li>
+              <a href="mailto:care4gender@fpt.edu.vn" className="hover:text-white cursor-pointer transition-colors">+ Email Us</a>
+            </li>
           </ul>
+          
+          <div className="mt-6">
+            <h4 className="font-semibold text-white mb-3 text-sm">Payment Partner</h4>
+            <div className="flex items-center gap-2">
+              <img 
+                src="https://payos.vn/docs/img/logo.svg"
+                alt="PayOS Logo" 
+                className="h-8 object-contain bg-white rounded px-2 py-1"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCA4MCAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzAwN0JGRiIvPgo8dGV4dCB4PSI0MCIgeT0iMjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSJib2xkIj5QYXlPUzwvdGV4dD4KPHN2Zz4=';
+                }}
+              />
+              <span className="text-xs text-gray-400">Secure payments</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -80,26 +114,48 @@ const Footer: React.FC = () => {
         </p>
 
         <div className="flex items-center gap-6">
-          <p className="text-white font-semibold text-sm text-center">Explore Our Comprehensive Healthcare Solutions</p>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm">
-            Make Appointment →
-          </button>
+          <p className="text-white font-semibold text-sm text-center">Your Health, Our Priority - Professional Care Anytime</p>
+          <Link to="/book-consultant" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors">
+            Book Consultation →
+          </Link>
           <div className="flex items-center gap-2 text-sm text-white">
-            <span className="bg-white w-6 h-6 rounded-full" /> {/* Clock icon placeholder */}
+            <span className="bg-blue-400 w-6 h-6 rounded-full flex items-center justify-center">🕒</span>
             <div>
-              <p className="text-xs font-semibold">Opening Hour</p>
-              <p className="text-xs">09:30AM - 10:30PM</p>
+              <p className="text-xs font-semibold">Available 24/7</p>
+              <p className="text-xs">Online Consultation</p>
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-4 text-gray-400 mt-4 md:mt-0">
-          <span>Social Media:</span>
-          <FaFacebookF className="hover:text-white cursor-pointer" />
-          <FaTwitter className="hover:text-white cursor-pointer" />
-          <FaLinkedinIn className="hover:text-white cursor-pointer" />
-          <FaInstagram className="hover:text-white cursor-pointer" />
-          <FaYoutube className="hover:text-white cursor-pointer" />
+          <span>Share:</span>
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-400 transition-colors"
+            title="Share on Facebook"
+          >
+            <FaFacebookF />
+          </a>
+          <a
+            href={`https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent("Check out Care4Gender - Professional Gender Healthcare Services!")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-300 transition-colors"
+            title="Share on Twitter"
+          >
+            <FaTwitter />
+          </a>
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-500 transition-colors"
+            title="Share on LinkedIn"
+          >
+            <FaLinkedinIn />
+          </a>
         </div>
       </div>
     </footer>
