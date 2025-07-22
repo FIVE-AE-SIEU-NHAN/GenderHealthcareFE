@@ -50,6 +50,11 @@ const BlogCard = (blog: Blog) => (
     <h3 className="font-semibold text-lg mb-1 flex-grow">
       {blog.title.length > 50 ? blog.title.slice(0, 50) + '...' : blog.title}
     </h3>
+    <p className="text-sm text-gray-600 mb-2 flex-grow">
+                      {blog.summary && blog.summary.length > 200
+                        ? blog.summary.slice(0, 200) + '...'
+                        : blog.summary}
+                    </p>
     <div className="flex flex-col text-sm text-gray-500 mt-auto pt-2">
       <div className="font-medium text-gray-700">{blog.author_name}</div>
       <time dateTime={blog.created_at}>
