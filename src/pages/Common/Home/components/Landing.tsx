@@ -19,13 +19,13 @@ const Home: React.FC = () => {
       text: 'Find a Specialist',
       link: '/book-consultant',
       color:
-        'text-xl bg-semi-dark-blue text-white px-6 py-2 rounded-button hover:bg-blue-900 transition duration-200 font-semibold',
+        'bg-semi-dark-blue text-white hover:bg-blue-900',
     },
     {
       text: 'Meet Our Doctors',
       link: '/book-service',
       color:
-        'text-xl border-2 border-white text-white px-4 py-2 rounded-button font-semibold',
+        'border-2 border-white text-white hover:bg-white hover:text-semi-dark-blue',
     },
   ];
 
@@ -39,15 +39,15 @@ const Home: React.FC = () => {
       buttons: sharedButtons,
     },
     {
-      heading: "Dedicated and Experienced Medical",
-      title: 'Meet Our Experts',
+      heading: "Dedicated and Experienced Medical Team",
+      title: 'Meet Our Expert Specialists',
       description:
         'Wholehearted support, attentive listening, and companionship through every stage of your health journey.',
       image: "/images/bs2.webp", // Existing image path
       buttons: sharedButtons,
     },
     {
-      heading: "Convenient Appointments Booking Services",
+      heading: "Convenient Appointment Booking",
       title: 'Book an Appointment in Just a Few Steps',
       description:
         'Choose your doctor, pick a suitable time, and start your healthcare journey today.',
@@ -80,27 +80,35 @@ const Home: React.FC = () => {
                 zIndex: 0,
               }}
             />
-            <div className="absolute inset-0 bg-black/45 z-10" /> {/* Màu nền tối */}
-            <div className="lg:text-left relative z-20 flex flex-col items-center justify-center h-full text-white px-4 space-y-4 max-w-2xl ml-25">
-              <h3 className="text-3xl sm:text-5xl lg:text-7xl text-center font-black w-200">
-                {slide.heading}
-              </h3>
-              <h1 className="text-xl sm:text-3xl lg:text-5xl text-center font-medium w-full">
-                {slide.title}
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg max-w-md mx-auto">
-                {slide.description}
-              </p>
-              <div className="flex flex-wrap justify-center gap-4 mt-4">
+            <div className="absolute inset-0 bg-black/50 z-10" /> {/* Màu nền tối */}
+            
+            {/* Content container */}
+            <div className="relative z-20 flex flex-col justify-center h-full text-white pl-6 lg:pl-25 pr-4 space-y-8 max-w-3xl">
+              <div className="space-y-6">
+                <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[0.9] text-left text-shadow-lg">
+                  {slide.heading}
+                </h3>
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold leading-tight text-left opacity-95">
+                  {slide.title}
+                </h1>
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-left max-w-2xl opacity-90 font-light">
+                  {slide.description}
+                </p>
+              </div>
+            </div>
+
+            {/* Fixed position buttons */}
+            <div className="absolute bottom-20 left-6 lg:left-25 z-30">
+              <div className="flex flex-wrap gap-4 sm:gap-6">
                 {slide.buttons.map((button, btnIndex) => (
                   <Link
                     onClick={ToTop}
                     key={btnIndex}
                     to={button.link}
-                    className={`text-sm sm:text-base md:text-lg px-4 sm:px-5 md:px-6 py-2 md:py-3 rounded transition ${button.color}`}
+                    className={`text-sm sm:text-base lg:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-all duration-300 font-semibold shadow-lg ${button.color} hover:scale-105 hover:shadow-xl transform`}
                   >
                     {button.text}
-                    <FaArrowRightLong className="inline-block ml-3 sm:ml-4" />
+                    <FaArrowRightLong className="inline-block ml-2 sm:ml-4" />
                   </Link>
                 ))}
               </div>
