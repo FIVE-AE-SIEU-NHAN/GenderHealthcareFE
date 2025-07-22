@@ -21,9 +21,9 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img 
-                src={logo} 
-                alt="Care4Gender Logo" 
+              <img
+                src={logo}
+                alt="Care4Gender Logo"
                 className="w-12 h-12 object-contain"
               />
               <div>
@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
                 <p className="text-sm text-blue-200">Gender Healthcare</p>
               </div>
             </div>
-            
+
             <div className="text-sm text-gray-300 leading-relaxed mb-6">
               <p className="mb-2">
                 <span className="text-white font-medium">Care4Gender</span> provides comprehensive <span className="text-blue-300">sexual and reproductive health services</span>
@@ -45,8 +45,8 @@ const Footer: React.FC = () => {
             <div className="space-y-2 text-sm text-gray-300">
               <div className="flex items-center gap-2">
                 <FaPhoneAlt className="text-blue-400 flex-shrink-0" size={14} />
-                <a 
-                  href="tel:+842873005588" 
+                <a
+                  href="tel:+842873005588"
                   className="hover:text-white transition-colors duration-200"
                 >
                   +84 28 7300 5588
@@ -54,8 +54,8 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <FaEnvelope className="text-blue-400 flex-shrink-0" size={14} />
-                <a 
-                  href="mailto:care4gender@fpt.edu.vn" 
+                <a
+                  href="mailto:care4gender@fpt.edu.vn"
                   className="hover:text-white transition-colors duration-200"
                 >
                   care4gender@fpt.edu.vn
@@ -63,7 +63,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-start gap-2">
                 <FaMapMarkerAlt className="text-blue-400 mt-1 flex-shrink-0" size={14} />
-                <a 
+                <a
                   href="https://www.google.com/maps/search/?api=1&query=Lot+E2a-7+Street+D1+Long+Thanh+My+Thu+Duc+City+Ho+Chi+Minh+City+Vietnam"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -143,9 +143,9 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold text-white mb-4">Payment Partner</h3>
             <div className="mb-4">
-              <img 
+              <img
                 src="https://payos.vn/docs/img/logo.svg"
-                alt="PayOS Logo" 
+                alt="PayOS Logo"
                 className="h-12 object-contain bg-white rounded px-1 py-1"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
@@ -157,12 +157,12 @@ const Footer: React.FC = () => {
             <p className="text-xs text-gray-500 leading-relaxed mb-4">
               We partner with PayOS to ensure your payments are safe, secure, and processed quickly for all our healthcare services.
             </p>
-            
+
             {/* Operating Hours */}
             <div className="bg-gray-700/30 rounded-lg p-3">
               <p className="text-sm font-semibold text-white mb-1">Operating Hours</p>
               <p className="text-xs text-blue-200">7:00 AM - 5:00 PM</p>
-              <p className="text-xs text-gray-400">Monday - Sunday</p>
+              <p className="text-xs text-gray-400">Monday - Saturday</p>
             </div>
           </div>
         </div>
@@ -182,11 +182,11 @@ const Footer: React.FC = () => {
               <p className="text-white font-semibold text-sm text-center">
                 Your Health, Our Priority - Professional Care Anytime
               </p>
-              
+
               <div className="flex items-center gap-3 text-sm text-white">
-                <img 
-                  src={logo} 
-                  alt="Care4Gender Logo" 
+                <img
+                  src={logo}
+                  alt="Care4Gender Logo"
                   className="w-8 h-8 object-contain"
                 />
                 <div className="text-center sm:text-left">
