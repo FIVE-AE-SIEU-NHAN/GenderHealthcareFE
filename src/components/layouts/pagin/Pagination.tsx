@@ -1,8 +1,8 @@
 // src/components/shared/pagination/Pagination.tsx
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useState, useMemo, useCallback } from "react"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useMemo, useCallback } from 'react'
 
 interface PaginationProps {
   currentPage: number
@@ -17,11 +17,11 @@ export function Pagination({
   currentPage,
   totalPages,
   onPageChange,
-  className = "",
+  className = '',
   maxPageButtons = 3,
-  showJump = true,
+  showJump = true
 }: PaginationProps) {
-  const [jumpPage, setJumpPage] = useState("")
+  const [jumpPage, setJumpPage] = useState('')
 
   const safeTotalPages = Math.max(totalPages, 1)
   const safeCurrentPage = Math.max(1, Math.min(currentPage, safeTotalPages))
@@ -38,12 +38,12 @@ export function Pagination({
     const num = Number(jumpPage)
     if (!Number.isNaN(num) && num >= 1 && num <= safeTotalPages) {
       onPageChange(num)
-      setJumpPage("")
+      setJumpPage('')
     }
   }, [jumpPage, safeTotalPages, onPageChange])
 
   const pageNumbers = useMemo(() => {
-    const pages: (number | "...")[] = []
+    const pages: (number | '...')[] = []
 
     const half = Math.floor(maxPageButtons / 2)
     let start = Math.max(1, safeCurrentPage - half)
@@ -59,7 +59,7 @@ export function Pagination({
 
     if (start > 1) {
       pages.push(1)
-      if (start > 2) pages.push("...")
+      if (start > 2) pages.push('...')
     }
 
     for (let i = start; i <= end; i++) {
@@ -67,7 +67,7 @@ export function Pagination({
     }
 
     if (end < safeTotalPages) {
-      if (end < safeTotalPages - 1) pages.push("...")
+      if (end < safeTotalPages - 1) pages.push('...')
       pages.push(safeTotalPages)
     }
 
@@ -78,70 +78,70 @@ export function Pagination({
 
   return (
     <div className={`flex flex-wrap items-center justify-between gap-4 py-4 max-[548px]:w-130 ${className}`}>
-      <div className="text-sm text-muted-foreground">
-        Page <span className="font-medium">{safeCurrentPage}</span> of{" "}
-        <span className="font-medium">{safeTotalPages}</span>
+      <div className='text-muted-foreground text-sm'>
+        Page <span className='font-medium'>{safeCurrentPage}</span> of{' '}
+        <span className='font-medium'>{safeTotalPages}</span>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className='flex items-center gap-2'>
         <Button
-          variant="outline"
-          size="sm"
+          variant='outline'
+          size='sm'
           onClick={handlePrev}
           disabled={safeCurrentPage === 1}
-          aria-label="Previous page"
+          aria-label='Previous page'
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className='h-4 w-4' />
         </Button>
 
         {pageNumbers.map((p, idx) =>
-          typeof p === "number" ? (
+          typeof p === 'number' ? (
             <Button
               key={`page-${p}`}
-              size="sm"
-              variant={p === safeCurrentPage ? "default" : "outline"}
+              size='sm'
+              variant={p === safeCurrentPage ? 'default' : 'outline'}
               onClick={() => onPageChange(p)}
-              className="w-9"
+              className='w-9'
               aria-label={`Go to page ${p}`}
             >
               {p}
             </Button>
           ) : (
-            <span key={`ellipsis-${idx}`} className="px-2 text-sm text-muted-foreground">
+            <span key={`ellipsis-${idx}`} className='text-muted-foreground px-2 text-sm'>
               ...
             </span>
           )
         )}
 
         <Button
-          variant="outline"
-          size="sm"
+          variant='outline'
+          size='sm'
           onClick={handleNext}
           disabled={safeCurrentPage === safeTotalPages}
-          aria-label="Next page"
+          aria-label='Next page'
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className='h-4 w-4' />
         </Button>
       </div>
 
       {showJump && (
-        <div className="hidden min-[825px]:flex items-center gap-2 text-sm">
+        <div className='hidden items-center gap-2 text-sm min-[825px]:flex'>
           <span>Jump to:</span>
           <Input
-            id="jump-page"
-            type="number"
+            id='jump-page'
+            type='number'
             value={jumpPage}
             onChange={(e) => {
               const val = e.target.value
               if (/^\d*$/.test(val)) setJumpPage(val)
             }}
-            onKeyDown={(e) => e.key === "Enter" && handleJump()}
-            className="w-20 h-8"
+            onKeyDown={(e) => e.key === 'Enter' && handleJump()}
+            className='h-8 w-20'
             min={1}
             max={safeTotalPages}
-            aria-label="Jump to page"
+            aria-label='Jump to page'
           />
-          <Button size="sm" onClick={handleJump}>
+          <Button size='sm' onClick={handleJump}>
             Go
           </Button>
         </div>

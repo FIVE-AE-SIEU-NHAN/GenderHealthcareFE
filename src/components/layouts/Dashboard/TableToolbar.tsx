@@ -1,69 +1,59 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { format, isAfter } from "date-fns"
-import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw, ChevronsUpDown, Loader2 } from "lucide-react"
+import * as React from 'react'
+import { format, isAfter } from 'date-fns'
+import { CalendarIcon, Eye, Search as SearchIcon, RotateCcw, ChevronsUpDown, Loader2 } from 'lucide-react'
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Calendar22 } from "@/lib/DatePickerv2"
-import { cn } from "@/lib/utils"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Calendar22 } from '@/lib/DatePickerv2'
+import { cn } from '@/lib/utils'
 
 export interface FacetFilter {
-  key: string;
-  label: string;
-  options: { label: string; value: string }[];
+  key: string
+  label: string
+  options: { label: string; value: string }[]
 }
 
 interface TableToolbarProps {
   // Column Visibility
-  columns: { key: string; label: string; toggleable?: boolean; }[];
-  visibleColumns: string[];
-  onVisibleColumnsChange: (visibleCols: string[]) => void;
+  columns: { key: string; label: string; toggleable?: boolean }[]
+  visibleColumns: string[]
+  onVisibleColumnsChange: (visibleCols: string[]) => void
 
-  // Faceted Filter 
-  facetFilters?: FacetFilter[];
-  activeFilterKey: string;
-  onActiveFilterKeyChange: (key: string) => void;
-  activeFilterValues: string[];
-  onActiveFilterValuesChange: (values: string[]) => void;
+  // Faceted Filter
+  facetFilters?: FacetFilter[]
+  activeFilterKey: string
+  onActiveFilterKeyChange: (key: string) => void
+  activeFilterValues: string[]
+  onActiveFilterValuesChange: (values: string[]) => void
 
   // Search
-  searchValue?: string;
-  onSearchChange?: (value: string) => void;
-  searchFieldOptions?: { value: string; label: string }[];
-  searchFieldValue?: string;
-  onSearchFieldChange?: (value: string) => void;
-  onSearchSubmit?: () => void;
+  searchValue?: string
+  onSearchChange?: (value: string) => void
+  searchFieldOptions?: { value: string; label: string }[]
+  searchFieldValue?: string
+  onSearchFieldChange?: (value: string) => void
+  onSearchSubmit?: () => void
 
   // Date Range
-  dateFilterOptions?: { value: string; label: string }[];
-  activeDateFilterKey?: string;
-  onActiveDateFilterKeyChange?: (value: string) => void;
-  fromDate?: Date;
-  toDate?: Date;
-  onDateRangeChange?: (from?: Date, to?: Date) => void;
+  dateFilterOptions?: { value: string; label: string }[]
+  activeDateFilterKey?: string
+  onActiveDateFilterKeyChange?: (value: string) => void
+  fromDate?: Date
+  toDate?: Date
+  onDateRangeChange?: (from?: Date, to?: Date) => void
 
   // General Actions
-  onResetFilters?: () => void;
-  onCreate?: () => void;
-  createButtonLabel?: string;
-  placeholderSearch?: string;
+  onResetFilters?: () => void
+  onCreate?: () => void
+  createButtonLabel?: string
+  placeholderSearch?: string
 
-  isFetching?: boolean;
+  isFetching?: boolean
 }
 
 export default function TableToolbar({
@@ -77,14 +67,13 @@ export default function TableToolbar({
   activeFilterValues,
   onActiveFilterValuesChange,
 
-  searchValue = "",
+  searchValue = '',
   onSearchChange,
   searchFieldOptions = [],
   searchFieldValue,
   onSearchFieldChange,
-  placeholderSearch = "Search...",
+  placeholderSearch = 'Search...',
   onSearchSubmit,
-
 
   dateFilterOptions = [],
   activeDateFilterKey,
@@ -95,77 +84,76 @@ export default function TableToolbar({
 
   onResetFilters,
   onCreate,
-  createButtonLabel = "+ CREATE",
-  isFetching,
+  createButtonLabel = '+ CREATE',
+  isFetching
 }: TableToolbarProps) {
-  const [draftFromDate, setDraftFromDate] = React.useState<Date | undefined>(fromDate);
-  const [draftToDate, setDraftToDate] = React.useState<Date | undefined>(toDate);
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const [draftFromDate, setDraftFromDate] = React.useState<Date | undefined>(fromDate)
+  const [draftToDate, setDraftToDate] = React.useState<Date | undefined>(toDate)
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
 
-  const currentFilter = facetFilters.find(f => f.key === activeFilterKey);
+  const currentFilter = facetFilters.find((f) => f.key === activeFilterKey)
 
   const handleCategoryChange = (newKey: string) => {
-    onActiveFilterKeyChange(newKey);
-    onActiveFilterValuesChange([]);
-  };
+    onActiveFilterKeyChange(newKey)
+    onActiveFilterValuesChange([])
+  }
 
   React.useEffect(() => {
-    setDraftFromDate(fromDate);
-    setDraftToDate(toDate);
-  }, [fromDate, toDate]);
+    setDraftFromDate(fromDate)
+    setDraftToDate(toDate)
+  }, [fromDate, toDate])
 
   const handleApplyDates = () => {
-    onDateRangeChange?.(draftFromDate, draftToDate);
-    setIsPopoverOpen(false);
-  };
+    onDateRangeChange?.(draftFromDate, draftToDate)
+    setIsPopoverOpen(false)
+  }
 
   const generateDateButtonText = () => {
-    if (fromDate && toDate) return `${format(fromDate, "dd/MM/yyyy")} → ${format(toDate, "dd/MM/yyyy")}`;
-    if (fromDate) return format(fromDate, "dd/MM/yyyy");
-    return "Pick a date range";
-  };
+    if (fromDate && toDate) return `${format(fromDate, 'dd/MM/yyyy')} → ${format(toDate, 'dd/MM/yyyy')}`
+    if (fromDate) return format(fromDate, 'dd/MM/yyyy')
+    return 'Pick a date range'
+  }
 
-  const reset = () => { onResetFilters?.() };
+  const reset = () => {
+    onResetFilters?.()
+  }
 
   const toggleColumn = (col: string) => {
     if (visibleColumns.includes(col)) {
-      onVisibleColumnsChange(visibleColumns.filter(c => c !== col))
+      onVisibleColumnsChange(visibleColumns.filter((c) => c !== col))
     } else {
       onVisibleColumnsChange([...visibleColumns, col])
     }
   }
 
   const triggerSearch = () => {
-    onSearchSubmit?.();
-  };
+    onSearchSubmit?.()
+  }
 
-  const selectedFieldLabel = searchFieldOptions.find(opt => opt.value === searchFieldValue)?.label
-  const selectedDateFilterLabel = dateFilterOptions.find(opt => opt.value === activeDateFilterKey)?.label;
+  const selectedFieldLabel = searchFieldOptions.find((opt) => opt.value === searchFieldValue)?.label
+  const selectedDateFilterLabel = dateFilterOptions.find((opt) => opt.value === activeDateFilterKey)?.label
 
   return (
-    <div className="flex flex-wrap items-center gap-4 mb-6">
+    <div className='mb-6 flex flex-wrap items-center gap-4'>
       {/* View (Column Toggle) */}
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline">
-            <Eye className="w-4 h-4 mr-2" />
+          <Button variant='outline'>
+            <Eye className='mr-2 h-4 w-4' />
             View
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-3" align="start">
+        <PopoverContent className='w-auto p-3' align='start'>
           {columns
             .filter((col) => col.toggleable !== false) // Only show if toggleable is not explicitly false
             .map((col) => (
-              <div key={col.key} className="flex items-center space-x-2 mb-1">
+              <div key={col.key} className='mb-1 flex items-center space-x-2'>
                 <Checkbox
                   id={col.key}
                   checked={visibleColumns.includes(col.key)}
                   onCheckedChange={() => toggleColumn(col.key)} // Use the key to toggle
                 />
-                <label
-                  htmlFor={col.key}
-                  className="text-sm font-medium capitalize leading-none"
-                >
+                <label htmlFor={col.key} className='text-sm leading-none font-medium capitalize'>
                   {col.label}
                 </label>
               </div>
@@ -175,14 +163,14 @@ export default function TableToolbar({
 
       {/* Filter */}
       {facetFilters.length > 0 && currentFilter && (
-        <div className="flex items-center gap-0">
+        <div className='flex items-center gap-0'>
           {/* Part 1: Select the filter CATEGORY */}
           <Select value={activeFilterKey} onValueChange={handleCategoryChange}>
-            <SelectTrigger className="w-auto gap-2 font-medium rounded-r-[0] border-r-0">
-              <SelectValue placeholder="Filter by..." />
+            <SelectTrigger className='w-auto gap-2 rounded-r-[0] border-r-0 font-medium'>
+              <SelectValue placeholder='Filter by...' />
             </SelectTrigger>
-            <SelectContent align="center">
-              {facetFilters.map(filter => (
+            <SelectContent align='center'>
+              {facetFilters.map((filter) => (
                 <SelectItem key={filter.key} value={filter.key}>
                   {filter.label}
                 </SelectItem>
@@ -193,33 +181,36 @@ export default function TableToolbar({
           {/* Part 2: Popover to select the filter VALUES */}
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-auto justify-between rounded-l-[0]">
-                <span className="truncate max-w-50">
+              <Button variant='outline' className='w-auto justify-between rounded-l-[0]'>
+                <span className='max-w-50 truncate'>
                   {activeFilterValues.length > 0
                     ? currentFilter.options
-                      .filter(opt => activeFilterValues.includes(opt.value))
-                      .map(opt => opt.label)
-                      .join(", ")
+                        .filter((opt) => activeFilterValues.includes(opt.value))
+                        .map((opt) => opt.label)
+                        .join(', ')
                     : `Select ${currentFilter.label}`}
                 </span>
-                <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+                <ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="center">
+            <PopoverContent className='w-auto p-0' align='center'>
               {currentFilter.options.map(({ label, value }) => (
-                <div key={value} className="flex items-center space-x-2 p-2 hover:bg-accent rounded-md">
+                <div key={value} className='hover:bg-accent flex items-center space-x-2 rounded-md p-2'>
                   <Checkbox
                     id={`${currentFilter.key}-${value}`}
                     checked={activeFilterValues.includes(value)}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        onActiveFilterValuesChange([...activeFilterValues, value]);
+                        onActiveFilterValuesChange([...activeFilterValues, value])
                       } else {
-                        onActiveFilterValuesChange(activeFilterValues.filter(v => v !== value));
+                        onActiveFilterValuesChange(activeFilterValues.filter((v) => v !== value))
                       }
                     }}
                   />
-                  <label htmlFor={`${currentFilter.key}-${value}`} className="w-full text-sm font-medium leading-none cursor-pointer">
+                  <label
+                    htmlFor={`${currentFilter.key}-${value}`}
+                    className='w-full cursor-pointer text-sm leading-none font-medium'
+                  >
                     {label}
                   </label>
                 </div>
@@ -230,13 +221,11 @@ export default function TableToolbar({
       )}
 
       {/* Date Range Picker */}
-      <div className="flex items-center gap-0">
+      <div className='flex items-center gap-0'>
         {/* Dropdown to select the date field */}
         <Select value={activeDateFilterKey} onValueChange={onActiveDateFilterKeyChange}>
-          <SelectTrigger className="w-auto gap-2 font-medium rounded-r-none border-r-0">
-            <SelectValue placeholder="Filter by date...">
-              {selectedDateFilterLabel}
-            </SelectValue>
+          <SelectTrigger className='w-auto gap-2 rounded-r-none border-r-0 font-medium'>
+            <SelectValue placeholder='Filter by date...'>{selectedDateFilterLabel}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {dateFilterOptions.map((option) => (
@@ -250,30 +239,34 @@ export default function TableToolbar({
         {/* Date range picker */}
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="justify-start text-left rounded-l-none" onClick={() => setIsPopoverOpen(true)}>
-              <CalendarIcon className="w-4 h-4 mr-2" />
+            <Button
+              variant='outline'
+              className='justify-start rounded-l-none text-left'
+              onClick={() => setIsPopoverOpen(true)}
+            >
+              <CalendarIcon className='mr-2 h-4 w-4' />
               {generateDateButtonText()}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="flex gap-4 p-4 w-auto" align="center">
-            <div className="flex gap-4">
+          <PopoverContent className='flex w-auto gap-4 p-4' align='center'>
+            <div className='flex gap-4'>
               {/* FROM Calendar */}
               <Calendar22
-                placeholder="From date"
+                placeholder='From date'
                 value={draftFromDate}
                 onChange={(date) => {
-                  setDraftFromDate(date);
+                  setDraftFromDate(date)
                   if (date && draftToDate && isAfter(date, draftToDate)) {
-                    setDraftToDate(undefined);
+                    setDraftToDate(undefined)
                   }
                 }}
-                disabled={(date) => draftToDate ? isAfter(date, draftToDate) : false}
+                disabled={(date) => (draftToDate ? isAfter(date, draftToDate) : false)}
               />
 
               {/* TO Calendar */}
-              <div className={cn(!draftFromDate && "cursor-not-allowed")}>
+              <div className={cn(!draftFromDate && 'cursor-not-allowed')}>
                 <Calendar22
-                  placeholder="To date"
+                  placeholder='To date'
                   value={draftToDate}
                   onChange={(date) => setDraftToDate(date)}
                   // This disables the calendar dates before a "from" date is selected
@@ -283,10 +276,8 @@ export default function TableToolbar({
               </div>
             </div>
 
-            <div className={cn("flex justify-end", !draftFromDate && "cursor-not-allowed")}>
-              <Button onClick={handleApplyDates}
-                disabled={!draftFromDate}
-              >
+            <div className={cn('flex justify-end', !draftFromDate && 'cursor-not-allowed')}>
+              <Button onClick={handleApplyDates} disabled={!draftFromDate}>
                 Apply Dates
               </Button>
             </div>
@@ -295,14 +286,12 @@ export default function TableToolbar({
       </div>
 
       {/* Search */}
-      <div className="flex items-center">
+      <div className='flex items-center'>
         {/* Search Field Dropdown */}
         {searchFieldOptions.length > 0 && (
           <Select value={searchFieldValue} onValueChange={onSearchFieldChange}>
-            <SelectTrigger className="w-auto rounded-r-none border-r-0 focus:ring-0 focus:ring-offset-0 font-medium">
-              <SelectValue placeholder="Search in...">
-                {selectedFieldLabel}
-              </SelectValue>
+            <SelectTrigger className='w-auto rounded-r-none border-r-0 font-medium focus:ring-0 focus:ring-offset-0'>
+              <SelectValue placeholder='Search in...'>{selectedFieldLabel}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               {searchFieldOptions.map((option) => (
@@ -315,27 +304,27 @@ export default function TableToolbar({
         )}
 
         {/* Search Input and Button */}
-        <div className="relative flex items-center">
+        <div className='relative flex items-center'>
           <Input
-            id="search-input"
+            id='search-input'
             placeholder={placeholderSearch}
-            className="w-[300px] pr-10 rounded-l-none focus:ring-0 focus:ring-offset-0"
+            className='w-[300px] rounded-l-none pr-10 focus:ring-0 focus:ring-offset-0'
             value={searchValue}
             onChange={(e) => onSearchChange?.(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 triggerSearch()
               }
             }}
           />
           <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="absolute right-1 h-8 w-8"
+            type='button'
+            size='icon'
+            variant='ghost'
+            className='absolute right-1 h-8 w-8'
             onClick={triggerSearch}
           >
-            <SearchIcon className="h-4 w-4 text-muted-foreground" />
+            <SearchIcon className='text-muted-foreground h-4 w-4' />
           </Button>
         </div>
       </div>
@@ -343,25 +332,25 @@ export default function TableToolbar({
       {/* Reset button */}
       {(fromDate || toDate || activeFilterValues.length > 0 || searchValue) && (
         <Button
-          variant="ghost"
-          size="sm"
+          variant='ghost'
+          size='sm'
           onClick={reset}
-          className="group relative hover:border border-dashed border-red-600/50 bg-red-100 text-red-600 hover:text-red-500"
+          className='group relative border-dashed border-red-600/50 bg-red-100 text-red-600 hover:border hover:text-red-500'
         >
-          <RotateCcw className=" h-4 w-4 rotate-90 transition-transform group-hover:rotate-[-45deg] duration-300" />
+          <RotateCcw className='h-4 w-4 rotate-90 transition-transform duration-300 group-hover:rotate-[-45deg]' />
           Reset
         </Button>
       )}
 
-      <div className="flex items-center gap-2 ml-auto">
+      <div className='ml-auto flex items-center gap-2'>
         {isFetching && (
-          <div className="flex items-center gap-2 text-muted-foreground text-sm">
-            <Loader2 className="h-4 w-4 animate-spin" />
+          <div className='text-muted-foreground flex items-center gap-2 text-sm'>
+            <Loader2 className='h-4 w-4 animate-spin' />
             <span>Loading...</span>
           </div>
         )}
         {onCreate && (
-          <Button className="cursor-pointer" onClick={onCreate}>
+          <Button className='cursor-pointer' onClick={onCreate}>
             {createButtonLabel}
           </Button>
         )}

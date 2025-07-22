@@ -1,124 +1,109 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
-import slide1 from '@/assets/images/bs1.webp';
+import React from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Pagination, EffectFade } from 'swiper/modules'
+import slide1 from '@/assets/images/bs1.webp'
 // import slide2 from '@/assets/images/bs2.webp';
-import slide3 from '@/assets/images/bs3.webp';
+import slide3 from '@/assets/images/bs3.webp'
 
+import { FaArrowRightLong } from 'react-icons/fa6'
+import { Link } from 'react-router-dom'
 
-
-import { FaArrowRightLong } from "react-icons/fa6";
-import { Link } from 'react-router-dom';
-
-
-const ToTop = () => window.scrollTo({ top: 0 });
+const ToTop = () => window.scrollTo({ top: 0 })
 
 const Home: React.FC = () => {
   const sharedButtons = [
     {
       text: 'Find a Specialist',
       link: '/book-consultant',
-      color:
-        'bg-semi-dark-blue text-white hover:bg-blue-900',
+      color: 'bg-semi-dark-blue text-white hover:bg-blue-900'
     },
     {
       text: 'Meet Our Doctors',
       link: '/book-service',
-      color:
-        'border-2 border-white text-white hover:bg-white hover:text-semi-dark-blue',
-    },
-  ];
+      color: 'border-2 border-white text-white hover:bg-white hover:text-semi-dark-blue'
+    }
+  ]
 
   const slides = [
     {
-      heading: "Comprehensive Sexual Health Care",
+      heading: 'Comprehensive Sexual Health Care',
       title: 'Protect your health — anytime, anywhere',
-      description:
-        'Professional consultation and care for reproductive and sexual health from top doctors.',
+      description: 'Professional consultation and care for reproductive and sexual health from top doctors.',
       image: slide1, // Your local asset
-      buttons: sharedButtons,
+      buttons: sharedButtons
     },
     {
-      heading: "Dedicated and Experienced Medical Team",
+      heading: 'Dedicated and Experienced Medical Team',
       title: 'Meet Our Expert Specialists',
       description:
         'Wholehearted support, attentive listening, and companionship through every stage of your health journey.',
-      image: "/images/bs2.webp", // Existing image path
-      buttons: sharedButtons,
+      image: '/images/bs2.webp', // Existing image path
+      buttons: sharedButtons
     },
     {
-      heading: "Convenient Appointment Booking",
+      heading: 'Convenient Appointment Booking',
       title: 'Book an Appointment in Just a Few Steps',
-      description:
-        'Choose your doctor, pick a suitable time, and start your healthcare journey today.',
+      description: 'Choose your doctor, pick a suitable time, and start your healthcare journey today.',
       image: slide3, // Your local asset
-      buttons: sharedButtons,
-    },
-  ];
-
-
+      buttons: sharedButtons
+    }
+  ]
 
   return (
-    <section id="home" className="relative w-full h-screen">
+    <section id='home' className='relative h-screen w-full'>
       <Swiper
         modules={[Autoplay, Pagination, EffectFade]}
-        effect="fade"
+        effect='fade'
         autoplay={{ delay: 3000 }}
         loop
         pagination={{ clickable: true }}
-        className="w-full h-[calc(100dvh-59px)]"
+        className='h-[calc(100dvh-59px)] w-full'
       >
         {slides.map((slide, index) => (
-          <SwiperSlide
-            key={index}
-            className="relative w-full h-full"
-          >
+          <SwiperSlide key={index} className='relative h-full w-full'>
             <div
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat sm:bg-[center_top] lg:bg-center"
+              className='absolute inset-0 bg-cover bg-center bg-no-repeat sm:bg-[center_top] lg:bg-center'
               style={{
                 backgroundImage: `url(${slide.image})`,
-                zIndex: 0,
+                zIndex: 0
               }}
             />
-            <div className="absolute inset-0 bg-black/50 z-10" /> {/* Màu nền tối */}
-            
+            <div className='absolute inset-0 z-10 bg-black/50' /> {/* Màu nền tối */}
             {/* Content container */}
-            <div className="relative z-20 flex flex-col justify-center h-full text-white pl-6 lg:pl-25 pr-4 space-y-8 max-w-3xl">
-              <div className="space-y-6">
-                <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-[0.9] text-left text-shadow-lg">
+            <div className='relative z-20 flex h-full max-w-3xl flex-col justify-center space-y-8 pr-4 pl-6 text-white lg:pl-25'>
+              <div className='space-y-6'>
+                <h3 className='text-left text-3xl leading-[0.9] font-black text-shadow-lg sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl'>
                   {slide.heading}
                 </h3>
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold leading-tight text-left opacity-95">
+                <h1 className='text-left text-xl leading-tight font-semibold opacity-95 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl'>
                   {slide.title}
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed text-left max-w-2xl opacity-90 font-light">
+                <p className='max-w-2xl text-left text-base leading-relaxed font-light opacity-90 sm:text-lg md:text-xl lg:text-2xl'>
                   {slide.description}
                 </p>
               </div>
             </div>
-
             {/* Fixed position buttons */}
-            <div className="absolute bottom-20 left-6 lg:left-25 z-30">
-              <div className="flex flex-wrap gap-4 sm:gap-6">
+            <div className='absolute bottom-20 left-6 z-30 lg:left-25'>
+              <div className='flex flex-wrap gap-4 sm:gap-6'>
                 {slide.buttons.map((button, btnIndex) => (
                   <Link
                     onClick={ToTop}
                     key={btnIndex}
                     to={button.link}
-                    className={`text-sm sm:text-base lg:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl transition-all duration-300 font-semibold shadow-lg ${button.color} hover:scale-105 hover:shadow-xl transform`}
+                    className={`rounded-xl px-6 py-3 text-sm font-semibold shadow-lg transition-all duration-300 sm:px-8 sm:py-4 sm:text-base lg:text-lg ${button.color} transform hover:scale-105 hover:shadow-xl`}
                   >
                     {button.text}
-                    <FaArrowRightLong className="inline-block ml-2 sm:ml-4" />
+                    <FaArrowRightLong className='ml-2 inline-block sm:ml-4' />
                   </Link>
                 ))}
               </div>
             </div>
-
           </SwiperSlide>
         ))}
       </Swiper>
     </section>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

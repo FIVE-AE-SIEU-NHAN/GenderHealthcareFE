@@ -1,44 +1,42 @@
 // src/contexts/SocketContext.tsx
 
-import React, { createContext, useContext, useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query'; // Import this
-import { socket } from '@/utils/socket';
-import { useAuth } from './AuthContext';
+import React, { createContext, useContext, useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query' // Import this
+import { socket } from '@/utils/socket'
+import { useAuth } from './AuthContext'
 
-const SocketContext = createContext(socket);
+const SocketContext = createContext(socket)
 
 export const useSocket = () => {
-  return useContext(SocketContext);
-};
+  return useContext(SocketContext)
+}
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     if (user && !socket.connected) {
-      socket.auth = { userId: user.user_id };
-      socket.connect();
+      socket.auth = { userId: user.user_id }
+      socket.connect()
     }
 
     // --- GLOBAL LISTENER FOR NOTIFICATION ---
     const onNewNotification = (data: { notification_id: string; content: string }) => {
       // toast.info("You have a new notification!", { description: data.content });
       console.log({ description: data.content })
-      queryClient.invalidateQueries({ queryKey: ['notifications'] });
-    };
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+    }
 
-    socket.on('notify:send', onNewNotification);
-    
+    socket.on('notify:send', onNewNotification)
+
     return () => {
-      socket.off('notify:send', onNewNotification); // Clean up the listener
+      socket.off('notify:send', onNewNotification) // Clean up the listener
       if (socket.connected) {
-        socket.disconnect();
+        socket.disconnect()
       }
-    };
-  }, [user, queryClient]); 
+    }
+  }, [user, queryClient])
 
-  return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
-  );
-};
+  return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+}

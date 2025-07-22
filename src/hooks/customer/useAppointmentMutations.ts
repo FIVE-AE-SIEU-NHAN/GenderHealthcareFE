@@ -1,8 +1,13 @@
-import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { bookAppointmentAPI, bookServicesAPI } from '@/apis/customer/appointmentApi';
-import type { BookAppointmentError, BookAppointmentPayload, BookAppointmentResponse, BookServicesPayload } from '@/types/customer/appointmentTypes';
-import { AxiosError } from 'axios';
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { bookAppointmentAPI, bookServicesAPI } from '@/apis/customer/appointmentApi'
+import type {
+  BookAppointmentError,
+  BookAppointmentPayload,
+  BookAppointmentResponse,
+  BookServicesPayload
+} from '@/types/customer/appointmentTypes'
+import { AxiosError } from 'axios'
 
 /**
  * A hook for customer-facing appointment mutations.
@@ -16,10 +21,10 @@ export const useAppointmentMutations = () => {
   >({
     mutationFn: bookAppointmentAPI,
     onError: (error) => {
-      const message = error.response?.data?.message || 'Booking failed. Please try again.';
-      toast.error(message);
-    },
-  });
+      const message = error.response?.data?.message || 'Booking failed. Please try again.'
+      toast.error(message)
+    }
+  })
 
   // =============== BOOK A NEW SERVICE ===============
   const bookServiceMutation = useMutation<
@@ -29,13 +34,13 @@ export const useAppointmentMutations = () => {
   >({
     mutationFn: bookServicesAPI,
     onError: (error) => {
-      const message = error.response?.data?.message || 'Booking failed. Please try again.';
-      toast.error(message);
-    },
-  });
+      const message = error.response?.data?.message || 'Booking failed. Please try again.'
+      toast.error(message)
+    }
+  })
 
   return {
     bookAppointment: bookAppointmentMutation,
-    bookService: bookServiceMutation,
-  };
-};
+    bookService: bookServiceMutation
+  }
+}

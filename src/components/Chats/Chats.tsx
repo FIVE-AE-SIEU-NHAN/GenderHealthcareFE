@@ -11,8 +11,8 @@ import {
   Plus,
   Search,
   Send,
-  Video,
-} from 'lucide-react';
+  Video
+} from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -21,8 +21,7 @@ import { type ChatUser, type Convo } from './data/chat-types'
 // Fake Data
 import { conversations } from './data/convo.json'
 import { cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
 export default function Chats() {
   const [search, setSearch] = useState('')
@@ -34,28 +33,25 @@ export default function Chats() {
     fullName.toLowerCase().includes(search.trim().toLowerCase())
   )
 
-  const currentMessage = selectedUser?.messages.reduce(
-    (acc: Record<string, Convo[]>, obj) => {
-      const key = format(obj.timestamp, 'd MMM, yyyy')
+  const currentMessage = selectedUser?.messages.reduce((acc: Record<string, Convo[]>, obj) => {
+    const key = format(obj.timestamp, 'd MMM, yyyy')
 
-      // Create an array for the category if it doesn't exist
-      if (!acc[key]) {
-        acc[key] = []
-      }
+    // Create an array for the category if it doesn't exist
+    if (!acc[key]) {
+      acc[key] = []
+    }
 
-      // Push the current object to the array
-      acc[key].push(obj)
+    // Push the current object to the array
+    acc[key].push(obj)
 
-      return acc
-    },
-    {}
-  )
+    return acc
+  }, {})
 
   return (
     <>
-      <section className='flex max-h-[calc(84vh)] overflow-hidden gap-6'>
+      <section className='flex max-h-[calc(84vh)] gap-6 overflow-hidden'>
         {/* Left Side */}
-        <div className='flex w-full flex-col gap-2 sm:w-56 lg:w-72 2xl:w-80 pb-26'>
+        <div className='flex w-full flex-col gap-2 pb-26 sm:w-56 lg:w-72 2xl:w-80'>
           <div className='bg-background sticky top-0 z-10 -mx-4 px-4 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none'>
             <div className='flex items-center justify-between py-2'>
               <div className='flex gap-2'>
@@ -81,17 +77,14 @@ export default function Chats() {
             {filteredChatList.map((chatUsr) => {
               const { id, profile, username, messages, fullName } = chatUsr
               const lastConvo = messages[0]
-              const lastMsg =
-                lastConvo.sender === 'You'
-                  ? `You: ${lastConvo.message}`
-                  : lastConvo.message
+              const lastMsg = lastConvo.sender === 'You' ? `You: ${lastConvo.message}` : lastConvo.message
               return (
                 <Fragment key={id}>
                   <button
                     type='button'
                     className={cn(
                       `hover:bg-secondary/75 -mx-1 flex w-full rounded-md px-2 py-2 text-left text-sm hover:cursor-pointer`,
-                      selectedUser?.id === id && 'sm:bg-slate-200 hover:bg-slate-200'
+                      selectedUser?.id === id && 'hover:bg-slate-200 sm:bg-slate-200'
                     )}
                     onClick={() => {
                       setSelectedUser(chatUsr)
@@ -104,9 +97,7 @@ export default function Chats() {
                         <AvatarFallback>{username}</AvatarFallback>
                       </Avatar>
                       <div>
-                        <span className='col-start-2 row-span-2 font-medium'>
-                          {fullName}
-                        </span>
+                        <span className='col-start-2 row-span-2 font-medium'>{fullName}</span>
                         <span className='text-muted-foreground col-start-2 row-span-2 row-start-2 line-clamp-2 text-ellipsis'>
                           {lastMsg}
                         </span>
@@ -142,10 +133,7 @@ export default function Chats() {
                 </Button>
                 <div className='flex items-center gap-2 lg:gap-4'>
                   <Avatar className='size-9 lg:size-11'>
-                    <AvatarImage
-                      src={selectedUser.profile}
-                      alt={selectedUser.username}
-                    />
+                    <AvatarImage src={selectedUser.profile} alt={selectedUser.username} />
                     <AvatarFallback>{selectedUser.username}</AvatarFallback>
                   </Avatar>
                   <div>
@@ -164,21 +152,21 @@ export default function Chats() {
                 <Button
                   size='icon'
                   variant='ghost'
-                  className='hidden size-8 rounded-full sm:inline-flex lg:size-10 cursor-pointer'
+                  className='hidden size-8 cursor-pointer rounded-full sm:inline-flex lg:size-10'
                 >
                   <Video size={22} className='stroke-muted-foreground' />
                 </Button>
                 <Button
                   size='icon'
                   variant='ghost'
-                  className='hidden size-8 rounded-full sm:inline-flex lg:size-10 cursor-pointer'
+                  className='hidden size-8 cursor-pointer rounded-full sm:inline-flex lg:size-10'
                 >
                   <Phone size={22} className='stroke-muted-foreground' />
                 </Button>
                 <Button
                   size='icon'
                   variant='ghost'
-                  className='h-10 rounded-md sm:h-8 sm:w-4 lg:h-10 lg:w-6 cursor-pointer'
+                  className='h-10 cursor-pointer rounded-md sm:h-8 sm:w-4 lg:h-10 lg:w-6'
                 >
                   <MoreVertical className='stroke-muted-foreground sm:size-5' />
                 </Button>
@@ -200,7 +188,7 @@ export default function Chats() {
                                   className={cn(
                                     'chat-box max-w-72 px-3 py-2 break-words shadow-lg',
                                     msg.sender === 'You'
-                                      ? 'bg-primary/85 text-slate-200 self-end rounded-[16px_16px_0_16px]'
+                                      ? 'bg-primary/85 self-end rounded-[16px_16px_0_16px] text-slate-200'
                                       : 'bg-secondary self-start rounded-[16px_16px_16px_0]'
                                   )}
                                 >
@@ -210,7 +198,7 @@ export default function Chats() {
                               <TooltipContent
                                 side={msg.sender === 'You' ? 'left' : 'right'}
                                 sideOffset={6}
-                                className="text-white px-2 py-1 rounded-md text-xs"
+                                className='rounded-md px-2 py-1 text-xs text-white'
                               >
                                 <p>{format(msg.timestamp, 'h:mm a')}</p>
                               </TooltipContent>
@@ -225,38 +213,24 @@ export default function Chats() {
               <form className='flex w-full flex-none gap-2'>
                 <div className='border-input focus-within:ring-ring flex flex-1 items-center gap-2 rounded-md border px-2 py-1 focus-within:ring-1 focus-within:outline-hidden lg:gap-4'>
                   <div className='space-x-1'>
-                    <Button
-                      size='icon'
-                      type='button'
-                      variant='ghost'
-                      className='h-8 rounded-md cursor-pointer'
-                    >
-                      <Plus
-                        size={20}
-                        className='stroke-muted-foreground'
-                      />
+                    <Button size='icon' type='button' variant='ghost' className='h-8 cursor-pointer rounded-md'>
+                      <Plus size={20} className='stroke-muted-foreground' />
                     </Button>
                     <Button
                       size='icon'
                       type='button'
                       variant='ghost'
-                      className='hidden h-8 rounded-md lg:inline-flex cursor-pointer'
+                      className='hidden h-8 cursor-pointer rounded-md lg:inline-flex'
                     >
-                      <ImagePlus
-                        size={20}
-                        className='stroke-muted-foreground'
-                      />
+                      <ImagePlus size={20} className='stroke-muted-foreground' />
                     </Button>
                     <Button
                       size='icon'
                       type='button'
                       variant='ghost'
-                      className='hidden h-8 rounded-md lg:inline-flex cursor-pointer'
+                      className='hidden h-8 cursor-pointer rounded-md lg:inline-flex'
                     >
-                      <Paperclip
-                        size={20}
-                        className='stroke-muted-foreground'
-                      />
+                      <Paperclip size={20} className='stroke-muted-foreground' />
                     </Button>
                   </div>
                   <label className='flex-1'>
@@ -267,11 +241,7 @@ export default function Chats() {
                       className='h-8 w-full bg-inherit focus-visible:outline-hidden'
                     />
                   </label>
-                  <Button
-                    variant='ghost'
-                    size='icon'
-                    className='hidden sm:inline-flex'
-                  >
+                  <Button variant='ghost' size='icon' className='hidden sm:inline-flex'>
                     <Send size={20} />
                   </Button>
                 </div>
@@ -293,15 +263,9 @@ export default function Chats() {
               </div>
               <div className='space-y-2 text-center'>
                 <h1 className='text-xl font-semibold'>Your messages</h1>
-                <p className='text-muted-foreground text-sm'>
-                  Send a message to start a chat.
-                </p>
+                <p className='text-muted-foreground text-sm'>Send a message to start a chat.</p>
               </div>
-              <Button
-                className='bg-blue-500 px-6 text-white hover:bg-blue-600'
-              >
-                Send message
-              </Button>
+              <Button className='bg-blue-500 px-6 text-white hover:bg-blue-600'>Send message</Button>
             </div>
           </div>
         )}

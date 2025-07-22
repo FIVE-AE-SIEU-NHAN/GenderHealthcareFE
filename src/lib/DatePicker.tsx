@@ -1,28 +1,18 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { format, setYear } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import * as React from 'react'
+import { format, setYear } from 'date-fns'
+import { CalendarIcon } from 'lucide-react'
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { ControllerRenderProps } from "react-hook-form"
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { ControllerRenderProps } from 'react-hook-form'
 
 interface DatePickerProps {
-  field: ControllerRenderProps<any, any>;
+  field: ControllerRenderProps<any, any>
 }
 
 function DatePicker({ field }: DatePickerProps) {
@@ -89,100 +79,82 @@ function DatePicker({ field }: DatePickerProps) {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={'outline'}
           className={cn(
-            "w-[213px] min-[541px]:w-[230px] sm:w-[250px] justify-start text-left font-normal p-5",
-            !field.value && "text-muted-foreground"
+            'w-[213px] justify-start p-5 text-left font-normal min-[541px]:w-[230px] sm:w-[250px]',
+            !field.value && 'text-muted-foreground'
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {field.value ? format(field.value, "PPP") : <span>Pick a Date</span>}
+          <CalendarIcon className='mr-2 h-4 w-4' />
+          {field.value ? format(field.value, 'PPP') : <span>Pick a Date</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="flex w-auto flex-col space-y-2 p-2">
-        <Select
-          value={selectedYear.toString()}
-          onValueChange={handleYearChange}
-          onOpenChange={setIsSelectOpen}
-        >
-          <SelectTrigger className="w-[150px] h-9">
-            <SelectValue placeholder="Select Year" />
+      <PopoverContent align='start' className='flex w-auto flex-col space-y-2 p-2'>
+        <Select value={selectedYear.toString()} onValueChange={handleYearChange} onOpenChange={setIsSelectOpen}>
+          <SelectTrigger className='h-9 w-[150px]'>
+            <SelectValue placeholder='Select Year' />
           </SelectTrigger>
-          <SelectContent className="max-h-64 overflow-y-auto">
+          <SelectContent className='max-h-64 overflow-y-auto'>
             {/* Show all years when open, but render efficiently */}
-            {isSelectOpen ?
-              years.map((year) => (
-                <SelectItem key={year} value={year.toString()}>
-                  {year}
-                </SelectItem>
-              ))
-              :
-              visibleYears.map((year) => (
-                <SelectItem key={year} value={year.toString()}>
-                  {year}
-                </SelectItem>
-              ))
-            }
+            {isSelectOpen
+              ? years.map((year) => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))
+              : visibleYears.map((year) => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))}
           </SelectContent>
         </Select>
 
         {/* Calendar */}
-        <div className="rounded-md border">
+        <div className='rounded-md border'>
           <Calendar
-            mode="single"
+            mode='single'
             selected={field.value}
             onSelect={field.onChange}
             month={calendarMonth}
             onMonthChange={setCalendarMonth}
           />
-
         </div>
       </PopoverContent>
     </Popover>
   )
 }
 
-
 interface DatePickerNormalProps {
-  field: ControllerRenderProps<any, any>;
-  error?: boolean;
+  field: ControllerRenderProps<any, any>
+  error?: boolean
 }
 
-function DatePickerNormal({ field,error }: DatePickerNormalProps) {
+function DatePickerNormal({ field, error }: DatePickerNormalProps) {
   const today = new Date()
-  const threeMonthsLater = new Date(
-    today.getFullYear(),
-    today.getMonth() + 3,
-    today.getDate()
-  )
+  const threeMonthsLater = new Date(today.getFullYear(), today.getMonth() + 3, today.getDate())
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={'outline'}
           className={cn(
-            "w-[240px] pl-3 text-left font-normal",
-            !field.value && "text-muted-foreground",
-            error && "border-red-500 ring-1 ring-red-300"
+            'w-[240px] pl-3 text-left font-normal',
+            !field.value && 'text-muted-foreground',
+            error && 'border-red-500 ring-1 ring-red-300'
           )}
         >
-          {field.value ? (
-            format(field.value, "PPP")
-          ) : (
-            <span>Chọn ngày hẹn</span>
-          )}
-          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+          {field.value ? format(field.value, 'PPP') : <span>Chọn ngày hẹn</span>}
+          <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className='w-auto p-0' align='start'>
         <Calendar
-          mode="single"
+          mode='single'
           selected={field.value}
           onSelect={field.onChange}
-          disabled={(date) =>
-            date < today || date > threeMonthsLater
-          }
+          disabled={(date) => date < today || date > threeMonthsLater}
           autoFocus
         />
       </PopoverContent>
@@ -190,40 +162,37 @@ function DatePickerNormal({ field,error }: DatePickerNormalProps) {
   )
 }
 
-
-import { ChevronDownIcon } from "lucide-react"
+import { ChevronDownIcon } from 'lucide-react'
 
 interface NewDatePickerProps {
-  value?: Date;
-  onChange: (date: Date | undefined) => void;
+  value?: Date
+  onChange: (date: Date | undefined) => void
 }
 
 function NewDatePicker({ value, onChange }: NewDatePickerProps) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-48 justify-between font-normal">
-          {value ? value.toLocaleDateString() : "Select date"}
+        <Button variant='outline' className='w-48 justify-between font-normal'>
+          {value ? value.toLocaleDateString() : 'Select date'}
           <ChevronDownIcon />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+      <PopoverContent className='w-auto overflow-hidden p-0' align='start'>
         <Calendar
-          mode="single"
+          mode='single'
           selected={value}
-          captionLayout="dropdown"
+          captionLayout='dropdown'
           onSelect={(selected) => {
-            onChange(selected);
-            setOpen(false);
+            onChange(selected)
+            setOpen(false)
           }}
         />
       </PopoverContent>
     </Popover>
-  );
+  )
 }
 
-
-
-export { DatePicker, DatePickerNormal, NewDatePicker };
+export { DatePicker, DatePickerNormal, NewDatePicker }

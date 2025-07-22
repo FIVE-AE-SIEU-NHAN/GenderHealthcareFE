@@ -1,59 +1,55 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Lock, UserPlus, LogIn } from "lucide-react";
-import unAuth from "@/assets/images/unauth.png"; 
+import React from 'react'
+import { Button } from '@/components/ui/button'
+import { Lock, UserPlus, LogIn } from 'lucide-react'
+import unAuth from '@/assets/images/unauth.png'
 
 const Unauthorized = () => {
   return (
-    <div className="relative w-full text-dark-blue flex flex-col bg-gradient-to-br from-blue-50 via-white to-blue-100 min-h-[calc(100vh-72px)]">
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <Lock className="absolute top-12 left-8 text-blue-200 w-24 h-24 opacity-40 rotate-6" />
-        <UserPlus className="absolute top-36 right-14 text-pink-300 w-32 h-32 opacity-20 -rotate-12" />
-        <LogIn className="absolute bottom-20 left-10 text-blue-300 w-20 h-20 opacity-30 rotate-3" />
+    <div className='text-dark-blue relative flex min-h-[calc(100vh-72px)] w-full flex-col bg-gradient-to-br from-blue-50 via-white to-blue-100'>
+      <div className='pointer-events-none absolute inset-0 z-0'>
+        <Lock className='absolute top-12 left-8 h-24 w-24 rotate-6 text-blue-200 opacity-40' />
+        <UserPlus className='absolute top-36 right-14 h-32 w-32 -rotate-12 text-pink-300 opacity-20' />
+        <LogIn className='absolute bottom-20 left-10 h-20 w-20 rotate-3 text-blue-300 opacity-30' />
       </div>
-      <section className="z-10 flex-grow grid place-items-center px-6">
-        <div className="container grid gap-12 lg:max-w-4xl lg:grid-cols-2 lg:items-center">
-          <div className="text-center space-y-6 max-w-lg mx-auto text-shadow-md/10">
-            <p className="text-2xl sm:text-3xl font-bold uppercase text-light-blue tracking-wide">
-              Unauthorized
-            </p>
-            <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">
-              Access Denied
-            </h1>
-            <p className="font-semibold text-semi-dark-blue leading-relaxed text-xl sm:text-2xl w-116">
+      <section className='z-10 grid flex-grow place-items-center px-6'>
+        <div className='container grid gap-12 lg:max-w-4xl lg:grid-cols-2 lg:items-center'>
+          <div className='mx-auto max-w-lg space-y-6 text-center text-shadow-md/10'>
+            <p className='text-light-blue text-2xl font-bold tracking-wide uppercase sm:text-3xl'>Unauthorized</p>
+            <h1 className='text-4xl leading-tight font-extrabold sm:text-6xl'>Access Denied</h1>
+            <p className='text-semi-dark-blue w-116 text-xl leading-relaxed font-semibold sm:text-2xl'>
               You need to be logged in to access this page. Please log in or sign up to continue.
             </p>
 
-            <div className="flex justify-center gap-6 mt-6">
+            <div className='mt-6 flex justify-center gap-6'>
               <Button
-                onClick={() => (window.location.href = "/login")}
-                className="min-w-[126px] bg-light-blue hover:bg-semi-dark-blue text-white px-6 py-6 rounded-full font-bold text-xl shadow-lg hover:shadow-xl transition-transform duration-200 ease-in-out active:scale-95 hover:-translate-y-0.5 active:translate-y-0.5"
+                onClick={() => (window.location.href = '/login')}
+                className='bg-light-blue hover:bg-semi-dark-blue min-w-[126px] rounded-full px-6 py-6 text-xl font-bold text-white shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0.5 active:scale-95'
               >
-                <LogIn className="inline mr-1 h-6 w-6" /> Login
+                <LogIn className='mr-1 inline h-6 w-6' /> Login
               </Button>
               <Button
-                onClick={() => (window.location.href = "/signup")}
-                variant="outline"
-                className="text-light-blue border-light-blue hover:bg-blue-50 hover:text-light-blue px-6 py-6 rounded-full font-bold text-xl shadow-lg hover:shadow-xl transition-transform duration-200 ease-in-out active:scale-95 hover:-translate-y-0.5 active:translate-y-0.5"
+                onClick={() => (window.location.href = '/signup')}
+                variant='outline'
+                className='text-light-blue border-light-blue hover:text-light-blue rounded-full px-6 py-6 text-xl font-bold shadow-lg transition-transform duration-200 ease-in-out hover:-translate-y-0.5 hover:bg-blue-50 hover:shadow-xl active:translate-y-0.5 active:scale-95'
               >
-                <UserPlus className="inline mr-1 h-6 w-6" /> Sign Up
+                <UserPlus className='mr-1 inline h-6 w-6' /> Sign Up
               </Button>
             </div>
           </div>
 
           {/* Illustration Block */}
-          <div className="flex flex-col items-center justify-center">
+          <div className='flex flex-col items-center justify-center'>
             <img
-              src= {unAuth}
-              alt="Unauthorized access illustration"
-              className="w-64 lg:w-[360px] ml-7 animate-floating"
+              src={unAuth}
+              alt='Unauthorized access illustration'
+              className='animate-floating ml-7 w-64 lg:w-[360px]'
             />
-            <div className="mt-6 h-8 w-36 rounded-full bg-blue-900/20 blur-md animate-shadow"></div>
+            <div className='animate-shadow mt-6 h-8 w-36 rounded-full bg-blue-900/20 blur-md'></div>
           </div>
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default Unauthorized;
+export default Unauthorized

@@ -7,40 +7,39 @@
  * returned by the `getStaffsForAdmin` service.
  */
 export interface DoctorProfile {
-  id: string;
-  name: string;
-  gender: 'male' | 'female' | 'other';
-  date_of_birth: string;
-  specialization: string;
-  created_at: string;
-  status: number; // 0 for Inactive, 1 for Active
-  email: string;
-  phone_number: string;
+  id: string
+  name: string
+  gender: 'male' | 'female' | 'other'
+  date_of_birth: string
+  specialization: string
+  created_at: string
+  status: number // 0 for Inactive, 1 for Active
+  email: string
+  phone_number: string
 }
 
 export interface GetDoctorProfileResponse {
-  message: string;
-  staff: DoctorProfile;
+  message: string
+  staff: DoctorProfile
 }
 /**
  * Represents the raw response structure from the `/staff/get-staff` API endpoint.
  */
 export interface BackendDoctorResponse {
-  message: string;
+  message: string
   result: {
-    staffs: DoctorProfile[];
-    total: number;
-  };
+    staffs: DoctorProfile[]
+    total: number
+  }
 }
 
 /**
  * Represents the structured, paginated data format consumed by the `useDoctors` hook.
  */
 export interface PaginatedDoctorsResponse {
-  data: DoctorProfile[];
-  total: number;
+  data: DoctorProfile[]
+  total: number
 }
-
 
 // =================================================================
 // ==                DATA FETCHING & FILTERING OPTIONS            ==
@@ -51,24 +50,23 @@ export interface PaginatedDoctorsResponse {
  * These options are passed to the `useDoctors` hook and `fetchDoctors` API call.
  */
 export interface UseDoctorsOptions {
-  page: number;
-  limit: number;
-  filters: Record<string, string | string[]>;
+  page: number
+  limit: number
+  filters: Record<string, string | string[]>
   search: {
-    field: string;
-    value: string;
-  };
+    field: string
+    value: string
+  }
   sort: {
-    field: keyof DoctorProfile;
-    direction: 'asc' | 'desc';
-  };
+    field: keyof DoctorProfile
+    direction: 'asc' | 'desc'
+  }
   dateRange?: {
-    field: string;
-    from?: Date;
-    to?: Date;
-  };
+    field: string
+    from?: Date
+    to?: Date
+  }
 }
-
 
 // =================================================================
 // ==                      DOCTOR MUTATIONS                       ==
@@ -79,17 +77,16 @@ export interface UseDoctorsOptions {
  * Payload for the `editDoctorStatusAPI` mutation.
  */
 export interface EditDoctorStatusPayload {
-  doctorId: string;
-  status: number; // 0 for Inactive, 1 for Active
+  doctorId: string
+  status: number // 0 for Inactive, 1 for Active
 }
 
 /**
  * Expected response from the `editDoctorStatusAPI` mutation.
  */
-export interface EditDoctorStatusResponse{
-  message: string;
+export interface EditDoctorStatusResponse {
+  message: string
 }
-
 
 // =============== UPDATE DOCTOR PROFILE ===============
 /**
@@ -97,8 +94,8 @@ export interface EditDoctorStatusResponse{
  * It requires the doctor's ID and a partial object of their profile fields.
  */
 export interface UpdateDoctorProfilePayload {
-  doctorId: string;
-  specialization: string;
+  doctorId: string
+  specialization: string
 }
 
 /**
@@ -106,6 +103,6 @@ export interface UpdateDoctorProfilePayload {
  * which includes the updated doctor data.
  */
 export interface UpdateDoctorProfileResponse {
-  message: string;
-  doctorInfor: DoctorProfile;
+  message: string
+  doctorInfor: DoctorProfile
 }

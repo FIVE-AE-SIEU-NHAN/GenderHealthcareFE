@@ -1,19 +1,15 @@
-import { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
-import { ChartAreaInteractive } from "@/components/test-chart";
-import { useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
-
-
+import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
+import { ChartAreaInteractive } from '@/components/test-chart'
+import { useEffect } from 'react'
+import { useOutletContext } from 'react-router-dom'
 
 export default function ManagerDashboard() {
-  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
   useEffect(() => {
     setBreadcrumb({
-      title: "Manager Dashboard",
-    });
-  }, [setBreadcrumb]);
+      title: 'Manager Dashboard'
+    })
+  }, [setBreadcrumb])
 
-  return (
-    <ChartAreaInteractive />
-  )
+  return <ChartAreaInteractive />
 }

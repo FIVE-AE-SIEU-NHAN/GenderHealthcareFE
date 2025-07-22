@@ -7,15 +7,15 @@ export type PayOSResponse = {
   orderCode: number
   currency: string
   paymentLinkId: string
-  status: "PENDING" | "PAID" | "FAILED" | string
+  status: 'PENDING' | 'PAID' | 'FAILED' | string
   checkoutUrl: string
   qrCode: string
 }
 
 export interface CancelPaymentPayload {
-  orderCode: string;
+  orderCode: string
 }
 
 export interface CancelPaymentResponse {
-  message: string;
+  message: string
 }

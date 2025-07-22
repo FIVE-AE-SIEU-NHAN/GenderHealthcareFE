@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap');
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -23,15 +23,15 @@ body {
 
   --radius-button: 14px;
 
-  --animate-fade-in-up: fade-in-up .6s ease-in-out;
+  --animate-fade-in-up: fade-in-up 0.6s ease-in-out;
   --animate-caret-blink: caret-blink 1.25s ease-out infinite;
   --animate-jello: jello-horizontal 0.9s both;
-  --animate-slide-up: slideUp .6s ease-out forwards;
-  --animate-fade-in: fadeIn .6s ease-out forwards;
+  --animate-slide-up: slideUp 0.6s ease-out forwards;
+  --animate-fade-in: fadeIn 0.6s ease-out forwards;
   --animate-shadow: shadow 2.45s infinite;
   --animate-floating: floating 2.45s infinite;
-  --animate-fade-in-scale: fadeInScale .5s ease forwards;
-  --animate-shine: shine .5s ease-in-out;
+  --animate-fade-in-scale: fadeInScale 0.5s ease forwards;
+  --animate-shine: shine 0.5s ease-in-out;
   --animate-accordion-down: accordion-down 0.3s ease-out;
   --animate-accordion-up: accordion-up 0.3s ease-in;
   --animate-fade-in-zoom: fadeInScale 0.3s ease-out;
@@ -89,16 +89,18 @@ body {
   }
 
   @keyframes shadow {
-    0%,100% {
-      transform: scale(1,1);
+    0%,
+    100% {
+      transform: scale(1, 1);
     }
     50% {
-      transform: scale(.85,.85);
+      transform: scale(0.85, 0.85);
     }
   }
 
   @keyframes floating {
-    0%,100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
@@ -106,7 +108,7 @@ body {
     }
   }
 
-  @keyframes fadeIn{
+  @keyframes fadeIn {
     0% {
       opacity: 0;
     }
@@ -127,10 +129,13 @@ body {
   }
 
   @keyframes caret-blink {
-    0%,70%,100% {
+    0%,
+    70%,
+    100% {
       opacity: 1;
     }
-    20%,50% {
+    20%,
+    50% {
       opacity: 0;
     }
   }
@@ -158,9 +163,7 @@ body {
 
 @layer components {
   .nav-text {
-    @apply whitespace-nowrap text-navText text-shadow-md
-    relative text-xl inline-block after:absolute after:left-2 after:bottom-1.5 after:h-[2px] after:w-0
-     lg:after:bg-black after:transition-all after:duration-300 hover:after:w-[75%];
+    @apply text-navText relative inline-block text-xl whitespace-nowrap text-shadow-md after:absolute after:bottom-1.5 after:left-2 after:h-[2px] after:w-0 after:transition-all after:duration-300 hover:after:w-[75%] lg:after:bg-black;
   }
 
   .section-text {
@@ -168,11 +171,11 @@ body {
   }
 
   .form-icon {
-    @apply absolute left-2 top-[14px] h-4 w-4 text-[#101245] stroke-[2.7];
+    @apply absolute top-[14px] left-2 h-4 w-4 stroke-[2.7] text-[#101245];
   }
 
   .shine {
-    @apply absolute top-0 left-[-75%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] transition-all duration-300 ease-in-out pointer-events-none;
+    @apply pointer-events-none absolute top-0 left-[-75%] h-full w-[50%] skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/40 to-transparent transition-all duration-300 ease-in-out;
   }
 }
 
@@ -191,7 +194,7 @@ body {
     --chart-4: oklch(0.828 0.189 84.429);
     --chart-5: oklch(0.769 0.188 70.08);
   }
- 
+
   .dark {
     --chart-1: oklch(0.488 0.243 264.376);
     --chart-2: oklch(0.696 0.17 162.48);
@@ -200,10 +203,9 @@ body {
     --chart-5: oklch(0.645 0.246 16.439);
   }
 
-
   * {
     scrollbar-width: none; /* Can be "auto", "thin", or "none" */
-    scrollbar-color: #1C2359 transparent; /* thumb color track color */
+    scrollbar-color: #1c2359 transparent; /* thumb color track color */
   }
 
   .swiper-pagination-bullet {
@@ -215,12 +217,71 @@ body {
   }
 
   .swiper-pagination-bullet-active {
-    background-color: #1a3973 !important; 
+    background-color: #1a3973 !important;
     opacity: 1;
   }
 
   /* External animation */
-  @-webkit-keyframes jello-horizontal{0%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}30%{-webkit-transform:scale3d(1.25,.75,1);transform:scale3d(1.25,.75,1)}40%{-webkit-transform:scale3d(.75,1.25,1);transform:scale3d(.75,1.25,1)}50%{-webkit-transform:scale3d(1.15,.85,1);transform:scale3d(1.15,.85,1)}65%{-webkit-transform:scale3d(.95,1.05,1);transform:scale3d(.95,1.05,1)}75%{-webkit-transform:scale3d(1.05,.95,1);transform:scale3d(1.05,.95,1)}100%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}}@keyframes jello-horizontal{0%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}30%{-webkit-transform:scale3d(1.25,.75,1);transform:scale3d(1.25,.75,1)}40%{-webkit-transform:scale3d(.75,1.25,1);transform:scale3d(.75,1.25,1)}50%{-webkit-transform:scale3d(1.15,.85,1);transform:scale3d(1.15,.85,1)}65%{-webkit-transform:scale3d(.95,1.05,1);transform:scale3d(.95,1.05,1)}75%{-webkit-transform:scale3d(1.05,.95,1);transform:scale3d(1.05,.95,1)}100%{-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}}
+  @-webkit-keyframes jello-horizontal {
+    0% {
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+    }
+    30% {
+      -webkit-transform: scale3d(1.25, 0.75, 1);
+      transform: scale3d(1.25, 0.75, 1);
+    }
+    40% {
+      -webkit-transform: scale3d(0.75, 1.25, 1);
+      transform: scale3d(0.75, 1.25, 1);
+    }
+    50% {
+      -webkit-transform: scale3d(1.15, 0.85, 1);
+      transform: scale3d(1.15, 0.85, 1);
+    }
+    65% {
+      -webkit-transform: scale3d(0.95, 1.05, 1);
+      transform: scale3d(0.95, 1.05, 1);
+    }
+    75% {
+      -webkit-transform: scale3d(1.05, 0.95, 1);
+      transform: scale3d(1.05, 0.95, 1);
+    }
+    100% {
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+    }
+  }
+  @keyframes jello-horizontal {
+    0% {
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+    }
+    30% {
+      -webkit-transform: scale3d(1.25, 0.75, 1);
+      transform: scale3d(1.25, 0.75, 1);
+    }
+    40% {
+      -webkit-transform: scale3d(0.75, 1.25, 1);
+      transform: scale3d(0.75, 1.25, 1);
+    }
+    50% {
+      -webkit-transform: scale3d(1.15, 0.85, 1);
+      transform: scale3d(1.15, 0.85, 1);
+    }
+    65% {
+      -webkit-transform: scale3d(0.95, 1.05, 1);
+      transform: scale3d(0.95, 1.05, 1);
+    }
+    75% {
+      -webkit-transform: scale3d(1.05, 0.95, 1);
+      transform: scale3d(1.05, 0.95, 1);
+    }
+    100% {
+      -webkit-transform: scale3d(1, 1, 1);
+      transform: scale3d(1, 1, 1);
+    }
+  }
 
   /* === SCROLL === */
 
@@ -302,7 +363,7 @@ body {
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.623 0.214 259.815);
 }
- 
+
 .dark {
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);

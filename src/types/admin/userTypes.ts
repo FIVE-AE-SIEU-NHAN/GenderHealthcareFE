@@ -1,79 +1,69 @@
-import type { User } from '@/types/user'; 
-
+import type { User } from '@/types/user'
 
 // =================== USERS FETCHING ===================
 export interface BackendUserResponse {
-  message: string;
+  message: string
   result: {
-    users: User[];
-    total: number;
-  };
+    users: User[]
+    total: number
+  }
 }
-
 
 // --------- Response for paginated users ---------
 export interface PaginatedUsersResponse {
-  data: User[];
-  total: number;
+  data: User[]
+  total: number
 }
 
 // --------- Options for the hook ---------
 export interface UseUsersOptions {
-  page: number;
-  limit: number;
-  filters: Record<string, ( string | number ) | ( string | number )[] >; 
+  page: number
+  limit: number
+  filters: Record<string, (string | number) | (string | number)[]>
   search: {
-    field: string; 
-    value: string;
-  };
+    field: string
+    value: string
+  }
   sort: {
-    field: keyof User;
-    direction: 'asc' | 'desc';
-  };
+    field: keyof User
+    direction: 'asc' | 'desc'
+  }
   dateRange?: {
-    field?: string; 
-    from?: Date;
-    to?: Date;
-  };
+    field?: string
+    from?: Date
+    to?: Date
+  }
 }
 
-
-
-
-
-
-// =================== USERS STATUS =================== 
+// =================== USERS STATUS ===================
 export interface EditUserStatusPayload {
-  userId: string;
-  status: number;
+  userId: string
+  status: number
 }
 
 export interface EditUserStatusResponse {
-  message: string;
+  message: string
 }
-
-
-
 
 // =================== USER CREATION ===================
 export interface CreateUserPayload {
-  name: string;
-  email: string;
-  gender: 'male' | 'female' | 'other';
-  phone_number: string;
-  password: string;
-  date_of_birth: string; 
-  role: number;
+  name: string
+  email: string
+  gender: 'male' | 'female' | 'other'
+  phone_number: string
+  password: string
+  date_of_birth: string
+  role: number
 
   // "Consultant" role
-  specialization_1?: string;
-  specialization_2?: string;
-  certifications?: string;
-  experienceYears?: number;
+  specialization_1?: string
+  specialization_2?: string
+  certifications?: string
+  experienceYears?: number
 }
 
 // --------- Response for user creation ---------
 export interface CreateUserResponse {
-  message: string;
-  result: User; 
+  message: string
+  result: User
 }

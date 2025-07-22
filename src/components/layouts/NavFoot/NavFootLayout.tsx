@@ -1,6 +1,6 @@
-import Navbar from "@/components/layouts/NavFoot/Navbar";
-import Footer from "@/components/layouts/NavFoot/Footer";
-import { Outlet } from "react-router-dom";
+import Navbar from '@/components/layouts/NavFoot/Navbar'
+import Footer from '@/components/layouts/NavFoot/Footer'
+import { Outlet } from 'react-router-dom'
 
 export default function NavFootLayout() {
   return (
@@ -9,5 +9,5 @@ export default function NavFootLayout() {
       <Outlet />
       <Footer />
     </>
-  );
+  )
 }

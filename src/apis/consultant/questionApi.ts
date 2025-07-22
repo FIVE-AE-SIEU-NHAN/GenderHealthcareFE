@@ -1,65 +1,67 @@
-import api from '@/apis/axiosConfig';
-import type { AnswerQuestionPayload, QuestionMutationResponse } from '@/types/consultant/questionTypes';
+import api from '@/apis/axiosConfig'
+import type { AnswerQuestionPayload, QuestionMutationResponse } from '@/types/consultant/questionTypes'
 
-import { QUESTION_STATUS, QUESTION_SEARCH_FIELDS } from '@/Application/constants/manager/manager.questionConstants';
-import { BackendQuestionResponse, PaginatedQuestionsResponse, UseQuestionsOptions } from '@/types/manager/questionTypes';
-import { format } from 'date-fns';
+import { QUESTION_STATUS, QUESTION_SEARCH_FIELDS } from '@/Application/constants/manager/manager.questionConstants'
+import { BackendQuestionResponse, PaginatedQuestionsResponse, UseQuestionsOptions } from '@/types/manager/questionTypes'
+import { format } from 'date-fns'
 
 // =============== QUESTION FETCHING ===============
-export const fetchQuestions = async ({ page, limit, filters, search, sort, dateRange }: UseQuestionsOptions): Promise<PaginatedQuestionsResponse> => {
+export const fetchQuestions = async ({
+  page,
+  limit,
+  filters,
+  search,
+  sort,
+  dateRange
+}: UseQuestionsOptions): Promise<PaginatedQuestionsResponse> => {
   const params: Record<string, string | number | number[] | string[]> = {
     _page: page,
     _limit: limit,
     _sort: sort.field,
-    _order: sort.direction,
-  };
+    _order: sort.direction
+  }
 
-  // Search 
+  // Search
   if (search.value && QUESTION_SEARCH_FIELDS[search.field as keyof typeof QUESTION_SEARCH_FIELDS]) {
-    const backendKey = QUESTION_SEARCH_FIELDS[search.field as keyof typeof QUESTION_SEARCH_FIELDS];
-    params[backendKey] = search.value;
+    const backendKey = QUESTION_SEARCH_FIELDS[search.field as keyof typeof QUESTION_SEARCH_FIELDS]
+    params[backendKey] = search.value
   }
 
   // Filters
   for (const key in filters) {
-    const value = filters[key];
-    const valuesAsArray = Array.isArray(value) ? value : [value];
+    const value = filters[key]
+    const valuesAsArray = Array.isArray(value) ? value : [value]
     if (key === 'status') {
-      params._status = valuesAsArray.map(v => QUESTION_STATUS.API_MAP[String(v)]);
-    } 
-    else if (key === 'topic') {
-      params._topic = valuesAsArray as string[]; 
+      params._status = valuesAsArray.map((v) => QUESTION_STATUS.API_MAP[String(v)])
+    } else if (key === 'topic') {
+      params._topic = valuesAsArray as string[]
     }
   }
 
+  // Date Filter
+  if (dateRange && (dateRange.from || dateRange.to)) {
+    const dates: string[] = []
 
-  // Date Filter 
-   if (dateRange && (dateRange.from || dateRange.to)) {
-    const dates: string[] = [];
-    
     if (dateRange.from) {
-      dates.push(format(dateRange.from, 'yyyy-MM-dd'));
+      dates.push(format(dateRange.from, 'yyyy-MM-dd'))
     }
     if (dateRange.to) {
-      dates.push(format(dateRange.to, 'yyyy-MM-dd'));
+      dates.push(format(dateRange.to, 'yyyy-MM-dd'))
     }
 
     if (dates.length > 0) {
-      const dateKey = `_${dateRange.field}`; 
-      params[dateKey] = dates;
+      const dateKey = `_${dateRange.field}`
+      params[dateKey] = dates
     }
   }
-  
-  const response = await api.get<BackendQuestionResponse>('/question/consultant', { params }); 
-  const result = response.data?.result; 
+
+  const response = await api.get<BackendQuestionResponse>('/question/consultant', { params })
+  const result = response.data?.result
   return {
-    data: result?.questions ?? [],  
-    total: result?.total ?? 0,  
-  };
-};
-
-
-
+    data: result?.questions ?? [],
+    total: result?.total ?? 0
+  }
+}
 
 // =============== ANSWERING A QUESTION ===============
 /**
@@ -70,12 +72,12 @@ export const fetchQuestions = async ({ page, limit, filters, search, sort, dateR
  */
 export const answerQuestionAPI = async ({
   questionId,
-  answer,
+  answer
 }: AnswerQuestionPayload): Promise<QuestionMutationResponse> => {
-  const body = { answer };
-  const response = await api.patch<QuestionMutationResponse>(`/question/${questionId}/answer`, body);
-  return response.data;
-};
+  const body = { answer }
+  const response = await api.patch<QuestionMutationResponse>(`/question/${questionId}/answer`, body)
+  return response.data
+}
 
 // =============== EDITING AN ANSWER ===============
 /**
@@ -86,13 +88,12 @@ export const answerQuestionAPI = async ({
  */
 export const editAnswerAPI = async ({
   questionId,
-  answer,
+  answer
 }: AnswerQuestionPayload): Promise<QuestionMutationResponse> => {
-  const body = { answer };
-  const response = await api.patch<QuestionMutationResponse>(`/question/${questionId}/consultant-edit`, body);
-  return response.data;
-};
-
+  const body = { answer }
+  const response = await api.patch<QuestionMutationResponse>(`/question/${questionId}/consultant-edit`, body)
+  return response.data
+}
 
 // =============== REPORT A QUESTION ===============
 /**
@@ -102,6 +103,6 @@ export const editAnswerAPI = async ({
  * @returns A promise that resolves to the server's success message.
  */
 export const reportQuestionAPI = async (questionId: string): Promise<QuestionMutationResponse> => {
-  const response = await api.post<QuestionMutationResponse>(`/question/${questionId}/report`);
-  return response.data;
-};
+  const response = await api.post<QuestionMutationResponse>(`/question/${questionId}/report`)
+  return response.data
+}

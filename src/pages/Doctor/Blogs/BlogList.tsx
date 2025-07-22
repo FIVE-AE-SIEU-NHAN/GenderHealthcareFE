@@ -1,205 +1,185 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useOutletContext } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import {
-  MoreHorizontal,
-  XCircle,
-  Pencil,
-  NotepadText,
-  Loader2,
-} from "lucide-react";
+import React, { useEffect, useMemo, useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { MoreHorizontal, XCircle, Pencil, NotepadText, Loader2 } from 'lucide-react'
 
-import type { DashboardLayoutContext } from "@/components/layouts/Dashboard/DashboardLayout";
-import TableToolbar, { FacetFilter } from "@/components/layouts/Dashboard/TableToolbar";
-import { DataTable } from "@/components/layouts/Dashboard/DataTable";
-import type { Blog } from "@/types";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import type { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
+import TableToolbar, { FacetFilter } from '@/components/layouts/Dashboard/TableToolbar'
+import { DataTable } from '@/components/layouts/Dashboard/DataTable'
+import type { Blog } from '@/types'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
-import { DataTableSkeleton } from "@/components/layouts/Dashboard/DataTableSkeleton";
-import { formatDate } from "@/utils/formatDate";
-import { BLOG_STATUS } from "@/Application/constants/manager/manager.blogConstants";
-import { useBlogs } from "@/hooks/doctor/useBlogs";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CreateBlogDialogContent } from "./BlogCreate";
-import { useBlogDetail } from "@/hooks/customer/useBlogs";
-
+import { DataTableSkeleton } from '@/components/layouts/Dashboard/DataTableSkeleton'
+import { formatDate } from '@/utils/formatDate'
+import { BLOG_STATUS } from '@/Application/constants/manager/manager.blogConstants'
+import { useBlogs } from '@/hooks/doctor/useBlogs'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { CreateBlogDialogContent } from './BlogCreate'
+import { useBlogDetail } from '@/hooks/customer/useBlogs'
 
 // ========== FACET FILTERS ==========
 const blogFacetFilters: FacetFilter[] = [
   {
-    key: "status",
-    label: "Status",
-    options: BLOG_STATUS.FILTER_OPTIONS,
-  },
-];
+    key: 'status',
+    label: 'Status',
+    options: BLOG_STATUS.FILTER_OPTIONS
+  }
+]
 
 // ========== DATE FILTERS ==========
-const dateFilterOptions = [
-  { value: 'created_at', label: 'Date Created' },
-];
+const dateFilterOptions = [{ value: 'created_at', label: 'Date Created' }]
 
 // ========== SEARCHABLE FIELDS ==========
 const searchableFields = [
   { value: 'all', label: 'All Fields' },
   { value: 'title', label: 'Title' },
-  { value: 'summary', label: 'Description' },
-];
+  { value: 'summary', label: 'Description' }
+]
 
 export default function BlogListDashboard() {
-  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>();
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
 
-  const [page, setPage] = useState(1);
-  const ROWS_PER_PAGE = 10;
+  const [page, setPage] = useState(1)
+  const ROWS_PER_PAGE = 10
 
   const [sort, setSort] = useState<{ field: keyof Blog; direction: 'asc' | 'desc' }>({
     field: 'created_at',
     direction: 'desc'
-  });
+  })
 
-  const [activeFilterKey, setActiveFilterKey] = useState<string>('status');
-  const [activeFilterValues, setActiveFilterValues] = useState<string[]>([]);
+  const [activeFilterKey, setActiveFilterKey] = useState<string>('status')
+  const [activeFilterValues, setActiveFilterValues] = useState<string[]>([])
 
-  const [uiSearchConfig, setUiSearchConfig] = useState({ field: 'all', value: '' });
-  const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'all', value: '' });
-
-
-
-
+  const [uiSearchConfig, setUiSearchConfig] = useState({ field: 'all', value: '' })
+  const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'all', value: '' })
 
   // =============== COLUMNS FORMAT ===============
-  const allBlogColumns = useMemo(() => [
-    {
-      key: "no",
-      label: "No.",
-      sortable: false,
-      render: (_blog: Blog, index: number) => (
-        <Badge variant="outline" className="font-mono bg-emerald-400/15 border-emerald-600">
-          {(page - 1) * ROWS_PER_PAGE + index + 1}
-        </Badge>
-      ),
-    },
-    {
-      key: "id",
-      label: "ID",
-      defaultVisible: false,
-      render: (blog: Blog) => (
-        <Badge variant="outline" className="font-mono bg-emerald-400/15">
-          {blog.id}
-        </Badge>
-      )
-    },
-    {
-      key: "title",
-      label: "Title",
-      render: (blog: Blog) => <p className="line-clamp-2 font-semibold">{blog.title}</p>,
-    },
-    {
-      key: "summary",
-      label: "Description",
-      sortable: false,
-      cellclassName: "max-w-sm",
-      render: (blog: Blog) => <p className="truncate text-left">{blog.summary}</p>,
-    },
-    {
-      key: "created_at",
-      label: "Date Created",
-      render: (blog: Blog) => formatDate(blog.created_at),
-    },
-    {
-      key: "status",
-      label: "Status",
-      render: (blog: Blog) => {
-        const statusString = BLOG_STATUS.UI_MAP[blog.status] || 'Unknown';
-        return (
-          <Badge className={cn(
-            "font-medium text-xs",
-            statusString === "Published" && "border-blue-500 bg-blue-500/10 text-blue-700",
-            statusString === "Archived" && "border-red-500/50 bg-red-500/10 text-red-700",
-            statusString === "Draft" && "border-yellow-500/50 bg-yellow-500/10 text-yellow-700",
-          )}>
-            {statusString}
+  const allBlogColumns = useMemo(
+    () => [
+      {
+        key: 'no',
+        label: 'No.',
+        sortable: false,
+        render: (_blog: Blog, index: number) => (
+          <Badge variant='outline' className='border-emerald-600 bg-emerald-400/15 font-mono'>
+            {(page - 1) * ROWS_PER_PAGE + index + 1}
           </Badge>
-        );
+        )
       },
-    },
-  ], [page]);
+      {
+        key: 'id',
+        label: 'ID',
+        defaultVisible: false,
+        render: (blog: Blog) => (
+          <Badge variant='outline' className='bg-emerald-400/15 font-mono'>
+            {blog.id}
+          </Badge>
+        )
+      },
+      {
+        key: 'title',
+        label: 'Title',
+        render: (blog: Blog) => <p className='line-clamp-2 font-semibold'>{blog.title}</p>
+      },
+      {
+        key: 'summary',
+        label: 'Description',
+        sortable: false,
+        cellclassName: 'max-w-sm',
+        render: (blog: Blog) => <p className='truncate text-left'>{blog.summary}</p>
+      },
+      {
+        key: 'created_at',
+        label: 'Date Created',
+        render: (blog: Blog) => formatDate(blog.created_at)
+      },
+      {
+        key: 'status',
+        label: 'Status',
+        render: (blog: Blog) => {
+          const statusString = BLOG_STATUS.UI_MAP[blog.status] || 'Unknown'
+          return (
+            <Badge
+              className={cn(
+                'text-xs font-medium',
+                statusString === 'Published' && 'border-blue-500 bg-blue-500/10 text-blue-700',
+                statusString === 'Archived' && 'border-red-500/50 bg-red-500/10 text-red-700',
+                statusString === 'Draft' && 'border-yellow-500/50 bg-yellow-500/10 text-yellow-700'
+              )}
+            >
+              {statusString}
+            </Badge>
+          )
+        }
+      }
+    ],
+    [page]
+  )
 
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    allBlogColumns.filter((col) => col.defaultVisible !== false).map((col) => col.key)
+  )
 
+  const visibleColumnCount = allBlogColumns.filter((c) => visibleColumns.includes(c.key)).length
 
-
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(allBlogColumns.filter(col => col.defaultVisible !== false).map((col) => col.key));
-
-  const visibleColumnCount = allBlogColumns.filter(c => visibleColumns.includes(c.key)).length;
-
-  const [dateConfig, setDateConfig] = useState<{ field: string; from?: Date; to?: Date; }>({
+  const [dateConfig, setDateConfig] = useState<{ field: string; from?: Date; to?: Date }>({
     field: 'created_at'
-  });
+  })
 
-  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
-  const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
-  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false)
+  const [editingBlog, setEditingBlog] = useState<Blog | null>(null)
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false)
 
-   const [selectedBlogIdForEdit, setSelectedBlogIdForEdit] = useState<string | null>(null);
+  const [selectedBlogIdForEdit, setSelectedBlogIdForEdit] = useState<string | null>(null)
 
   // ========== SET BREADCRUMB ==========
   useEffect(() => {
     setBreadcrumb({
-      title: "Blogs Management",
-      parent: "Dashboard",
-      parentHref: "/doctor",
-    });
-  }, [setBreadcrumb]);
+      title: 'Blogs Management',
+      parent: 'Dashboard',
+      parentHref: '/doctor'
+    })
+  }, [setBreadcrumb])
 
   // ========== API FILTERS ==========
   const apiFilters = useMemo(() => {
-    if (activeFilterValues.length === 0) return {};
-    return { [activeFilterKey]: activeFilterValues };
-  }, [activeFilterKey, activeFilterValues]);
+    if (activeFilterValues.length === 0) return {}
+    return { [activeFilterKey]: activeFilterValues }
+  }, [activeFilterKey, activeFilterValues])
 
   useEffect(() => {
-    setPage(1);
-  }, [apiFilters, apiSearchConfig, sort, dateConfig]);
+    setPage(1)
+  }, [apiFilters, apiSearchConfig, sort, dateConfig])
 
   const handleSearchSubmit = () => {
-    setApiSearchConfig(uiSearchConfig);
-  };
+    setApiSearchConfig(uiSearchConfig)
+  }
 
   // ========== USE BLOGS HOOK ==========
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    isFetching,
-  } = useBlogs({
+  const { data, isLoading, isError, error, isFetching } = useBlogs({
     page,
     limit: ROWS_PER_PAGE,
     filters: apiFilters,
     search: apiSearchConfig,
     sort,
-    dateRange: dateConfig,
-  });
+    dateRange: dateConfig
+  })
 
-  const { data: blogDetail, isLoading: isFetchingDetail } = useBlogDetail(selectedBlogIdForEdit);
+  const { data: blogDetail, isLoading: isFetchingDetail } = useBlogDetail(selectedBlogIdForEdit)
 
   useEffect(() => {
     if (blogDetail) {
-      setEditingBlog(blogDetail);      
-      setIsFormDialogOpen(true);       
-      setSelectedBlogIdForEdit(null); // Reset ID to make the hook idle again.
+      setEditingBlog(blogDetail)
+      setIsFormDialogOpen(true)
+      setSelectedBlogIdForEdit(null) // Reset ID to make the hook idle again.
     }
-  }, [blogDetail]);
+  }, [blogDetail])
 
-  const blogs = data?.data ?? [];
-  const totalBlogs = data?.total ?? 0;
-  const totalPages = Math.ceil(totalBlogs / ROWS_PER_PAGE);
+  const blogs = data?.data ?? []
+  const totalBlogs = data?.total ?? 0
+  const totalPages = Math.ceil(totalBlogs / ROWS_PER_PAGE)
 
   // ========== COLUMNS SETUP ==========
   const columns = useMemo(() => {
@@ -209,102 +189,94 @@ export default function BlogListDashboard() {
       visible: visibleColumns.includes(col.key as string),
       sortable: col.sortable,
       cellClassName: col.cellclassName,
-      render: col.render,
-    }));
-  }, [visibleColumns, allBlogColumns]);
+      render: col.render
+    }))
+  }, [visibleColumns, allBlogColumns])
 
   // Handler to open the dialog in "create" mode
   const handleOpenCreateDialog = () => {
-    setEditingBlog(null); // Ensure no blog is being edited
-    setIsFormDialogOpen(true);
-  };
-
+    setEditingBlog(null) // Ensure no blog is being edited
+    setIsFormDialogOpen(true)
+  }
 
   // ========== ACTIONS ==========
-  const renderBlogActions = ((blog: Blog) => {
-    const isThisBlogLoading = isFetchingDetail && selectedBlogIdForEdit === blog.id;
+  const renderBlogActions = (blog: Blog) => {
+    const isThisBlogLoading = isFetchingDetail && selectedBlogIdForEdit === blog.id
 
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0" disabled={isThisBlogLoading}>
-            <span className="sr-only">Open menu</span>
-            {isThisBlogLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <MoreHorizontal className="h-4 w-4" />
-            )}
+          <Button variant='ghost' className='h-8 w-8 p-0' disabled={isThisBlogLoading}>
+            <span className='sr-only'>Open menu</span>
+            {isThisBlogLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : <MoreHorizontal className='h-4 w-4' />}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem 
+        <DropdownMenuContent align='end'>
+          <DropdownMenuItem
             onClick={() => setSelectedBlogIdForEdit(blog.id)} // This triggers the fetch
             disabled={isThisBlogLoading || blog.status === 'ARCHIVED'}
           >
             {isThisBlogLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
             ) : (
-              <Pencil className="mr-2 h-4 w-4" />
+              <Pencil className='mr-2 h-4 w-4' />
             )}
             <span>Update this Blog</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-    );
-  });
+    )
+  }
 
   return (
     <>
       <TableToolbar
         isFetching={isFetching && !isLoading}
-
         facetFilters={blogFacetFilters}
         activeFilterKey={activeFilterKey}
         onActiveFilterKeyChange={setActiveFilterKey}
         activeFilterValues={activeFilterValues}
         onActiveFilterValuesChange={setActiveFilterValues}
-
         searchValue={uiSearchConfig.value}
-        onSearchChange={(newValue) => setUiSearchConfig(current => ({ ...current, value: newValue }))}
+        onSearchChange={(newValue) => setUiSearchConfig((current) => ({ ...current, value: newValue }))}
         searchFieldOptions={searchableFields}
         searchFieldValue={uiSearchConfig.field}
-        onSearchFieldChange={(newField) => setUiSearchConfig(current => ({ ...current, field: newField }))}
+        onSearchFieldChange={(newField) => setUiSearchConfig((current) => ({ ...current, field: newField }))}
         onSearchSubmit={handleSearchSubmit}
-
         columns={allBlogColumns}
         visibleColumns={visibleColumns}
         onVisibleColumnsChange={setVisibleColumns}
-
         dateFilterOptions={dateFilterOptions}
         activeDateFilterKey={dateConfig.field}
-        onActiveDateFilterKeyChange={(newField) => setDateConfig(current => ({ ...current, field: newField }))}
+        onActiveDateFilterKeyChange={(newField) => setDateConfig((current) => ({ ...current, field: newField }))}
         fromDate={dateConfig.from}
         toDate={dateConfig.to}
-        onDateRangeChange={(from, to) => setDateConfig(current => ({ ...current, from, to }))}
-
+        onDateRangeChange={(from, to) => setDateConfig((current) => ({ ...current, from, to }))}
         onResetFilters={() => {
-          setPage(1);
-          setSort({ field: 'created_at', direction: 'desc' });
-          setActiveFilterKey('status');
-          setActiveFilterValues([]);
-          setUiSearchConfig({ field: 'all', value: '' });
-          setApiSearchConfig({ field: 'all', value: '' });
-          setDateConfig({ field: 'created_at' });
-          setVisibleColumns(allBlogColumns.map((c) => c.key));
+          setPage(1)
+          setSort({ field: 'created_at', direction: 'desc' })
+          setActiveFilterKey('status')
+          setActiveFilterValues([])
+          setUiSearchConfig({ field: 'all', value: '' })
+          setApiSearchConfig({ field: 'all', value: '' })
+          setDateConfig({ field: 'created_at' })
+          setVisibleColumns(allBlogColumns.map((c) => c.key))
         }}
         onCreate={handleOpenCreateDialog}
-        createButtonLabel="+ Create Blog"
+        createButtonLabel='+ Create Blog'
       />
 
-      {isFetching && <div className="absolute inset-0 bg-white/50 z-10"></div>}
+      {isFetching && <div className='absolute inset-0 z-10 bg-white/50'></div>}
 
       {isLoading ? (
         <DataTableSkeleton columnCount={visibleColumnCount + 1} />
       ) : isError ? (
-        <div className="min-h-[calc(77vh)] flex flex-col items-center justify-center text-center py-10 border rounded-xl bg-white shadow-sm">
-          <div className="bg-red-100 p-3 rounded-full"><XCircle className="h-8 w-8 text-red-500" /></div>
-          <h3 className="mt-4 text-lg font-semibold">Failed to Load Blogs</h3>
-          <p className="text-muted-foreground mt-1">{error?.message}</p>
+        <div className='flex min-h-[calc(77vh)] flex-col items-center justify-center rounded-xl border bg-white py-10 text-center shadow-sm'>
+          <div className='rounded-full bg-red-100 p-3'>
+            <XCircle className='h-8 w-8 text-red-500' />
+          </div>
+          <h3 className='mt-4 text-lg font-semibold'>Failed to Load Blogs</h3>
+          <p className='text-muted-foreground mt-1'>{error?.message}</p>
         </div>
       ) : (
         <DataTable
@@ -322,31 +294,31 @@ export default function BlogListDashboard() {
 
       <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
         <DialogContent
-          className="sm:max-w-none w-[95vw] h-[90vh] md:w-[80vw] lg:w-[70vw] xl:w-[85vw] 2xl:w-[75vw] flex flex-col p-0 data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out"
+          className='data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out flex h-[90vh] w-[95vw] flex-col p-0 sm:max-w-none md:w-[80vw] lg:w-[70vw] xl:w-[85vw] 2xl:w-[75vw]'
           onInteractOutside={(e) => {
             // Prevent closing the dialog while the form is submitting
             if (isFormSubmitting) {
-              e.preventDefault();
+              e.preventDefault()
             }
           }}
         >
-          <DialogHeader className="rounded-t-lg border-b p-6 pb-4 bg-gradient-to-br from-slate-50 to-slate-100">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-blue-700 flex items-center justify-center shrink-0">
-                <NotepadText className="h-8 w-8 text-white" />
+          <DialogHeader className='rounded-t-lg border-b bg-gradient-to-br from-slate-50 to-slate-100 p-6 pb-4'>
+            <div className='flex items-center gap-4'>
+              <div className='from-primary flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br to-blue-700'>
+                <NotepadText className='h-8 w-8 text-white' />
               </div>
-              <div className="flex flex-col">
-                <DialogTitle className="text-3xl font-bold tracking-tight text-foreground">
+              <div className='flex flex-col'>
+                <DialogTitle className='text-foreground text-3xl font-bold tracking-tight'>
                   {editingBlog ? 'Update Blog Post' : 'Create New Blog'}
                 </DialogTitle>
-                <DialogDescription className="text-base text-muted-foreground mt-1">
+                <DialogDescription className='text-muted-foreground mt-1 text-base'>
                   {editingBlog ? 'Modify the details below.' : 'Fill out the form below to create a new blog.'}
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto p-6" >
+          <div className='flex-1 overflow-y-auto p-6'>
             <CreateBlogDialogContent
               initialData={editingBlog}
               onSuccess={() => setIsFormDialogOpen(false)}
@@ -357,5 +329,5 @@ export default function BlogListDashboard() {
         </DialogContent>
       </Dialog>
     </>
-  );
+  )
 }
