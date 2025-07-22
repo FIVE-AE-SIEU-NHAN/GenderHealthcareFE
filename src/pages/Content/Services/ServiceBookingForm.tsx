@@ -67,33 +67,24 @@ export const STIS_TESTING_PACKAGES = [
 const MAX_NOTE_LENGTH = 500;
 const MIN_NOTE_LENGTH = 20;
 
-// =================================================================
-// BƯỚC QUAN TRỌNG: CẬP NHẬT LOGIC VALIDATION CHO Ô NOTE
-// =================================================================
 export const formSchema = z.object({
   topic: z.string({ required_error: "Please select a testing package." }).min(1, "Please select a testing package."),
   booking_date: z.date({ required_error: "Please select a date." }),
   time_slot: z.string({ required_error: "Please select a time slot." }).min(1, "Please select a time slot."),
   note: z.string()
     .max(MAX_NOTE_LENGTH, { message: `Note cannot exceed ${MAX_NOTE_LENGTH} characters.` })
-    // Dùng refine để xử lý logic phức tạp
     .refine(value => {
-        // Nếu không có giá trị (rỗng, undefined) hoặc chỉ toàn dấu cách, thì cho qua (hợp lệ)
-        if (!value || value.trim() === '') {
-            return true;
-        }
-        // Nếu có giá trị, sau khi cắt bỏ dấu cách, phải có ít nhất 20 ký tự
+        if (!value || value.trim() === '') return true;
         return value.trim().length >= MIN_NOTE_LENGTH;
     }, {
-        // Thông báo lỗi sẽ hiển thị khi người dùng nhập dưới 20 ký tự
         message: `If provided, the note must be at least ${MIN_NOTE_LENGTH} characters.`
     })
     .optional()
-    .or(z.literal('')), // Đảm bảo trường optional hoạt động tốt
+    .or(z.literal('')),
   agreed: z.boolean().refine(val => val === true, {
     message: "You must agree to the terms of use.",
   }),
-  selected_services: z.array(z.string()).refine(val => val.length > 0, {
+  selected_services: z.array(z.string()).min(1, {
     message: "Please select at least one service."
   })
 });
@@ -120,9 +111,12 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
   const getSelectedPackage = () => STIS_TESTING_PACKAGES.find(p => p.value === selectedTopicValue);
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find(t => t.value === selectedTimeSlotValue)?.label;
 
+  // === DÒNG SỬA Ở ĐÂY: Khi đổi gói, reset (làm trống) danh sách lựa chọn ===
   React.useEffect(() => {
+    // Chỉ cần set về mảng rỗng khi topic thay đổi
+    // Để người dùng có thể tự chọn từ đầu
     if (selectedTopicValue) {
-        form.setValue("selected_services", []);
+      form.setValue("selected_services", []);
     }
   }, [selectedTopicValue, form]);
 
@@ -259,7 +253,7 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                     <div className="relative">
                       <FormControl>
                         <Textarea
-                          placeholder={`Please describe any relevant information... (min ${MIN_NOTE_LENGTH} chars)`}
+                          placeholder={`Please describe any relevant information... (${MIN_NOTE_LENGTH} - ${MAX_NOTE_LENGTH} chars)`}
                           className="resize-none h-30 pb-6 pr-14 break-all"
                           disabled={isPending}
                           maxLength={MAX_NOTE_LENGTH}
