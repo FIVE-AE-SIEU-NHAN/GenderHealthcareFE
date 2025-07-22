@@ -22,6 +22,28 @@ const BlogDetails: React.FC = () => {
   // 3. Call useBlogDetail hook to fetch data, loading state and error
   const { data: blog, isLoading, isError, error } = useBlogDetail(id);
 
+  // Share functionality
+  const currentUrl = window.location.href;
+  const shareTitle = blog?.title || 'Care4Gender Article';
+  const shareText = `Check out this article: ${shareTitle}`;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+      alert('Link copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = currentUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Link copied to clipboard!');
+    }
+  };
+
   // 4. Handle Loading state: Show loading message while waiting for API
   if (isLoading) {
     return (
@@ -167,112 +189,44 @@ const BlogDetails: React.FC = () => {
               )}
             </div>
 
-            {/* Share, Like, Comment Section */}
-            <div className="mt-10">
-              {/* Share Buttons */}
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-slate-600 dark:text-slate-400 font-medium mr-2">Share:</span>
-                <Link to={""} className="text-blue-600 hover:text-blue-800 transition-colors">
+            {/* Share Section */}
+            <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-4">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Share this article:</span>
+                
+                {/* Facebook Share */}
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  title="Share on Facebook"
+                >
                   <FaFacebookF className="text-xl" />
-                </Link>
-                <Link to={""} className="text-slate-800 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white transition-colors">
+                  <span className="text-sm font-medium">Facebook</span>
+                </a>
+
+                {/* Twitter/X Share */}
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareText)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-slate-800 hover:text-slate-600 dark:text-slate-300 dark:hover:text-white transition-colors p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                  title="Share on Twitter/X"
+                >
                   <FaXTwitter className="text-xl" />
-                </Link>
-                <Link to={""} className="text-blue-500 hover:text-blue-700 transition-colors">
+                  <span className="text-sm font-medium">Twitter</span>
+                </a>
+
+                {/* Copy Link */}
+                <button
+                  onClick={handleCopyLink}
+                  className="flex items-center gap-2 text-blue-500 hover:text-blue-700 transition-colors p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  title="Copy link"
+                >
                   <FaLink className="text-xl" />
-                </Link>
-              </div>
-
-              <hr className="my-8 border-t border-slate-200 dark:border-slate-800" />
-
-              {/* Like Button */}
-              <div className="flex items-center gap-2 mb-8">
-                <button className="flex items-center bg-blue-600 text-white text-sm font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-blue-700 transition-all duration-200">
-                  ❤️ Like ({blog.like_count || 0})
+                  <span className="text-sm font-medium">Copy Link</span>
                 </button>
-              </div>
-
-              {/* Comment Section */}
-              <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-6 mb-8">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                  Comments
-                </h3>
-                <div className="space-y-4">
-                  {/* Sample Comments */}
-                  <div className="flex gap-3">
-                    <div className="flex-shrink-0">
-                      <img
-                        src="/images/avatar-placeholder.png"
-                        alt="User Avatar"
-                        className="w-10 h-10 rounded-full object-cover bg-slate-200 dark:bg-slate-700"
-                        onError={(e) => {
-                          e.currentTarget.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGM0Y0RjYiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iOCIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMzYgMzZDMzYgMjggMjggMjIgMjAgMjJTNCAyOCA0IDM2IiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=";
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        John Doe
-                      </p>
-                      <p className="text-sm text-slate-700 dark:text-slate-300">
-                        Great article! Very informative and well-written. Thank you for sharing this valuable information.
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        2 hours ago
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <div className="flex-shrink-0">
-                      <img
-                        src="/images/avatar-placeholder.png"
-                        alt="User Avatar"
-                        className="w-10 h-10 rounded-full object-cover bg-slate-200 dark:bg-slate-700"
-                        onError={(e) => {
-                          e.currentTarget.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGM0Y0RjYiLz4KPGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iOCIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMzYgMzZDMzYgMjggMjggMjIgMjAgMjJTNCAyOCA0IDM2IiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=";
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        Sarah Wilson
-                      </p>
-                      <p className="text-sm text-slate-700 dark:text-slate-300">
-                        I completely agree with the points made in this article. This has been very helpful for my understanding.
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        5 hours ago
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Add Comment Form */}
-                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-                    <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">
-                      Add a comment
-                    </h4>
-                    <div className="flex gap-3">
-                      <div className="flex-shrink-0">
-                        <div className="w-8 h-8 rounded-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center">
-                          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">You</span>
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <textarea
-                          className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
-                          rows={3}
-                          placeholder="Write your comment here..."
-                        />
-                        <div className="flex justify-end mt-2">
-                          <button className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                            Post Comment
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </article>
