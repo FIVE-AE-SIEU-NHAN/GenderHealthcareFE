@@ -225,15 +225,7 @@ const BlogDetails: React.FC = () => {
                   title="Copy link"
                 >
                   <FaLink className="text-xl" />
-                </Link>
-              </div>
-
-              <hr className="my-8 border-t border-slate-200 dark:border-slate-800" />
-
-              {/* Like Button */}
-              <div className="flex items-center gap-2 mb-8">
-                <button className="flex items-center bg-blue-600 text-white text-sm font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-blue-700 transition-all duration-200">
-                  ❤️ Like ({blog.like_count || 0})
+                  <span className="text-sm font-medium">Copy Link</span>
                 </button>
               </div>
             </div>
