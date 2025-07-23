@@ -16,6 +16,10 @@ export interface ServerToClientEvents {
   'call:offer': (data: { offer: RTCSessionDescriptionInit; from: string }) => void
   'call:answer': (data: { answer: RTCSessionDescriptionInit; from: string }) => void
   'call:ice-candidate': (data: { candidate: RTCIceCandidateInit; from: string }) => void
+
+  // --- CHATBOT EVENTS ---
+  'chatbot:reply': (data: { reply: string }) => void
+  'chatbot:message:error': (data: { error: string }) => void
 }
 
 // Events the client EMITS (sends to the server)
@@ -33,11 +37,15 @@ export interface ClientToServerEvents {
   'call:offer': (data: { offer: RTCSessionDescriptionInit; to: string }) => void
   'call:answer': (data: { answer: RTCSessionDescriptionInit; to: string }) => void
   'call:ice-candidate': (data: { candidate: RTCIceCandidateInit; to: string }) => void
+
+  // --- CHATBOT EVENTS ---
+  'chatbot:joinRoom': (room_id: string) => void
+  'chatbot:message': (data: { room_id: string; user_id: string; message: string }) => void
+  'chatbot:session:end': (data: { user_id: string }) => void
 }
 
 const URL = import.meta.env.VITE_BASE_URL
 
-// The 'autoConnect: false' is important.
 // Manually connect only when we have the user's ID.
 export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(URL, {
   autoConnect: false

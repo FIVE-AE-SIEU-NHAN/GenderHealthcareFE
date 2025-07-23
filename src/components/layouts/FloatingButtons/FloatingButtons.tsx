@@ -23,7 +23,7 @@ function ScrollToTopButton({ isChatOpen }: { isChatOpen: boolean }) {
 
       timeoutIdRef.current = setTimeout(() => {
         setIsScrolling(false)
-      }, 1000) // 1sec
+      }, 2000) // 2secs
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })

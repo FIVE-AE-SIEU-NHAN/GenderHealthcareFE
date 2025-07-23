@@ -54,6 +54,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.57.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.6.0",
     "react-webcam": "^7.2.0",
     "recharts": "^2.15.3",
@@ -67,6 +68,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@tailwindcss/typography": "^0.5.16",
     "@tanstack/eslint-plugin-query": "^5.78.0",
     "@types/node": "^22.15.19",
     "@types/react": "^19.1.2",

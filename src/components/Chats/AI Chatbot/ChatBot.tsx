@@ -1,11 +1,12 @@
-// src/components/ChatWidget.tsx
-import React, { useState, useEffect, useRef } from 'react'
-import { Send, X, User } from 'lucide-react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { Send, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { BsRobot } from 'react-icons/bs'
-import { format } from 'date-fns'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { useSocket } from '@/contexts/SocketContext'
+import { useAuth } from '@/contexts/AuthContext'
+import ReactMarkdown from 'react-markdown'
 
 const typingIndicatorStyles = `
   .typing-indicator span { height: 8px; width: 8px; background-color: #9E9EA1; border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
@@ -21,11 +22,13 @@ interface Message {
   createdAt: string
 }
 
+const CHATBOT_HISTORY_KEY = 'chatbot_session_history'
+
 const initialMessages: Message[] = [
   {
     id: 'welcome',
     user: 'ai',
-    text: 'Hello! How can I assist you today? Feel free to ask me anything about our services or products.',
+    text: 'Hello! How can I assist you today? You can ask me to:\n- **Summarize** our main services.\n- Explain the difference between `basic` and `advanced` packages.\n- Provide a link to our [Privacy Policy](/terms-and-privacy).',
     createdAt: new Date().toISOString()
   }
 ]
@@ -36,43 +39,92 @@ interface ChatWidgetProps {
 
 export default function ChatWidget({ onChatToggle }: ChatWidgetProps) {
   const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState<Message[]>(initialMessages)
+
+  const [messages, setMessages] = useState<Message[]>(() => {
+    try {
+      const storedHistory = sessionStorage.getItem(CHATBOT_HISTORY_KEY)
+      return storedHistory ? JSON.parse(storedHistory) : initialMessages
+    } catch (error) {
+      console.error('Failed to parse chat history from sessionStorage:', error)
+      return initialMessages
+    }
+  })
+
   const [newMsg, setNewMsg] = useState('')
   const [loading, setLoading] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
-  // --- Smart Scroll Lock with Event Listeners ---
+  const socket = useSocket()
+  const { user } = useAuth()
+
+  const chatRoomId = useMemo(() => {
+    if (!user?.user_id) return null
+    return user.user_id.split('-')[0]
+  }, [user?.user_id])
+
   useEffect(() => {
-    const chatContainer = chatContainerRef.current
-
-    const handleMouseEnter = () => {
-      document.body.style.overflow = 'hidden' // Disable body scroll when mouse enters
+    // Only save if there's more than the initial welcome message
+    if (messages.length > 1) {
+      sessionStorage.setItem(CHATBOT_HISTORY_KEY, JSON.stringify(messages))
     }
+  }, [messages])
 
-    const handleMouseLeave = () => {
-      document.body.style.overflow = 'auto' // Re-enable body scroll when mouse leaves
-    }
-
-    // Only add listeners if the chat is open and the element exists
-    if (open && chatContainer) {
-      chatContainer.addEventListener('mouseenter', handleMouseEnter)
-      chatContainer.addEventListener('mouseleave', handleMouseLeave)
-    }
-
-    // Cleanup function
-    return () => {
-      document.body.style.overflow = 'auto' // Always restore scroll on cleanup
-      if (chatContainer) {
-        chatContainer.removeEventListener('mouseenter', handleMouseEnter)
-        chatContainer.removeEventListener('mouseleave', handleMouseLeave)
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (socket.connected && user?.user_id) {
+        socket.emit('chatbot:session:end', { user_id: user.user_id })
       }
     }
-  }, [open])
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [socket, user?.user_id])
 
   useEffect(() => {
-    onChatToggle(open)
-  }, [open, onChatToggle])
+    if (!open || !chatRoomId || !socket.connected) {
+      return
+    }
+
+    socket.emit('chatbot:joinRoom', chatRoomId)
+
+    const handleReply = (data: { reply: string }) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-${Date.now()}`,
+          user: 'ai',
+          text: data.reply,
+          createdAt: new Date().toISOString()
+        }
+      ])
+      setLoading(false)
+    }
+
+    const handleError = (data: { error: string }) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          user: 'ai',
+          text: data.error,
+          createdAt: new Date().toISOString()
+        }
+      ])
+      setLoading(false)
+    }
+
+    socket.on('chatbot:reply', handleReply)
+    socket.on('chatbot:message:error', handleError)
+
+    return () => {
+      socket.off('chatbot:reply', handleReply)
+      socket.off('chatbot:message:error', handleError)
+    }
+  }, [open, chatRoomId, socket])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -80,27 +132,51 @@ export default function ChatWidget({ onChatToggle }: ChatWidgetProps) {
     }
   }, [messages, loading])
 
+  useEffect(() => {
+    onChatToggle(open)
+  }, [open, onChatToggle])
+
   const sendMessage = () => {
-    if (!newMsg.trim()) return
+    const trimmedMsg = newMsg.trim()
+    if (!trimmedMsg || !chatRoomId || !user) return
+
     setMessages((prev) => [
       ...prev,
-      { id: Date.now().toString(), user: 'me', text: newMsg.trim(), createdAt: new Date().toISOString() }
+      { id: `me-${Date.now()}`, user: 'me', text: trimmedMsg, createdAt: new Date().toISOString() }
     ])
+
+    socket.emit('chatbot:message', {
+      room_id: chatRoomId,
+      user_id: user.user_id,
+      message: trimmedMsg
+    })
+
     setNewMsg('')
     setLoading(true)
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          user: 'ai',
-          text: 'Thank you for your message! I am processing your request.',
-          createdAt: new Date().toISOString()
-        }
-      ])
-      setLoading(false)
-    }, 2500)
   }
+
+  useEffect(() => {
+    const chatContainer = chatContainerRef.current
+    const handleMouseEnter = () => {
+      document.body.style.overflow = 'hidden'
+    }
+    const handleMouseLeave = () => {
+      document.body.style.overflow = 'auto'
+    }
+
+    if (open && chatContainer) {
+      chatContainer.addEventListener('mouseenter', handleMouseEnter)
+      chatContainer.addEventListener('mouseleave', handleMouseLeave)
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto'
+      if (chatContainer) {
+        chatContainer.removeEventListener('mouseenter', handleMouseEnter)
+        chatContainer.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }
+  }, [open])
 
   return (
     <TooltipProvider delayDuration={100}>
@@ -145,48 +221,47 @@ export default function ChatWidget({ onChatToggle }: ChatWidgetProps) {
               className={cn('flex items-end gap-2', msg.user === 'me' ? 'justify-end' : 'justify-start')}
             >
               {msg.user === 'ai' && (
-                <div className='flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-200'>
-                  <BsRobot className='h-5 w-5 text-gray-600' />
+                <div className='flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-slate-200'>
+                  <BsRobot className='h-5 w-5 text-slate-600' />
                 </div>
               )}
 
-              <Tooltip>
-                <TooltipTrigger asChild>
+              <div
+                className={cn(
+                  'max-w-[75%] rounded-2xl p-3 shadow-sm',
+                  msg.user === 'me'
+                    ? 'bg-semi-dark-blue rounded-br-lg text-white'
+                    : 'rounded-bl-lg bg-slate-100 text-slate-800'
+                )}
+              >
+                {msg.user === 'me' ? (
+                  <p className='text-sm'>{msg.text}</p>
+                ) : (
                   <div
                     className={cn(
-                      'max-w-[75%] cursor-default rounded-2xl p-2',
-                      msg.user === 'me'
-                        ? 'bg-semi-dark-blue rounded-br-lg text-white'
-                        : 'rounded-bl-lg border bg-white text-gray-800'
+                      'prose prose-sm max-w-none',
+                      'prose-p:text-slate-800',
+                      'prose-a:text-blue-600 prose-a:font-medium hover:prose-a:underline',
+                      'prose-strong:text-slate-900',
+                      'prose-ul:list-disc prose-ul:pl-4 prose-li:marker:text-slate-500',
+                      'prose-ol:list-decimal prose-ol:pl-4 prose-li:marker:text-slate-500',
+                      'prose-code:bg-slate-200/60 prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono'
                     )}
                   >
-                    <p className='text-sm'>{msg.text}</p>
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
                   </div>
-                </TooltipTrigger>
-                <TooltipContent
-                  side={msg.user === 'me' ? 'left' : 'right'}
-                  className='rounded-md bg-blue-500 px-2 py-1 text-xs text-white'
-                  collisionBoundary={chatContainerRef.current}
-                >
-                  <p>{format(new Date(msg.createdAt), 'h:mm a')}</p>
-                </TooltipContent>
-              </Tooltip>
-
-              {msg.user === 'me' && (
-                <div className='flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-200'>
-                  <User className='h-5 w-5 text-gray-600' />
-                </div>
-              )}
+                )}
+              </div>
             </div>
           ))}
 
           {/* Loading Indicator */}
           {loading && (
             <div className='flex items-end gap-2'>
-              <div className='flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-200'>
-                <BsRobot className='h-5 w-5 text-gray-600' />
+              <div className='flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-slate-200'>
+                <BsRobot className='h-5 w-5 text-slate-600' />
               </div>
-              <div className='rounded-2xl rounded-bl-lg border bg-white p-3'>
+              <div className='rounded-2xl rounded-bl-lg bg-slate-100 p-3 shadow-sm'>
                 <div className='typing-indicator'>
                   <span></span>
                   <span></span>
