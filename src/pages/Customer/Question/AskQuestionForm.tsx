@@ -10,10 +10,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
+// Giả định các import này tồn tại trong dự án của bạn
 import { useQuestionMutations } from "@/hooks/customer/useQuestionMutations";
 import { TOPIC_OPTIONS } from "@/Application/constants/appointment";
+import { cn } from "@/lib/utils"; 
 
-// FAQ type and data remain the same
+// --- Dữ liệu và Schema ---
+
 interface FAQ {
   question: string;
   answer: string;
@@ -46,13 +49,13 @@ const faqs: FAQ[] = [
   }
 ];
 
-// Define a validation schema that matches the backend requirements
 const formSchema = z.object({
   topic: z.string({ required_error: "Please select a topic." }).min(1, { message: "Please select a topic." }),
   question: z.string()
     .min(20, { message: "Your question must be at least 20 characters long." })
-    .max(1000, { message: "Your question cannot exceed 1000 characters." }),
 });
+
+// --- Thành phần React ---
 
 export default function AskQuestion() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -68,7 +71,10 @@ export default function AskQuestion() {
       topic: "",
       question: "",
     },
+    mode: 'onChange',
   });
+
+  const questionValue = form.watch("question") || "";
 
   useEffect(() => {
     const updateHeight = () => {
@@ -110,8 +116,8 @@ export default function AskQuestion() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-10 max-w-7xl mx-auto items-start">
+          {/* Cột bên trái: FAQs */}
           <div className="bg-[#1A3973] rounded-2xl p-8 md:p-10 text-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_0_30px_-15px_rgba(26,57,115,0.2)] border border-[#1A3973] hover:shadow-[0_25px_65px_-15px_rgba(0,0,0,0.2),0_0_40px_-15px_rgba(26,57,115,0.3)] transition-all duration-300" style={faqContainerStyle}>
-            {/* Your FAQ content here, unchanged */}
             <div className="flex flex-col items-center mb-8">
               <div className="bg-white/20 p-4 rounded-full mb-4 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.3)]">
                 <Calendar className="text-3xl w-8 h-8" />
@@ -119,7 +125,6 @@ export default function AskQuestion() {
               <h2 className="text-3xl font-bold text-center mb-2">Common Questions</h2>
               <div className="w-16 h-1 bg-white mx-auto"></div>
             </div>
-
             <div className="space-y-3">
               {faqs.map((faq, index) => (
                 <div key={index} className="border-b border-white/20 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
@@ -139,6 +144,7 @@ export default function AskQuestion() {
             </div>
           </div>
 
+          {/* Cột bên phải: Form */}
           <div ref={formRef} className="bg-white rounded-2xl p-8 md:p-10 text-black shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_0_30px_-15px_rgba(26,57,115,0.2)] border border-white hover:shadow-[0_25px_65px_-15px_rgba(0,0,0,0.2),0_0_40px_-15px_rgba(26,57,115,0.3)] transition-all duration-300">
             <div className="relative mb-5">
               <div className="bg-[#1A3973] rounded-full p-3 w-14 h-14 mx-auto mb-3 flex items-center justify-center shadow-sm">
@@ -177,15 +183,42 @@ export default function AskQuestion() {
                     </FormItem>
                   )} />
 
+                  {/* === PHẦN CẬP NHẬT START === */}
                   <FormField control={form.control} name="question" render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Your Question</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Please describe your health goals or questions in detail..." rows={4} className="w-full rounded-lg border-gray-300 min-h-[120px]" {...field} />
+                        <Textarea 
+                          placeholder="Please describe your health goals or questions in detail..." 
+                          rows={4} 
+                          className="w-full rounded-lg border-gray-300 min-h-[120px] resize-none"
+                          maxLength={1000}
+                          {...field} 
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <div className="flex items-start justify-between mt-2 h-5">
+                        <div className="flex-grow">
+                          {/* Tin nhắn lỗi Zod sẽ được ưu tiên hiển thị ở đây */}
+                          <FormMessage />
+                          {/* Nếu không có lỗi Zod và đã đạt đến giới hạn, hiển thị tin nhắn tùy chỉnh */}
+                          {!form.formState.errors.question && questionValue.length === 1000 && (
+                            <p className="text-sm text-blue-600">
+                              You have reached the character limit.
+                            </p>
+                          )}
+                        </div>
+                        <p className={cn(
+                            "text-sm ml-auto flex-shrink-0", // Thêm flex-shrink-0 để đảm bảo không bị co lại
+                            (questionValue?.length || 0) >= 1000
+                                ? "text-red-500 font-bold"
+                                : "text-gray-500"
+                        )}>
+                            {`${questionValue?.length || 0} / 1000`}
+                        </p>
+                      </div>
                     </FormItem>
                   )} />
+                  {/* === PHẦN CẬP NHẬT END === */}
 
                   <Button type="submit" disabled={askQuestion.isPending} className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg font-semibold rounded-lg py-3 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
                     {askQuestion.isPending ? (
