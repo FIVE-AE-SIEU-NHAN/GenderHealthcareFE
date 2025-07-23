@@ -12,8 +12,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 
 import { useQuestionMutations } from '@/hooks/customer/useQuestionMutations'
 import { TOPIC_OPTIONS } from '@/Application/constants/appointment'
+import { cn } from '@/lib/utils'
 
-// FAQ type and data remain the same
 interface FAQ {
   question: string
   answer: string
@@ -52,13 +52,9 @@ const faqs: FAQ[] = [
   }
 ]
 
-// Define a validation schema that matches the backend requirements
 const formSchema = z.object({
   topic: z.string({ required_error: 'Please select a topic.' }).min(1, { message: 'Please select a topic.' }),
-  question: z
-    .string()
-    .min(20, { message: 'Your question must be at least 20 characters long.' })
-    .max(1000, { message: 'Your question cannot exceed 1000 characters.' })
+  question: z.string().min(20, { message: 'Your question must be at least 20 characters long.' })
 })
 
 export default function AskQuestion() {
@@ -74,8 +70,11 @@ export default function AskQuestion() {
     defaultValues: {
       topic: '',
       question: ''
-    }
+    },
+    mode: 'onChange'
   })
+
+  const questionValue = form.watch('question') || ''
 
   useEffect(() => {
     const updateHeight = () => {
@@ -115,11 +114,11 @@ export default function AskQuestion() {
         </div>
 
         <div className='mx-auto grid max-w-7xl items-start gap-10 md:grid-cols-2'>
+          {/* FAQs */}
           <div
             className='rounded-2xl border border-[#1A3973] bg-[#1A3973] p-8 text-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_0_30px_-15px_rgba(26,57,115,0.2)] transition-all duration-300 hover:shadow-[0_25px_65px_-15px_rgba(0,0,0,0.2),0_0_40px_-15px_rgba(26,57,115,0.3)] md:p-10'
             style={faqContainerStyle}
           >
-            {/* Your FAQ content here, unchanged */}
             <div className='mb-8 flex flex-col items-center'>
               <div className='mb-4 rounded-full bg-white/20 p-4 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.3)]'>
                 <Calendar className='h-8 w-8 text-3xl' />
@@ -127,7 +126,6 @@ export default function AskQuestion() {
               <h2 className='mb-2 text-center text-3xl font-bold'>Common Questions</h2>
               <div className='mx-auto h-1 w-16 bg-white'></div>
             </div>
-
             <div className='space-y-3'>
               {faqs.map((faq, index) => (
                 <div
@@ -158,6 +156,7 @@ export default function AskQuestion() {
             </div>
           </div>
 
+          {/* Form */}
           <div
             ref={formRef}
             className='rounded-2xl border border-white bg-white p-8 text-black shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15),0_0_30px_-15px_rgba(26,57,115,0.2)] transition-all duration-300 hover:shadow-[0_25px_65px_-15px_rgba(0,0,0,0.2),0_0_40px_-15px_rgba(26,57,115,0.3)] md:p-10'
@@ -232,11 +231,27 @@ export default function AskQuestion() {
                           <Textarea
                             placeholder='Please describe your health goals or questions in detail...'
                             rows={4}
-                            className='min-h-[120px] w-full rounded-lg border-gray-300'
+                            className='min-h-[120px] w-full resize-none rounded-lg border-gray-300'
+                            maxLength={1000}
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <div className='mt-2 flex h-5 items-start justify-between'>
+                          <div className='flex-grow'>
+                            <FormMessage />
+                            {!form.formState.errors.question && questionValue.length === 1000 && (
+                              <p className='text-sm text-blue-600'>You have reached the character limit.</p>
+                            )}
+                          </div>
+                          <p
+                            className={cn(
+                              'ml-auto flex-shrink-0 text-sm',
+                              (questionValue?.length || 0) >= 1000 ? 'font-bold text-red-500' : 'text-gray-500'
+                            )}
+                          >
+                            {`${questionValue?.length || 0} / 1000`}
+                          </p>
+                        </div>
                       </FormItem>
                     )}
                   />
