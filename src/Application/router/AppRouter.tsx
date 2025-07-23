@@ -24,6 +24,7 @@ import ServiceDetail from '@/pages/Content/Services/ServiceDetails'
 import BlogPage from '@/pages/Content/Blog/BlogList'
 import FloatingButtons from '@/components/layouts/FloatingButtons/FloatingButtons'
 import AboutUsPage from '@/pages/Common/AboutUs'
+import CycleTracking from '@/pages/Customer/Cycle/CycleTracking'
 
 export default function AppRouter() {
   return (
@@ -41,6 +42,7 @@ export default function AppRouter() {
           <Route path='/services' element={<ServiceList />} />
           <Route path='/service-details' element={<ServiceDetail />} />
           <Route path='/blogs' element={<BlogPage />} />
+          <Route path='/cy-cal' element={<CycleTracking />} />
         </Route>
 
         {/* Auth Routes (things that's related to authen will be here)*/}
