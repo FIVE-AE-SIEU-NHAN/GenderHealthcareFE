@@ -1,64 +1,64 @@
 import { useState, useMemo, useEffect } from 'react'
 import { startOfWeek, endOfWeek, formatISO } from 'date-fns'
 import { AlertCircle } from 'lucide-react'
-
-import { useManagerAppointments } from '@/hooks/manager/useAppointments'
-
-import { CalendarWeekView } from '@/components/Appointment Calendar/CalendarWeekView'
-import { Appointment } from '@/types/consultant/appointmentTypes'
 import { useOutletContext } from 'react-router-dom'
+
 import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
+import { CalendarWeekView } from '@/components/Appointment Calendar/CalendarWeekView'
+import { WeeklyStats } from '@/components/Appointment Calendar/StatsHeader'
 
-export default function ManagerAppointmentCalendar() {
+import { ServiceAppointment } from '@/types/doctor/serviceAppointmentTypes'
+import { useDoctorServiceAppointments } from '@/hooks/doctor/useServiceAppointment'
+
+export default function DoctorServiceAppointmentCalendar() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
-
   const [currentWeek, setCurrentWeek] = useState(new Date())
 
-  // ========== SET BREADCRUMB ==========
+  // ========== SET BREADCRUMB (for Doctor) ==========
   useEffect(() => {
     setBreadcrumb({
-      title: 'Appointments Management',
+      title: 'My Service Appointments',
       parent: 'Dashboard',
-      parentHref: '/manager'
+      parentHref: '/doctor'
     })
   }, [setBreadcrumb])
 
-  // ========== CALCULATE WEEK DATE RANGE ==========
+  // ========== CALCULATE WEEK DATE RANGE (this logic is reusable) ==========
   const weekDateRange = useMemo(() => {
     const start = startOfWeek(currentWeek, { weekStartsOn: 1 })
     const end = endOfWeek(currentWeek, { weekStartsOn: 1 })
     return { start, end }
   }, [currentWeek])
 
-  // ========== USE MANAGER APPOINTMENTS HOOK ==========
   const {
     data: appointmentData,
     isLoading,
     isError,
     error,
     isFetching
-  } = useManagerAppointments({
+  } = useDoctorServiceAppointments({
     startDate: formatISO(weekDateRange.start, { representation: 'date' }),
     endDate: formatISO(weekDateRange.end, { representation: 'date' })
   })
 
-  // ========== EXTRACT APPOINTMENTS FROM DATA ==========
-  const appointments: Appointment[] = useMemo(() => appointmentData?.data ?? [], [appointmentData])
+  // ========== EXTRACT APPOINTMENTS FROM DATA (using the new type) ==========
+  const appointments: ServiceAppointment[] = useMemo(() => appointmentData?.data ?? [], [appointmentData])
 
-  // ========== CALCULATE WEEKLY STATS ==========
-  const weeklyStats = useMemo(() => {
+  const weeklyStats: WeeklyStats = useMemo(() => {
     const totalAppointments = appointments.length
     const pending = appointments.filter((apt) => apt.status === 'PENDING').length
+    const checkin = appointments.filter((apt) => apt.status === 'CHECKIN').length
     const ongoing = appointments.filter((apt) => apt.status === 'ONGOING').length
+    const inputResults = appointments.filter((apt) => apt.status === 'INPUT_RESULTS').length
     const completed = appointments.filter((apt) => apt.status === 'COMPLETED').length
     const cancelled = appointments.filter((apt) => apt.status === 'CANCELLED').length
 
-    return { totalAppointments, pending, ongoing, completed, cancelled }
+    return { totalAppointments, pending, checkin, ongoing, inputResults, completed, cancelled }
   }, [appointments])
 
   return (
     <div className='relative'>
-      {/* ========= FLOATING ELEMENTS (EFFECTS) */}
+      {/* Decorative floating elements can be reused */}
       <div className='absolute top-20 left-20 h-32 w-32 animate-pulse rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-xl' />
       <div className='absolute top-40 right-32 h-24 w-24 animate-pulse rounded-full bg-gradient-to-r from-emerald-400/20 to-blue-400/20 blur-xl delay-1000' />
       <div className='absolute bottom-32 left-32 h-28 w-28 animate-pulse rounded-full bg-gradient-to-r from-purple-400/20 to-pink-400/20 blur-xl delay-2000' />
@@ -73,7 +73,7 @@ export default function ManagerAppointmentCalendar() {
             >
               <AlertCircle className='h-5 w-5' />
               <div>
-                <p className='font-bold'>Failed to load appointments</p>
+                <p className='font-bold'>Failed to load service appointments</p>
                 <p className='text-sm'>{(error as Error).message}</p>
               </div>
             </div>
@@ -87,6 +87,7 @@ export default function ManagerAppointmentCalendar() {
             isFetching={isFetching}
             weeklyStats={weeklyStats}
             isLoading={isLoading}
+            appointmentType='service'
           />
         </div>
       </div>

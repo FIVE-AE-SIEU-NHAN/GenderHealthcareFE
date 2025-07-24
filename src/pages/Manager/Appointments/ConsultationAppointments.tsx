@@ -1,28 +1,27 @@
 import { useState, useMemo, useEffect } from 'react'
 import { startOfWeek, endOfWeek, formatISO } from 'date-fns'
 import { AlertCircle } from 'lucide-react'
+import { useOutletContext } from 'react-router-dom'
 
-import { useConsultantAppointments } from '@/hooks/consultant/useAppointments'
+import { useManagerAppointments } from '@/hooks/manager/useAppointments'
+import { useUpdateAppointmentStatus } from '@/hooks/manager/useAppointmentsMutation'
 
 import { CalendarWeekView } from '@/components/Appointment Calendar/CalendarWeekView'
-import { Appointment } from '@/types/consultant/appointmentTypes'
-import { useOutletContext } from 'react-router-dom'
 import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
-import VideoChatRoom from '@/components/Chats/VideoChatRoom'
+import { Appointment } from '@/types/consultant/appointmentTypes'
+import { AppointmentStatus } from '@/Application/constants/appointment'
 
-export default function ConsultantAppointmentCalendar() {
+export default function ManagerConsultationAppointmentCalendar() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
 
   const [currentWeek, setCurrentWeek] = useState(new Date())
-
-  const [activeCallRoomId, setActiveCallRoomId] = useState<string | null>(null)
 
   // ========== SET BREADCRUMB ==========
   useEffect(() => {
     setBreadcrumb({
       title: 'Appointments Management',
       parent: 'Dashboard',
-      parentHref: '/consultant'
+      parentHref: '/manager'
     })
   }, [setBreadcrumb])
 
@@ -33,17 +32,27 @@ export default function ConsultantAppointmentCalendar() {
     return { start, end }
   }, [currentWeek])
 
-  // ========== USE CONSULTANT APPOINTMENTS HOOK ==========
+  // ========== USE MANAGER APPOINTMENTS HOOK ==========
   const {
     data: appointmentData,
     isLoading,
     isError,
     error,
     isFetching
-  } = useConsultantAppointments({
+  } = useManagerAppointments({
     startDate: formatISO(weekDateRange.start, { representation: 'date' }),
     endDate: formatISO(weekDateRange.end, { representation: 'date' })
   })
+
+  const updateStatusMutation = useUpdateAppointmentStatus()
+
+  const handleStatusChange = (appointmentId: string, status: AppointmentStatus) => {
+    updateStatusMutation.mutate({ appointmentId, status })
+  }
+
+  const isUpdatingStatus = (appointmentId: string): boolean => {
+    return updateStatusMutation.isPending && updateStatusMutation.variables?.appointmentId === appointmentId
+  }
 
   // ========== EXTRACT APPOINTMENTS FROM DATA ==========
   const appointments: Appointment[] = useMemo(() => appointmentData?.data ?? [], [appointmentData])
@@ -58,20 +67,6 @@ export default function ConsultantAppointmentCalendar() {
 
     return { totalAppointments, pending, ongoing, completed, cancelled }
   }, [appointments])
-
-  // ========== VIDEO CHAT ROOM ==========
-  const handleJoinCall = (roomId: string) => {
-    setActiveCallRoomId(roomId)
-  }
-
-  const handleLeaveCall = () => {
-    setActiveCallRoomId(null)
-  }
-
-  // --- 4. CONDITIONAL RENDER: VIDEO CHAT OR CALENDAR ---
-  if (activeCallRoomId) {
-    return <VideoChatRoom chat_room_id={activeCallRoomId} onLeave={handleLeaveCall} />
-  }
 
   return (
     <div className='relative'>
@@ -101,11 +96,12 @@ export default function ConsultantAppointmentCalendar() {
             appointments={appointments}
             currentWeek={currentWeek}
             onWeekChange={setCurrentWeek}
-            weeklyStats={weeklyStats}
             isFetching={isFetching}
+            weeklyStats={weeklyStats}
             isLoading={isLoading}
-            onJoinCall={handleJoinCall}
             appointmentType='consultation'
+            onStatusChange={handleStatusChange}
+            isUpdating={isUpdatingStatus}
           />
         </div>
       </div>

@@ -8,7 +8,6 @@ export function useUpdateAppointmentStatus() {
   return useMutation({
     mutationFn: editAppointmentStatusApi,
     onSuccess: async () => {
-      // Invalidate both manager and consultant queries to be safe
       await queryClient.invalidateQueries({ queryKey: ['managerAppointments'] })
       await queryClient.invalidateQueries({ queryKey: ['consultantAppointments'] })
 
