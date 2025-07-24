@@ -1,14 +1,26 @@
+import { AppointmentStatus } from '@/Application/constants/appointment'
 import { cn } from '@/lib/utils'
-import { AppointmentStatus, STATUS_STYLES } from '@/Application/constants/appointment'
+import { ServiceAppointmentStatus } from '@/types/doctor/serviceAppointmentTypes'
+
+type AnyStatus = AppointmentStatus | ServiceAppointmentStatus | string
+
+interface StatusStyle {
+  label: string
+  className: string
+  dotColor: string
+}
 
 interface StatusBadgeProps {
-  status: AppointmentStatus
+  status: AnyStatus
+  styles: Record<string, StatusStyle>
   className?: string
   isCompact?: boolean
 }
 
-export function StatusBadge({ status, className, isCompact = false }: StatusBadgeProps) {
-  const config = STATUS_STYLES[status]
+export function StatusBadge({ status, styles, className, isCompact = false }: StatusBadgeProps) {
+  const config = styles[status]
+
+  if (!config) return null
 
   return (
     <div

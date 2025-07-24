@@ -7,17 +7,23 @@ import { AppointmentStatus, TimeSlot } from '@/Application/constants/appointment
 import { TopicLegend } from './TopicLegend'
 import { WeeklyStats, WeeklyStatsHeader } from './StatsHeader'
 import { cn } from '@/lib/utils'
-import { useUpdateAppointmentStatus } from '@/hooks/manager/useAppointmentsMutation'
 import { useEffect, useMemo, useState } from 'react'
+import { ServiceAppointment, ServiceAppointmentStatus } from '@/types/doctor/serviceAppointmentTypes'
+import { PackageLegend } from './PackageLegend'
 
+type AnyAppointment = Appointment | ServiceAppointment
 interface CalendarWeekViewProps {
-  appointments: Appointment[]
+  appointments: AnyAppointment[]
   currentWeek: Date
   onWeekChange: (date: Date) => void
   weeklyStats: WeeklyStats
+  appointmentType: 'consultation' | 'service'
   isLoading?: boolean
   isFetching?: boolean
   onJoinCall?: (roomId: string) => void
+  onStatusChange?: (appointmentId: string, status: AppointmentStatus | ServiceAppointmentStatus) => void
+  isUpdating?: (appointmentId: string) => boolean
+  onCardClick?: (appointment: AnyAppointment) => void
 }
 
 // Time slots mapping
@@ -43,9 +49,13 @@ export function CalendarWeekView({
   currentWeek,
   onWeekChange,
   weeklyStats,
+  appointmentType,
   isLoading,
   isFetching,
-  onJoinCall
+  onJoinCall,
+  onStatusChange,
+  isUpdating,
+  onCardClick
 }: CalendarWeekViewProps) {
   const [now, setNow] = useState(new Date())
 
@@ -93,19 +103,13 @@ export function CalendarWeekView({
     onWeekChange(addDays(currentWeek, 7))
   }
 
-  const updateStatusMutation = useUpdateAppointmentStatus()
-
-  const handleStatusChange = (appointmentId: string, status: AppointmentStatus) => {
-    updateStatusMutation.mutate({ appointmentId, status })
-  }
-
   return (
     <>
       {/* CARD HEADER */}
       <WeeklyStatsHeader stats={weeklyStats} isLoading={isLoading} isFetching={isFetching} />
 
       {/* Topic Legend  */}
-      <TopicLegend />
+      {appointmentType === 'consultation' ? <TopicLegend /> : <PackageLegend />}
 
       {/* ========= CALENDAR ========= */}
       <div className='w-full'>
@@ -193,12 +197,12 @@ export function CalendarWeekView({
                             key={appointment.id}
                             appointment={appointment}
                             className='relative z-20 w-full'
-                            onStatusChange={(newStatus) => handleStatusChange(appointment.id, newStatus)}
-                            isUpdating={
-                              updateStatusMutation.isPending &&
-                              updateStatusMutation.variables?.appointmentId === appointment.id
-                            }
                             onJoin={onJoinCall}
+                            onClick={onCardClick ? () => onCardClick(appointment) : undefined}
+                            onStatusChange={
+                              onStatusChange ? (newStatus) => onStatusChange(appointment.id, newStatus) : undefined
+                            }
+                            isUpdating={isUpdating ? isUpdating(appointment.id) : false}
                           />
                         ))}
                       </div>

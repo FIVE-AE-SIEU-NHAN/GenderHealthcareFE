@@ -3,8 +3,8 @@ import type { NavMainProps } from '@/components/layouts/Dashboard/nav-main'
 
 export const doctorSidebarItems: NavMainProps['items'] = [
   {
-    title: 'Appointments',
-    url: '/doctor/appointments',
+    title: 'Service Bookings',
+    url: '/doctor/service-appointments',
     icon: CalendarCheck
   },
   {
