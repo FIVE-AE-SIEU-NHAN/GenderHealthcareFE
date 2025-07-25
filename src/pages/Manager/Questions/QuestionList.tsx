@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { Loader2, MoreHorizontal, XCircle, Lock, Unlock, Trash, AlertTriangle } from 'lucide-react'
+import { Loader2, MoreHorizontal, XCircle, Lock, Unlock, AlertTriangle, ShieldOff } from 'lucide-react'
 
 import type { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
 import TableToolbar, { FacetFilter } from '@/components/layouts/Dashboard/TableToolbar'
@@ -36,8 +36,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
-
-// REMOVED: allQuestionColumns is now defined inside the component
 
 // ========== FACET FILTERS FOR QUESTIONS ==========
 const questionFacetFilters: FacetFilter[] = [
@@ -90,8 +88,10 @@ export default function QuestionListDashboard() {
     to?: Date
   }>({ field: 'created_at' })
 
+  const REPORTED_STATUS_ID = QUESTION_STATUS.API_MAP['Reported']
+  const PENDING_STATUS_ID = QUESTION_STATUS.API_MAP['Pending']
+
   // =============== MODIFIED: COLUMNS FORMAT FOR QUESTIONS ===============
-  // Defined inside the component with useMemo to access `page` state
   const allQuestionColumns = useMemo(
     () => [
       {
@@ -177,16 +177,16 @@ export default function QuestionListDashboard() {
       }
     ],
     [page]
-  ) // Dependency array ensures it recalculates when page changes
+  )
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     allQuestionColumns.filter((col) => col.defaultVisible !== false).map((col) => col.key)
   )
   const visibleColumnCount = allQuestionColumns.filter((c) => visibleColumns.includes(c.key)).length
 
-  const [questionToDelete, setQuestionToDelete] = useState<Question | null>(null)
+  const [questionToReject, setQuestionToReject] = useState<Question | null>(null)
 
-  const { editStatus: editQuestionStatusMutation, deleteQuestion } = useQuestionMutations()
+  const { editStatus: editQuestionStatusMutation, rejectReport } = useQuestionMutations()
 
   useEffect(() => {
     setBreadcrumb({
@@ -237,7 +237,7 @@ export default function QuestionListDashboard() {
     (question: Question) => {
       const isMutatingThisQuestion =
         (editQuestionStatusMutation.isPending && editQuestionStatusMutation.variables?.questionId === question.id) ||
-        (deleteQuestion.isPending && deleteQuestion.variables === question.id)
+        (rejectReport.isPending && rejectReport.variables?.questionId === question.id)
 
       return (
         <DropdownMenu>
@@ -252,19 +252,22 @@ export default function QuestionListDashboard() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <AlertDialogTrigger asChild>
-              <DropdownMenuItem
-                className='text-red-600 focus:bg-red-50 focus:text-red-700'
-                // `onSelect` prevents the dropdown from closing when we click the item
-                onSelect={(e) => e.preventDefault()}
-                onClick={() => setQuestionToDelete(question)}
-              >
-                <Trash className='mr-2 h-4 w-4' />
-                Delete this Question
-              </DropdownMenuItem>
-            </AlertDialogTrigger>
+            {question.status === REPORTED_STATUS_ID && (
+              <>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    className='text-orange-600 focus:bg-orange-50 focus:text-orange-700'
+                    onSelect={(e) => e.preventDefault()}
+                    onClick={() => setQuestionToReject(question)}
+                  >
+                    <ShieldOff className='mr-2 h-4 w-4' />
+                    Reject this Report
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
 
-            <DropdownMenuSeparator />
+                <DropdownMenuSeparator />
+              </>
+            )}
 
             {question.is_public ? (
               <DropdownMenuItem
@@ -287,7 +290,7 @@ export default function QuestionListDashboard() {
         </DropdownMenu>
       )
     },
-    [editQuestionStatusMutation, deleteQuestion]
+    [editQuestionStatusMutation, rejectReport, REPORTED_STATUS_ID]
   )
 
   return (
@@ -358,25 +361,24 @@ export default function QuestionListDashboard() {
               <div className='rounded-full bg-red-100 p-2'>
                 <AlertTriangle className='h-6 w-6 text-red-600' />
               </div>
-              <AlertDialogTitle className='text-xl'>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle className='text-xl'>Are you sure you want to reject this report?</AlertDialogTitle>
             </div>
             <AlertDialogDescription className='pt-2 pl-12'>
-              This action cannot be undone. This will permanently delete the question and any associated answers from
-              our servers.
+              This will change the question's status back to "Pending". The consultant who reported it will be notified.
+              This action can not be reversed.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className='bg-red-600 hover:bg-red-700'
-              // The action button calls the mutation with the stored question's ID
+              className='cursor-pointer bg-red-700 hover:bg-red-800'
               onClick={() => {
-                if (questionToDelete) {
-                  deleteQuestion.mutate(questionToDelete.id)
+                if (questionToReject) {
+                  rejectReport.mutate({ questionId: questionToReject.id, status: PENDING_STATUS_ID })
                 }
               }}
             >
-              Yes, delete question
+              Yes, reject report
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

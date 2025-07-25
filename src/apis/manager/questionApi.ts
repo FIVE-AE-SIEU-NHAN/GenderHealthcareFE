@@ -5,6 +5,8 @@ import {
   EditQuestionStatusPayload,
   EditQuestionStatusResponse,
   PaginatedQuestionsResponse,
+  RejectReportPayload,
+  RejectReportResponse,
   UseQuestionsOptions
 } from '@/types/manager/questionTypes'
 import { format } from 'date-fns'
@@ -69,7 +71,7 @@ export const fetchQuestions = async ({
   }
 }
 
-// =============== QUESTION STATUS EDITING ===============
+// =============== QUESTION VISIBILITY EDITING ===============
 export const editQuestionStatusAPI = async ({
   questionId,
   is_public
@@ -82,11 +84,21 @@ export const editQuestionStatusAPI = async ({
 // =============== DELETE A QUESTION ===============
 /**
  * API call to delete a question.
- * Corresponds to: DELETE /question/:id/delete
  * @param questionId The ID of the question to delete.
  * @returns A promise that resolves to the server's success message.
  */
 export const deleteQuestionAPI = async (questionId: string): Promise<{ message: string }> => {
   const response = await api.delete<{ message: string }>(`/question/${questionId}/delete`)
+  return response.data
+}
+
+// =============== REJECT A REPORTED QUESTION ===============
+/**
+ * API call to reject a reported question, setting its status.
+ * @param {RejectReportPayload} payload The payload containing questionId and the new status.
+ * @returns A promise that resolves to the server's success message.
+ */
+export const rejectReportAPI = async ({ questionId, status }: RejectReportPayload): Promise<RejectReportResponse> => {
+  const response = await api.patch<RejectReportResponse>(`/question/${questionId}/edit-status`, { status })
   return response.data
 }

@@ -91,7 +91,7 @@ export const editAnswerAPI = async ({
   answer
 }: AnswerQuestionPayload): Promise<QuestionMutationResponse> => {
   const body = { answer }
-  const response = await api.patch<QuestionMutationResponse>(`/question/${questionId}/consultant-edit`, body)
+  const response = await api.patch<QuestionMutationResponse>(`/question/${questionId}/edit-answer`, body)
   return response.data
 }
 

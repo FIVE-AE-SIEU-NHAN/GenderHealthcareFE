@@ -35,12 +35,22 @@ export interface UseQuestionsOptions {
   }
 }
 
-// =================== QUESTIONS STATUS ===================
+// =================== QUESTIONS VISIBILITY ===================
 export interface EditQuestionStatusPayload {
   questionId: string
   is_public: boolean
 }
 
 export interface EditQuestionStatusResponse {
+  message: string
+}
+
+// =================== REJECT REPORTED QUESTION ===================
+export interface RejectReportPayload {
+  questionId: string
+  status: number
+}
+
+export interface RejectReportResponse {
   message: string
 }
