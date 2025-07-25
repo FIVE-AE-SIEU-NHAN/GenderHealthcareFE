@@ -25,7 +25,7 @@ import BlogPage from '@/pages/Content/Blog/BlogList'
 import FloatingButtons from '@/components/layouts/FloatingButtons/FloatingButtons'
 import AboutUsPage from '@/pages/Common/AboutUs'
 import CycleTracking from '@/pages/Customer/Cycle/CycleTracking'
-
+import CycleForm from '@/pages/Customer/Cycle/CycleForm'
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -43,6 +43,7 @@ export default function AppRouter() {
           <Route path='/service-details' element={<ServiceDetail />} />
           <Route path='/blogs' element={<BlogPage />} />
           <Route path='/cy-cal' element={<CycleTracking />} />
+          <Route path='/cycle-form' element={<CycleForm />} />
         </Route>
 
         {/* Auth Routes (things that's related to authen will be here)*/}

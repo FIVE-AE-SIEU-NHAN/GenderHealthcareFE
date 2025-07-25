@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button'
 import { CycleData, DailyRating, CalendarDay } from '@/types/cycle'
 import { generateCalendarDays } from '@/utils/cycleCalculations'
 import DayRatingModal from './DayRatingModal'
-
+import axios from 'axios'
 interface CycleCalendarProps {
   cycleData: CycleData
   ratings: Map<string, DailyRating>
   onUpdateRating: (date: string, rating: DailyRating) => void
+  cycleId: string
 }
 
 const dayTypeStyles = {
@@ -43,11 +44,11 @@ const dayTypeLegendStyles = {
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const weekDaysShort = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
-export default function CycleCalendar({ cycleData, ratings, onUpdateRating }: CycleCalendarProps) {
+export default function CycleCalendar({ cycleData, ratings, onUpdateRating, cycleId }: CycleCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [selectedDay, setSelectedDay] = useState<CalendarDay | null>(null)
   const [showRatingModal, setShowRatingModal] = useState(false)
-
+  
   const calendarDays = useMemo(() => {
     return generateCalendarDays(currentMonth, cycleData, ratings)
   }, [currentMonth, cycleData, ratings])
@@ -70,10 +71,27 @@ export default function CycleCalendar({ cycleData, ratings, onUpdateRating }: Cy
     }
   }
 
-  const handleRatingSubmit = (rating: DailyRating) => {
+
+  const handleRatingSubmit = async (rating: DailyRating) => {
     if (selectedDay) {
       const dateKey = format(selectedDay.date, 'yyyy-MM-dd')
       onUpdateRating(dateKey, rating)
+
+      try {
+        const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null
+        await axios.post(
+          `/cycles/${cycleId}/logs`, 
+          {
+            log_date: dateKey,
+            ...rating
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+      } catch (err) {
+        // ...xử lý error nếu muốn
+      }
       setShowRatingModal(false)
       setSelectedDay(null)
     }
