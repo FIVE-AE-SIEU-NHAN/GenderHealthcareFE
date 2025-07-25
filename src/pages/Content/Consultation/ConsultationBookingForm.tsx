@@ -16,7 +16,7 @@ import { CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 
 
-// Form validation schema
+// --- THAY ĐỔI 1: Cập nhật Schema để đếm ký tự ---
 export const formSchema = z.object({
   topic: z.string({ required_error: "Please select a consultation topic." }).min(1, "Please select a consultation topic."),
   booking_date: z.date({ required_error: "Please select a date." }),
@@ -24,11 +24,13 @@ export const formSchema = z.object({
   note: z.string()
     .trim()
     .refine(value => {
-      if (!value) return true;
-      const wordCount = value.split(/\s+/).filter(word => word.length > 0).length;
-      return wordCount >= 8 && wordCount <= 50;
+      if (!value) return true; // Cho phép trường rỗng
+      // Thay đổi từ đếm từ sang đếm ký tự
+      const charCount = value.length; 
+      return charCount >= 8 && charCount <= 50;
     }, {
-      message: "The note must be between 8 and 50 words.",
+      // Cập nhật thông báo lỗi
+      message: "The note must be between 8 and 50 characters.",
     }),
   agreed: z.boolean().refine(val => val === true, {
     message: "You must agree to the terms of use.",
@@ -49,7 +51,11 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
   const selectedTopicValue = form.watch("topic");
   const selectedDateValue = form.watch("booking_date");
   const selectedTimeSlotValue = form.watch("time_slot");
-  const noteValue = form.watch("note"); // THEO DÕI GIÁ TRỊ CỦA Ô NOTE
+  
+  // --- THAY ĐỔI 2: Cập nhật logic hiển thị để đếm ký tự ---
+  const noteValue = form.watch("note") || "";
+  // Thay đổi từ đếm từ sang đếm ký tự
+  const charCount = noteValue.length;
 
   const getSelectedTopic = () => TOPIC_OPTIONS.find(t => t.value === selectedTopicValue);
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find(t => t.value === selectedTimeSlotValue)?.label;
@@ -138,7 +144,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                 )} />
               </div>
 
-              {/* ===== KHỐI CODE ĐƯỢC CẬP NHẬT ===== */}
+              {/* --- THAY ĐỔI 3: Cập nhật hiển thị và placeholder --- */}
               <FormField
                 control={form.control}
                 name="note"
@@ -147,31 +153,23 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                     <FormLabel>Note for the Consultant (Optional)</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Please describe your current condition or specific questions for the consultant..."
+                        // Cập nhật placeholder
+                        placeholder="Please describe your current condition..."
                         className="resize-none h-30"
                         disabled={isPending}
                         {...field}
                       />
                     </FormControl>
-                    {/* lỗi bên trái, counter bên phải */}
-                    <div className="flex items-center justify-between mt-1">
-                      {/* chiếm hết không gian còn lại để đẩy counter sang phải */}
-                      <div className="flex-1">
-                        <FormMessage />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">
-                          {noteValue?.length || 0}/50
-                        </p>
-                      </div>
+                    <div className="flex justify-between items-center mt-1">
+                      <FormMessage />
+                      <p className="text-sm text-gray-500 ml-auto">
+                        {/* Hiển thị số ký tự */}
+                        {charCount}/50
+                      </p>
                     </div>
                   </FormItem>
                 )}
               />
-
-
-              {/* ===== KẾT THÚC KHỐI CODE CẬP NHẬT ===== */}
-
 
               {/* Real-time info */}
               {getSelectedTopic() && (
@@ -223,7 +221,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                       </>
                     ) : (
                       <>
-                        <FaHeartbeat className="mr-2" />
+                        <FaHeartbeat className="mr-2"/>
                         <span>Book Consultant</span>
                       </>
                     )}
