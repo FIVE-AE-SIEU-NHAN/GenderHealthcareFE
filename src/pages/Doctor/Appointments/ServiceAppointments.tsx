@@ -11,7 +11,7 @@ import { ServiceResultModal } from '@/components/Appointment Calendar/ServiceRes
 
 import { useUpdateServiceAppointmentStatus } from '@/hooks/doctor/useServiceAppointmentsMutations'
 import { ServiceAppointment, ServiceAppointmentStatus } from '@/types/doctor/serviceAppointmentTypes'
-import { useDoctorServiceAppointments } from '@/hooks/doctor/useServiceAppointment'
+import { useServiceAppointments } from '@/hooks/doctor/useServiceAppointment'
 
 export default function DoctorServiceAppointmentCalendar() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
@@ -38,10 +38,13 @@ export default function DoctorServiceAppointmentCalendar() {
     isError,
     error,
     isFetching
-  } = useDoctorServiceAppointments({
-    startDate: formatISO(weekDateRange.start, { representation: 'date' }),
-    endDate: formatISO(weekDateRange.end, { representation: 'date' })
-  })
+  } = useServiceAppointments(
+    {
+      startDate: formatISO(weekDateRange.start, { representation: 'date' }),
+      endDate: formatISO(weekDateRange.end, { representation: 'date' })
+    },
+    'doctor'
+  )
 
   const updateStatusMutation = useUpdateServiceAppointmentStatus()
 

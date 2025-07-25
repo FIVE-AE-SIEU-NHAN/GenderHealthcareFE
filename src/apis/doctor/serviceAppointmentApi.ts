@@ -8,22 +8,27 @@ import {
 } from '@/types/doctor/serviceAppointmentTypes'
 import api from '@/apis/axiosConfig'
 
+// Define the roles that can access this feature
+type ServiceAppointmentRole = 'doctor' | 'manager'
+
 /**
- * Fetches service appointments for the currently logged-in doctor (staff) within a specific date range.
- * @param startDate - The start of the date range in ISO 8601 format.
- * @param endDate - The end of the date range in ISO 8601 format.
+ * Fetches service appointments for a specific role (doctor or manager) within a date range.
+ * @param options - The date range for the query ({ startDate, endDate }).
+ * @param role - The role of the user fetching the appointments ('doctor' or 'manager').
  * @returns The API response containing the list of service appointments.
  */
-export const fetchDoctorServiceAppointments = async ({
-  startDate,
-  endDate
-}: UseAppointmentsOptions): Promise<PaginatedServiceAppointments> => {
+export const fetchServiceAppointments = async (
+  options: UseAppointmentsOptions,
+  role: ServiceAppointmentRole
+): Promise<PaginatedServiceAppointments> => {
   const params = {
-    _start_date: startDate,
-    _end_date: endDate
+    _start_date: options.startDate,
+    _end_date: options.endDate
   }
 
-  const response = await api.get<BackendServiceAppointmentsResponse>('/test-service/staff', { params })
+  const endpoint = role === 'manager' ? '/test-service/manager' : '/test-service/staff'
+
+  const response = await api.get<BackendServiceAppointmentsResponse>(endpoint, { params })
   const result = response.data?.result
   return {
     data: result?.testServiceAppointments ?? [],

@@ -30,7 +30,7 @@ export function useSubmitAllTestResults() {
         })
       } else {
         // Fallback: just invalidate if we can't find the ID for some reason
-        queryClient.invalidateQueries({ queryKey: ['doctorServiceAppointments'] })
+        queryClient.invalidateQueries({ queryKey: ['serviceAppointments'] })
       }
     },
     onError: (error) => {
@@ -48,7 +48,7 @@ export function useUpdateServiceAppointmentStatus() {
   return useMutation({
     mutationFn: editServiceAppointmentStatus,
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['doctorServiceAppointments'] })
+      queryClient.invalidateQueries({ queryKey: ['serviceAppointments'] })
       toast.success(`Appointment status updated to "${variables.status}".`)
     },
     onError: (error) => {

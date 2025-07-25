@@ -8,14 +8,13 @@ import { CalendarWeekView } from '@/components/Appointment Calendar/CalendarWeek
 import { Appointment } from '@/types/consultant/appointmentTypes'
 import { useOutletContext } from 'react-router-dom'
 import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
-import VideoChatRoom from '@/components/Chats/VideoChatRoom'
+import { useUpdateAppointmentStatus } from '@/hooks/manager/useAppointmentsMutation'
+import { AppointmentStatus } from '@/Application/constants/appointment'
 
 export default function ConsultantAppointmentCalendar() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
 
   const [currentWeek, setCurrentWeek] = useState(new Date())
-
-  const [activeCallRoomId, setActiveCallRoomId] = useState<string | null>(null)
 
   // ========== SET BREADCRUMB ==========
   useEffect(() => {
@@ -45,6 +44,16 @@ export default function ConsultantAppointmentCalendar() {
     endDate: formatISO(weekDateRange.end, { representation: 'date' })
   })
 
+  const updateStatusMutation = useUpdateAppointmentStatus()
+
+  const handleStatusChange = (appointmentId: string, status: AppointmentStatus) => {
+    updateStatusMutation.mutate({ appointmentId, status })
+  }
+
+  const isUpdatingStatus = (appointmentId: string): boolean => {
+    return updateStatusMutation.isPending && updateStatusMutation.variables?.appointmentId === appointmentId
+  }
+
   // ========== EXTRACT APPOINTMENTS FROM DATA ==========
   const appointments: Appointment[] = useMemo(() => appointmentData?.data ?? [], [appointmentData])
 
@@ -61,16 +70,8 @@ export default function ConsultantAppointmentCalendar() {
 
   // ========== VIDEO CHAT ROOM ==========
   const handleJoinCall = (roomId: string) => {
-    setActiveCallRoomId(roomId)
-  }
-
-  const handleLeaveCall = () => {
-    setActiveCallRoomId(null)
-  }
-
-  // --- 4. CONDITIONAL RENDER: VIDEO CHAT OR CALENDAR ---
-  if (activeCallRoomId) {
-    return <VideoChatRoom chat_room_id={activeCallRoomId} onLeave={handleLeaveCall} />
+    const callUrl = `/call/${roomId}`
+    window.open(callUrl, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -107,6 +108,8 @@ export default function ConsultantAppointmentCalendar() {
             onJoinCall={handleJoinCall}
             appointmentType='consultation'
             userRole='consultant'
+            onStatusChange={handleStatusChange}
+            isUpdating={isUpdatingStatus}
           />
         </div>
       </div>

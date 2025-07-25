@@ -7,23 +7,23 @@ import { DashboardLayoutContext } from '@/components/layouts/Dashboard/Dashboard
 import { CalendarWeekView } from '@/components/Appointment Calendar/CalendarWeekView'
 import { WeeklyStats } from '@/components/Appointment Calendar/StatsHeader'
 
-import { ServiceAppointment } from '@/types/doctor/serviceAppointmentTypes'
-import { useDoctorServiceAppointments } from '@/hooks/doctor/useServiceAppointment'
+import { useUpdateServiceAppointmentStatus } from '@/hooks/doctor/useServiceAppointmentsMutations'
+import { ServiceAppointment, ServiceAppointmentStatus } from '@/types/doctor/serviceAppointmentTypes'
+import { useServiceAppointments } from '@/hooks/doctor/useServiceAppointment' // Adjust path if you moved it
 
-export default function DoctorServiceAppointmentCalendar() {
+export default function ManagerServiceAppointmentCalendar() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
   const [currentWeek, setCurrentWeek] = useState(new Date())
 
-  // ========== SET BREADCRUMB (for Doctor) ==========
+  // Setup breadcrumb for the manager page
   useEffect(() => {
     setBreadcrumb({
-      title: 'My Service Appointments',
+      title: 'Service Appointments Management',
       parent: 'Dashboard',
-      parentHref: '/doctor'
+      parentHref: '/manager'
     })
   }, [setBreadcrumb])
 
-  // ========== CALCULATE WEEK DATE RANGE (this logic is reusable) ==========
   const weekDateRange = useMemo(() => {
     const start = startOfWeek(currentWeek, { weekStartsOn: 1 })
     const end = endOfWeek(currentWeek, { weekStartsOn: 1 })
@@ -36,12 +36,16 @@ export default function DoctorServiceAppointmentCalendar() {
     isError,
     error,
     isFetching
-  } = useDoctorServiceAppointments({
-    startDate: formatISO(weekDateRange.start, { representation: 'date' }),
-    endDate: formatISO(weekDateRange.end, { representation: 'date' })
-  })
+  } = useServiceAppointments(
+    {
+      startDate: formatISO(weekDateRange.start, { representation: 'date' }),
+      endDate: formatISO(weekDateRange.end, { representation: 'date' })
+    },
+    'manager'
+  )
 
-  // ========== EXTRACT APPOINTMENTS FROM DATA (using the new type) ==========
+  const updateStatusMutation = useUpdateServiceAppointmentStatus()
+
   const appointments: ServiceAppointment[] = useMemo(() => appointmentData?.data ?? [], [appointmentData])
 
   const weeklyStats: WeeklyStats = useMemo(() => {
@@ -52,20 +56,25 @@ export default function DoctorServiceAppointmentCalendar() {
     const inputResults = appointments.filter((apt) => apt.status === 'INPUT_RESULTS').length
     const completed = appointments.filter((apt) => apt.status === 'COMPLETED').length
     const cancelled = appointments.filter((apt) => apt.status === 'CANCELLED').length
-
     return { totalAppointments, pending, checkin, ongoing, inputResults, completed, cancelled }
   }, [appointments])
 
+  const handleStatusChange = (appointmentId: string, status: ServiceAppointmentStatus) => {
+    updateStatusMutation.mutate({ appointmentId, status })
+  }
+
+  const isUpdatingStatus = (appointmentId: string): boolean => {
+    return updateStatusMutation.isPending && updateStatusMutation.variables?.appointmentId === appointmentId
+  }
+
   return (
     <div className='relative'>
-      {/* Decorative floating elements can be reused */}
       <div className='absolute top-20 left-20 h-32 w-32 animate-pulse rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-xl' />
       <div className='absolute top-40 right-32 h-24 w-24 animate-pulse rounded-full bg-gradient-to-r from-emerald-400/20 to-blue-400/20 blur-xl delay-1000' />
       <div className='absolute bottom-32 left-32 h-28 w-28 animate-pulse rounded-full bg-gradient-to-r from-purple-400/20 to-pink-400/20 blur-xl delay-2000' />
 
       <div className='relative max-h-[84vh] overflow-y-auto'>
         <div className='relative z-10 mx-auto w-full max-w-7xl'>
-          {/* ======== ERROR HANDLING ======== */}
           {isError && (
             <div
               role='alert'
@@ -79,15 +88,16 @@ export default function DoctorServiceAppointmentCalendar() {
             </div>
           )}
 
-          {/* ======== WEEKLY CALENDAR ======== */}
           <CalendarWeekView
             appointments={appointments}
             currentWeek={currentWeek}
             onWeekChange={setCurrentWeek}
-            isFetching={isFetching}
             weeklyStats={weeklyStats}
+            isFetching={isFetching}
             isLoading={isLoading}
             appointmentType='service'
+            onStatusChange={handleStatusChange}
+            isUpdating={isUpdatingStatus}
             userRole='manager'
           />
         </div>
