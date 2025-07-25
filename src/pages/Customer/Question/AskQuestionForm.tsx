@@ -49,6 +49,7 @@ const faqs: FAQ[] = [
   }
 ];
 
+// Schema được giữ nguyên, Zod sẽ xử lý lỗi khi submit
 const formSchema = z.object({
   topic: z.string({ required_error: "Please select a topic." }).min(1, { message: "Please select a topic." }),
   question: z.string()
@@ -71,7 +72,9 @@ export default function AskQuestion() {
       topic: "",
       question: "",
     },
-    mode: 'onChange',
+    // === THAY ĐỔI QUAN TRỌNG NHẤT NẰM Ở ĐÂY ===
+    // Đổi 'onChange' thành 'onSubmit' để chỉ kiểm tra lỗi khi người dùng nhấn nút.
+    mode: 'onSubmit',
   });
 
   const questionValue = form.watch("question") || "";
@@ -92,6 +95,7 @@ export default function AskQuestion() {
     return () => window.removeEventListener('resize', updateHeight);
   }, [formSubmitted]);
 
+  // Hàm onSubmit chỉ được gọi khi dữ liệu đã hợp lệ (sau khi nhấn submit)
   function onSubmit(values: z.infer<typeof formSchema>) {
     askQuestion.mutate(values, {
       onSuccess: () => {
@@ -183,7 +187,6 @@ export default function AskQuestion() {
                     </FormItem>
                   )} />
 
-                  {/* === PHẦN CẬP NHẬT START === */}
                   <FormField control={form.control} name="question" render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Your Question</FormLabel>
@@ -198,9 +201,7 @@ export default function AskQuestion() {
                       </FormControl>
                       <div className="flex items-start justify-between mt-2 h-5">
                         <div className="flex-grow">
-                          {/* Tin nhắn lỗi Zod sẽ được ưu tiên hiển thị ở đây */}
                           <FormMessage />
-                          {/* Nếu không có lỗi Zod và đã đạt đến giới hạn, hiển thị tin nhắn tùy chỉnh */}
                           {!form.formState.errors.question && questionValue.length === 1000 && (
                             <p className="text-sm text-blue-600">
                               You have reached the character limit.
@@ -208,7 +209,7 @@ export default function AskQuestion() {
                           )}
                         </div>
                         <p className={cn(
-                            "text-sm ml-auto flex-shrink-0", // Thêm flex-shrink-0 để đảm bảo không bị co lại
+                            "text-sm ml-auto flex-shrink-0",
                             (questionValue?.length || 0) >= 1000
                                 ? "text-red-500 font-bold"
                                 : "text-gray-500"
@@ -218,7 +219,6 @@ export default function AskQuestion() {
                       </div>
                     </FormItem>
                   )} />
-                  {/* === PHẦN CẬP NHẬT END === */}
 
                   <Button type="submit" disabled={askQuestion.isPending} className="w-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] hover:from-[#15305f] hover:to-[#3a6ad0] text-white text-lg font-semibold rounded-lg py-3 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
                     {askQuestion.isPending ? (
