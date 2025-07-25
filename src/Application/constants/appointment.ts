@@ -145,3 +145,10 @@ export const DEFAULT_TOPIC_STYLE: TopicStyle = {
 }
 
 export const TOPIC_VALUES = TOPIC_OPTIONS.map((option) => option.value)
+
+export const CONSULTATION_STATUS_TRANSITIONS: Record<AppointmentStatus, AppointmentStatus[]> = {
+  PENDING: ['ONGOING', 'CANCELLED'],
+  ONGOING: ['CANCELLED'], // Manager can cancel, consultant cannot manually complete.
+  COMPLETED: [],
+  CANCELLED: []
+}

@@ -105,11 +105,11 @@ export const SERVICE_STATUS_STYLES: Record<
  * The key is the current status, and the value is the next logical status.
  * `null` indicates a terminal state with no "next" step in the standard flow.
  */
-export const SERVICE_STATUS_TRANSITIONS: Record<ServiceAppointmentStatus, ServiceAppointmentStatus | null> = {
-  PENDING: 'CHECKIN',
-  CHECKIN: 'ONGOING',
-  ONGOING: 'INPUT_RESULTS',
-  INPUT_RESULTS: null,
-  COMPLETED: null,
-  CANCELLED: null
+export const SERVICE_STATUS_TRANSITIONS: Record<ServiceAppointmentStatus, ServiceAppointmentStatus[]> = {
+  PENDING: ['CHECKIN', 'CANCELLED'],
+  CHECKIN: ['ONGOING', 'CANCELLED'],
+  ONGOING: ['INPUT_RESULTS', 'CANCELLED'],
+  INPUT_RESULTS: [],
+  COMPLETED: [],
+  CANCELLED: []
 }

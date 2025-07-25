@@ -85,7 +85,7 @@ export function ConsultantBookingCard({
           </span>
         </p>
         <div className='flex items-center gap-2'>
-          <StatusBadge status={booking.status} />
+          <StatusBadge status={booking.status} styles={STATUS_STYLES} />
         </div>
 
         <p className='flex items-center gap-2'>

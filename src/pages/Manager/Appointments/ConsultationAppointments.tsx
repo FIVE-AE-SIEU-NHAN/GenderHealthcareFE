@@ -102,6 +102,7 @@ export default function ManagerConsultationAppointmentCalendar() {
             appointmentType='consultation'
             onStatusChange={handleStatusChange}
             isUpdating={isUpdatingStatus}
+            userRole='manager'
           />
         </div>
       </div>

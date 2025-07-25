@@ -110,6 +110,7 @@ export default function DoctorServiceAppointmentCalendar() {
             onCardClick={(appointment) => handleOpenResultModal(appointment as ServiceAppointment)}
             onStatusChange={handleStatusChange}
             isUpdating={isUpdatingStatus}
+            userRole='doctor'
           />
         </div>
       </div>

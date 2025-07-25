@@ -88,6 +88,7 @@ export default function DoctorServiceAppointmentCalendar() {
             weeklyStats={weeklyStats}
             isLoading={isLoading}
             appointmentType='service'
+            userRole='manager'
           />
         </div>
       </div>

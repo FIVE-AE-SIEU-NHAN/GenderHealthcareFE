@@ -1,5 +1,10 @@
-import { deleteQuestionAPI, editQuestionStatusAPI } from '@/apis/manager/questionApi'
-import { EditQuestionStatusPayload, EditQuestionStatusResponse } from '@/types/manager/questionTypes'
+import { deleteQuestionAPI, editQuestionStatusAPI, rejectReportAPI } from '@/apis/manager/questionApi'
+import {
+  EditQuestionStatusPayload,
+  EditQuestionStatusResponse,
+  RejectReportPayload,
+  RejectReportResponse
+} from '@/types/manager/questionTypes'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
@@ -10,19 +15,19 @@ import { toast } from 'sonner'
 export const useQuestionMutations = () => {
   const queryClient = useQueryClient()
 
-  // =============== QUESTION STATUS EDITING ===============
+  // =============== QUESTION VISIBILITY EDITING ===============
   const editStatusMutation = useMutation<EditQuestionStatusResponse, Error, EditQuestionStatusPayload>({
     mutationFn: editQuestionStatusAPI,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['questions'] })
-      toast.success(data.message || 'Question status updated successfully!')
+      toast.success(data.message || 'Question visibility updated successfully!')
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to update status.')
     }
   })
 
-  // =============== DELETE A QUESTION (NEW) ===============
+  // =============== DELETE A QUESTION ===============
   const deleteQuestionMutation = useMutation<
     { message: string },
     Error,
@@ -38,8 +43,21 @@ export const useQuestionMutations = () => {
     }
   })
 
+  // =============== REJECT A REPORTED QUESTION ===============
+  const rejectReportMutation = useMutation<RejectReportResponse, Error, RejectReportPayload>({
+    mutationFn: rejectReportAPI,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['questions'] })
+      toast.success(data.message || 'Report rejected successfully!')
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to reject report.')
+    }
+  })
+
   return {
     editStatus: editStatusMutation,
-    deleteQuestion: deleteQuestionMutation
+    deleteQuestion: deleteQuestionMutation,
+    rejectReport: rejectReportMutation
   }
 }

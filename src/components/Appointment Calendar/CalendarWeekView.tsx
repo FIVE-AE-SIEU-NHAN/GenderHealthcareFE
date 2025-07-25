@@ -12,18 +12,22 @@ import { ServiceAppointment, ServiceAppointmentStatus } from '@/types/doctor/ser
 import { PackageLegend } from './PackageLegend'
 
 type AnyAppointment = Appointment | ServiceAppointment
-interface CalendarWeekViewProps {
-  appointments: AnyAppointment[]
+interface CalendarWeekViewProps<T extends AnyAppointment> {
+  appointments: T[]
   currentWeek: Date
   onWeekChange: (date: Date) => void
   weeklyStats: WeeklyStats
   appointmentType: 'consultation' | 'service'
+  userRole: 'manager' | 'doctor' | 'consultant'
   isLoading?: boolean
   isFetching?: boolean
   onJoinCall?: (roomId: string) => void
-  onStatusChange?: (appointmentId: string, status: AppointmentStatus | ServiceAppointmentStatus) => void
+  onStatusChange?: (
+    appointmentId: string,
+    status: T extends ServiceAppointment ? ServiceAppointmentStatus : AppointmentStatus
+  ) => void
   isUpdating?: (appointmentId: string) => boolean
-  onCardClick?: (appointment: AnyAppointment) => void
+  onCardClick?: (appointment: T) => void
 }
 
 // Time slots mapping
@@ -44,19 +48,20 @@ const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sat
 const ROW_HEIGHT_PIXELS = 100 // Must match `min-h-[100px]` class
 const CALENDAR_START_HOUR = 7 // Must match first time slot "SLOT_07_08"
 
-export function CalendarWeekView({
+export function CalendarWeekView<T extends AnyAppointment>({
   appointments,
   currentWeek,
   onWeekChange,
   weeklyStats,
   appointmentType,
+  userRole,
   isLoading,
   isFetching,
   onJoinCall,
   onStatusChange,
   isUpdating,
   onCardClick
-}: CalendarWeekViewProps) {
+}: CalendarWeekViewProps<T>) {
   const [now, setNow] = useState(new Date())
 
   useEffect(() => {
@@ -196,9 +201,10 @@ export function CalendarWeekView({
                           <AppointmentCard
                             key={appointment.id}
                             appointment={appointment}
+                            userRole={userRole}
                             className='relative z-20 w-full'
                             onJoin={onJoinCall}
-                            onClick={onCardClick ? () => onCardClick(appointment) : undefined}
+                            onClick={onCardClick ? () => onCardClick(appointment as T) : undefined}
                             onStatusChange={
                               onStatusChange ? (newStatus) => onStatusChange(appointment.id, newStatus) : undefined
                             }

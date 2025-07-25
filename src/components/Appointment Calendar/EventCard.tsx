@@ -7,8 +7,8 @@ import { Loader2, Pencil } from 'lucide-react'
 
 import {
   STATUS_STYLES as CONSULTATION_STATUS_STYLES,
-  APPOINTMENT_STATUS_OPTIONS,
-  AppointmentStatus
+  AppointmentStatus,
+  CONSULTATION_STATUS_TRANSITIONS
 } from '@/Application/constants/appointment'
 import { TOPIC_STYLES_MAP, DEFAULT_TOPIC_STYLE } from '@/Application/constants/appointment'
 import { Appointment } from '@/types/consultant/appointmentTypes'
@@ -25,37 +25,56 @@ function isConsultation(appointment: AnyAppointment): appointment is Appointment
   return 'topic' in appointment
 }
 
-interface AppointmentCardProps {
-  appointment: AnyAppointment
+interface AppointmentCardProps<T extends AnyAppointment> {
+  appointment: T
   className?: string
+  userRole: 'manager' | 'doctor' | 'consultant'
   onJoin?: (roomId: string) => void
   onClick?: () => void
-  onStatusChange?: (status: AppointmentStatus | ServiceAppointmentStatus) => void
+  onStatusChange?: (status: T extends ServiceAppointment ? ServiceAppointmentStatus : AppointmentStatus) => void
   isUpdating?: boolean
 }
 
-export function AppointmentCard({
+export function AppointmentCard<T extends AnyAppointment>({
   appointment,
   className,
+  userRole,
   onJoin,
   onClick,
   onStatusChange,
   isUpdating = false
-}: AppointmentCardProps) {
+}: AppointmentCardProps<T>) {
   const isConsultationAppointment = isConsultation(appointment)
   const { status } = appointment
 
+  // --- CALCULATE NEXT AVAILABLE STATUSES BASED ON ROLE ---
+  const possibleNextStatuses = (() => {
+    if (!onStatusChange) return []
+
+    if (isConsultationAppointment) {
+      const transitions = CONSULTATION_STATUS_TRANSITIONS[appointment.status] || []
+      // A manager can cancel, a consultant cannot.
+      if (userRole === 'manager') {
+        return transitions
+      }
+      return transitions.filter((s) => s !== 'CANCELLED')
+    } else {
+      const transitions = SERVICE_STATUS_TRANSITIONS[appointment.status] || []
+      if (userRole === 'manager') {
+        return transitions
+      }
+      return transitions.filter((s) => s !== 'CANCELLED')
+    }
+  })()
+
   const styleInfo = isConsultationAppointment
     ? TOPIC_STYLES_MAP.get(appointment.topic) || DEFAULT_TOPIC_STYLE
-    : PACKAGE_STYLES_MAP.get(appointment.package_id) || DEFAULT_PACKAGE_STYLE
+    : PACKAGE_STYLES_MAP.get((appointment as ServiceAppointment).package_id) || DEFAULT_PACKAGE_STYLE
 
   const statusStyles = isConsultationAppointment ? CONSULTATION_STATUS_STYLES : SERVICE_STATUS_STYLES
 
   const isCardClickable = !isConsultationAppointment && status === 'INPUT_RESULTS' && !!onClick
-
-  const nextStatus = !isConsultationAppointment ? SERVICE_STATUS_TRANSITIONS[status] : null
-
-  const canBeEdited = onStatusChange && nextStatus
+  const canBeEdited = onStatusChange && possibleNextStatuses.length > 0
 
   return (
     <div
@@ -76,7 +95,7 @@ export function AppointmentCard({
         <>
           <div className='flex items-center gap-2'>
             <StatusBadge status={status} styles={statusStyles} className='text-xs' isCompact />
-            {onStatusChange && status !== 'COMPLETED' && status !== 'CANCELLED' && (
+            {canBeEdited && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild className='border border-gray-400 bg-white'>
                   <Button variant='ghost' size='icon' className='h-6 w-6' disabled={isUpdating}>
@@ -88,18 +107,16 @@ export function AppointmentCard({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='start'>
-                  {APPOINTMENT_STATUS_OPTIONS.map(
-                    (newStatus) =>
-                      newStatus !== 'COMPLETED' && (
-                        <DropdownMenuItem
-                          key={newStatus}
-                          disabled={status === newStatus}
-                          onSelect={() => onStatusChange(newStatus)}
-                        >
-                          <StatusBadge status={newStatus} styles={CONSULTATION_STATUS_STYLES} className='text-xs' />
-                        </DropdownMenuItem>
-                      )
-                  )}
+                  {possibleNextStatuses.map((newStatus) => (
+                    <DropdownMenuItem
+                      key={newStatus}
+                      disabled={status === newStatus}
+                      onSelect={() => onStatusChange(newStatus as AppointmentStatus)}
+                      className={newStatus === 'CANCELLED' ? 'focus:bg-red-50' : ''}
+                    >
+                      <StatusBadge status={newStatus} styles={CONSULTATION_STATUS_STYLES} className='text-xs' />
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
@@ -125,7 +142,6 @@ export function AppointmentCard({
       ) : (
         // === SERVICE APPOINTMENTS ===
         <>
-          {/* Badge and Package Name */}
           <div className='flex items-center gap-2'>
             <StatusBadge status={status} styles={statusStyles} className='text-xs' isCompact />
             {canBeEdited && (
@@ -140,12 +156,15 @@ export function AppointmentCard({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='start'>
-                  <DropdownMenuItem onSelect={() => onStatusChange(nextStatus!)}>
-                    <StatusBadge status={nextStatus!} styles={statusStyles} className='text-xs' />
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className='focus:bg-red-50' onSelect={() => onStatusChange('CANCELLED')}>
-                    <StatusBadge status='CANCELLED' styles={statusStyles} className='text-xs' />
-                  </DropdownMenuItem>
+                  {possibleNextStatuses.map((newStatus) => (
+                    <DropdownMenuItem
+                      key={newStatus}
+                      onSelect={() => onStatusChange(newStatus as any)}
+                      className={newStatus === 'CANCELLED' ? 'focus:bg-red-50' : ''}
+                    >
+                      <StatusBadge status={newStatus} styles={statusStyles} className='text-xs' />
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
             )}

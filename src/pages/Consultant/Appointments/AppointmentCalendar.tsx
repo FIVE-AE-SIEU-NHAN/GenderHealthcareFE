@@ -106,6 +106,7 @@ export default function ConsultantAppointmentCalendar() {
             isLoading={isLoading}
             onJoinCall={handleJoinCall}
             appointmentType='consultation'
+            userRole='consultant'
           />
         </div>
       </div>
