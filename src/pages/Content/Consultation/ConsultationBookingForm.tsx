@@ -49,6 +49,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
   const selectedTopicValue = form.watch("topic");
   const selectedDateValue = form.watch("booking_date");
   const selectedTimeSlotValue = form.watch("time_slot");
+  const noteValue = form.watch("note"); // THEO DÕI GIÁ TRỊ CỦA Ô NOTE
 
   const getSelectedTopic = () => TOPIC_OPTIONS.find(t => t.value === selectedTopicValue);
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find(t => t.value === selectedTimeSlotValue)?.label;
@@ -137,6 +138,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                 )} />
               </div>
 
+              {/* ===== KHỐI CODE ĐƯỢC CẬP NHẬT ===== */}
               <FormField
                 control={form.control}
                 name="note"
@@ -145,16 +147,31 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                     <FormLabel>Note for the Consultant (Optional)</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Please describe your current condition or specific questions for the consultant... (8-50 words)"
-                        className="resize-none h-30" // Prevents users from resizing the textarea
+                        placeholder="Please describe your current condition or specific questions for the consultant..."
+                        className="resize-none h-30"
                         disabled={isPending}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    {/* lỗi bên trái, counter bên phải */}
+                    <div className="flex items-center justify-between mt-1">
+                      {/* chiếm hết không gian còn lại để đẩy counter sang phải */}
+                      <div className="flex-1">
+                        <FormMessage />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          {noteValue?.length || 0}/50
+                        </p>
+                      </div>
+                    </div>
                   </FormItem>
                 )}
               />
+
+
+              {/* ===== KẾT THÚC KHỐI CODE CẬP NHẬT ===== */}
+
 
               {/* Real-time info */}
               {getSelectedTopic() && (
@@ -206,7 +223,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                       </>
                     ) : (
                       <>
-                        <FaHeartbeat className="mr-2"/>
+                        <FaHeartbeat className="mr-2" />
                         <span>Book Consultant</span>
                       </>
                     )}
