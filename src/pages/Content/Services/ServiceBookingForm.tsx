@@ -67,19 +67,13 @@ export const STIS_TESTING_PACKAGES = [
 const MAX_NOTE_LENGTH = 500;
 const MIN_NOTE_LENGTH = 20;
 
-// Remove 'selected_services' from the schema
+// === THAY ĐỔI 1: Xóa `.refine` kiểm tra độ dài tối thiểu khỏi schema của 'note' ===
 export const formSchema = z.object({
   topic: z.string({ required_error: "Please select a testing package." }).min(1, "Please select a testing package."),
   booking_date: z.date({ required_error: "Please select a date." }),
   time_slot: z.string({ required_error: "Please select a time slot." }).min(1, "Please select a time slot."),
   note: z.string()
     .max(MAX_NOTE_LENGTH, { message: `Note cannot exceed ${MAX_NOTE_LENGTH} characters.` })
-    .refine(value => {
-        if (!value || value.trim() === '') return true;
-        return value.trim().length >= MIN_NOTE_LENGTH;
-    }, {
-        message: `If provided, the note must be at least ${MIN_NOTE_LENGTH} characters.`
-    })
     .optional()
     .or(z.literal('')),
   agreed: z.boolean().refine(val => val === true, {
@@ -108,8 +102,23 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
 
   const getSelectedPackage = () => STIS_TESTING_PACKAGES.find(p => p.value === selectedTopicValue);
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find(t => t.value === selectedTimeSlotValue)?.label;
+  
+  // === THAY ĐỔI 2: Tạo một hàm xử lý submit mới để kiểm tra 'note' ===
+  const handleManualSubmit = (values: z.infer<typeof formSchema>) => {
+    const noteValue = values.note?.trim() ?? "";
 
-  // The useEffect for resetting 'selected_services' is no longer needed.
+    // Kiểm tra nếu có note nhưng không đủ dài
+    if (noteValue.length > 0 && noteValue.length < MIN_NOTE_LENGTH) {
+      form.setError("note", {
+        type: "manual",
+        message: `If provided, the note must be at least ${MIN_NOTE_LENGTH} characters.`
+      });
+      return; // Dừng việc gửi form
+    }
+
+    // Nếu hợp lệ, gọi hàm onSubmit gốc
+    onSubmit(values);
+  };
 
   return (
     <div className="relative z-10 flex justify-center w-full py-16">
@@ -128,7 +137,8 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
           </div>
           <p className="mb-6 text-sm text-gray-700 text-center">Complete this form to schedule your STIS testing with us!</p>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4">
+            {/* === THAY ĐỔI 3: Sử dụng hàm handleManualSubmit mới trong form === */}
+            <form onSubmit={form.handleSubmit(handleManualSubmit)} className="grid grid-cols-1 gap-4">
               <FormField control={form.control} name="topic" render={({ field }) => (
                 <FormItem>
                   <Select onValueChange={field.onChange} value={field.value} disabled={isPending}>
@@ -147,7 +157,6 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                 </FormItem>
               )} />
               
-              {/* === KHỐI HIỂN THỊ DỊCH VỤ ĐÃ SỬA LẠI (THAY THẾ CHECKBOX) === */}
               <div
                 className={cn(
                   "transition-all duration-500 ease-in-out overflow-hidden",
