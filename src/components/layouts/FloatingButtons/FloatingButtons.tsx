@@ -90,7 +90,7 @@ export default function FloatingButtons() {
 
   const excludedPaths = ['/login', '/signup', '/unauth', '/reset-password', '/forgot-password']
 
-  const excludedPrefixes = ['/dashboard', '/manager', '/consultant', '/doctor', '/user']
+  const excludedPrefixes = ['/dashboard', '/manager', '/consultant', '/doctor', '/user', '/call']
 
   const isPathExcluded =
     excludedPaths.includes(location.pathname) || excludedPrefixes.some((prefix) => location.pathname.startsWith(prefix))
