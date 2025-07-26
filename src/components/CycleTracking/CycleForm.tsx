@@ -10,6 +10,7 @@ import SleepHoursInput from './SleepHoursInput'
 
 interface CycleFormProps {
   onSubmit: (data: CycleFormData) => void
+  initialData?: Partial<CycleFormData>
 }
 
 const ratingNames = {
@@ -19,7 +20,7 @@ const ratingNames = {
   energy: 'Energy'
 }
 
-export default function CycleForm({ onSubmit }: CycleFormProps) {
+export default function CycleForm({ onSubmit, initialData }: CycleFormProps) {
   const form = useForm<CycleFormData>({
     defaultValues: {
       firstPeriodDate: format(new Date(), 'yyyy-MM-dd'),
@@ -29,7 +30,8 @@ export default function CycleForm({ onSubmit }: CycleFormProps) {
       libido: 3,
       stress: 3,
       sleep: 8,
-      energy: 3
+      energy: 3,
+      ...(initialData || {})
     }
   })
 
@@ -39,7 +41,6 @@ export default function CycleForm({ onSubmit }: CycleFormProps) {
 
   const renderRatingField = (field: 'mood' | 'libido' | 'stress' | 'energy') => {
     const name = ratingNames[field]
-
     return (
       <FormField
         control={form.control}
@@ -98,7 +99,6 @@ export default function CycleForm({ onSubmit }: CycleFormProps) {
             </div>
           </div>
         </div>
-
         <div className='p-8'>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-8'>
