@@ -122,7 +122,6 @@ const BlogPage: React.FC = () => {
   const blogs = blogData?.data ?? []
   const totalBlogs = blogData?.total ?? 0
   const totalPages = Math.ceil(totalBlogs / LIMIT)
-  const otherBlogs = blogs.slice(1)
 
   return (
     <div className='font-inter min-h-[calc(100dvh-64px)] bg-gray-100 text-gray-800'>
@@ -180,7 +179,7 @@ const BlogPage: React.FC = () => {
           <section className='mx-auto max-w-7xl p-5 pt-0'>
             <div className='grid grid-cols-1 gap-5 md:grid-cols-3'>
               <section className='col-span-1 grid grid-cols-1 gap-5 sm:grid-cols-2 md:col-span-4 md:grid-cols-3 lg:col-span-3'>
-                {otherBlogs.map((blog) => (
+                {blogs.map((blog) => (
                   <BlogCard key={blog.id} {...blog} />
                 ))}
               </section>

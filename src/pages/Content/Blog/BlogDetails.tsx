@@ -81,7 +81,7 @@ const BlogDetails: React.FC = () => {
         {/* Cover Image */}
         <div className='mb-12 h-[400px] w-full'>
           <img
-            src={blog.cover_image || '/images/cover.jpg'}
+            src={blog.main_image || '/images/cover.jpg'}
             alt={blog.title}
             className='h-full w-full rounded-xl bg-slate-200 object-cover shadow-lg dark:bg-slate-800'
             onError={(e) => {

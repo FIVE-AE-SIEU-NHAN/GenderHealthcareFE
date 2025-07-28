@@ -41,7 +41,8 @@ const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/services', label: 'Services' },
   { to: '/blogs', label: 'Blog' },
-  { to: '/about-us', label: 'About' }
+  { to: '/about-us', label: 'About' },
+  { to: '/cy-cal', label: 'Tracking' }
 ]
 
 const ToTop = () => window.scrollTo({ top: 0 })

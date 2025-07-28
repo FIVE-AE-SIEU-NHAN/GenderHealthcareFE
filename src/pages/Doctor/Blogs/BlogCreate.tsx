@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -15,19 +15,37 @@ import { cn } from '@/lib/utils'
 import { CreateBlogPayload, UpdateBlogPayload } from '@/types/customer/blogTypes' // Ensure path is correct
 import { useBlogMutations } from '@/hooks/doctor/useBlogsMutations'
 import { Blog } from '@/types'
+import axios from 'axios'
+import { CloudinaryImageInput } from '@/components/ui/cloundinary-image-input'
+
+// const blogSchema = z.object({
+//   title: z.string().min(1, 'Article Title is required.'),
+//   summary: z.string().min(1, 'Summary is required.').max(100, 'Summary must be 100 characters or less.'),
+//   content: z.string().min(1, 'Main Content is required.').max(1000, 'Main Content must be 1000 characters or less.'),
+//   section_1: z.string().max(500, 'Section 1 must be 500 characters or less.').optional(),
+//   section_2: z.string().max(500, 'Section 2 must be 500 characters or less.').optional(),
+//   // cover_image: z.string().min(1, 'Cover Image URL is required.').url({ message: 'Please enter a valid URL.' }),
+//   // main_image: z.string().min(1, 'Main Image URL is required.').url({ message: 'Please enter a valid URL.' }),
+//   // sub_image: z.string().min(1, 'Sub-image URL is required.').url({ message: 'Please enter a valid URL.' })
+//   cover_image: z.string().min(1, 'Cover Image is required.'),
+//   main_image: z.string().min(1, 'Main Image is required.'),
+//   sub_image: z.string().min(1, 'Sub-image is required.')
+// })
 
 const blogSchema = z.object({
   title: z.string().min(1, 'Article Title is required.'),
   summary: z.string().min(1, 'Summary is required.').max(100, 'Summary must be 100 characters or less.'),
   content: z.string().min(1, 'Main Content is required.').max(1000, 'Main Content must be 1000 characters or less.'),
-  section_1: z.string().max(500, 'Section 1 must be 500 characters or less.').optional(),
-  section_2: z.string().max(500, 'Section 2 must be 500 characters or less.').optional(),
-  cover_image: z.string().min(1, 'Cover Image URL is required.').url({ message: 'Please enter a valid URL.' }),
-  main_image: z.string().min(1, 'Main Image URL is required.').url({ message: 'Please enter a valid URL.' }),
-  sub_image: z.string().min(1, 'Sub-image URL is required.').url({ message: 'Please enter a valid URL.' })
+  section_1: z.string().min(1, 'Section 1 is required.').max(500, 'Section 1 must be 500 characters or less.'),
+  section_2: z.string().min(1, 'Section 2 is required.').max(500, 'Section 2 must be 500 characters or less.'),
+
+  cover_image: z.any().refine((value) => value, 'Cover Image is required.'),
+  main_image: z.any().refine((value) => value, 'Main Image is required.'),
+  sub_image: z.any().refine((value) => value, 'Sub-image is required.')
 })
 
 type BlogFormData = z.infer<typeof blogSchema>
+type ImageFieldName = 'cover_image' | 'main_image' | 'sub_image'
 
 const mockRecentBlogs = [
   { id: 2, title: 'Why you should practice morning yoga', authorName: 'Anna Doe' },
@@ -54,33 +72,41 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
   onSubmittingChange
 }) => {
   const { createBlog, updateBlog } = useBlogMutations()
-
   const isUpdateMode = !!initialData
+  const [previewUrls, setPreviewUrls] = useState<Partial<Record<ImageFieldName, string>>>({})
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-    reset
+    reset,
+    setValue,
+    setError,
+    clearErrors
   } = useForm<BlogFormData>({
     resolver: zodResolver(blogSchema),
     mode: 'onBlur',
-    // Use initialData for default values if in update mode
     defaultValues: {
       title: initialData?.title || '',
       summary: initialData?.summary || '',
       content: initialData?.content || '',
       section_1: initialData?.section_1 || '',
       section_2: initialData?.section_2 || '',
-      cover_image: initialData?.cover_image || '',
-      main_image: initialData?.main_image || '',
-      sub_image: initialData?.sub_image || ''
+      cover_image: initialData?.cover_image || undefined,
+      main_image: initialData?.main_image || undefined,
+      sub_image: initialData?.sub_image || undefined
     }
   })
 
   useEffect(() => {
     if (initialData) {
-      reset(initialData)
+      reset({
+        ...initialData,
+        cover_image: initialData.cover_image,
+        main_image: initialData.main_image,
+        sub_image: initialData.sub_image
+      })
     } else {
       reset({
         title: '',
@@ -88,39 +114,96 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
         content: '',
         section_1: '',
         section_2: '',
-        cover_image: '',
-        main_image: '',
-        sub_image: ''
+        cover_image: undefined,
+        main_image: undefined,
+        sub_image: undefined
       })
     }
   }, [initialData, reset])
 
   const isSubmitting = createBlog.isPending || updateBlog.isPending
 
-  const watchedValues = watch()
-  const placeholderImg = '/images/placeholder-image.svg'
-  const coverImagePreview = watchedValues.cover_image || placeholderImg
-  const subImagePreview = watchedValues.sub_image || placeholderImg
-  const currentDate = new Date()
-
   useEffect(() => {
     onSubmittingChange(isSubmitting)
   }, [isSubmitting, onSubmittingChange])
 
-  const onSubmit = (data: BlogFormData) => {
-    if (isUpdateMode && initialData) {
-      // ===== UPDATE =====
-      updateBlog.mutate(
-        { blogId: initialData.id, payload: data as UpdateBlogPayload },
-        { onSuccess: () => onSuccess() }
-      )
-    } else {
-      // ===== CREATE =====
-      createBlog.mutate(data as CreateBlogPayload, {
-        onSuccess: () => onSuccess()
+  const handleFileSelect = (file: File, fieldName: ImageFieldName) => {
+    // Client-side validation
+    const maxSizeInMB = 2
+    if (file.size > maxSizeInMB * 1024 * 1024) {
+      setError(fieldName, { message: `File must be < ${maxSizeInMB}MB` })
+      return
+    }
+
+    clearErrors(fieldName)
+    // Store the actual File object in the form state
+    setValue(fieldName, file, { shouldValidate: true, shouldDirty: true })
+
+    // Create and set a temporary preview URL
+    const newPreviewUrl = URL.createObjectURL(file)
+    setPreviewUrls((prev) => ({ ...prev, [fieldName]: newPreviewUrl }))
+  }
+
+  const onSubmit = async (data: BlogFormData) => {
+    const finalPayload: Partial<CreateBlogPayload> = { ...data }
+
+    // Create a list of upload tasks for any new files
+    const uploadTasks: Promise<{ fieldName: ImageFieldName; url: string }>[] = []
+
+    for (const field of ['cover_image', 'main_image', 'sub_image'] as ImageFieldName[]) {
+      const value = data[field]
+      if (value instanceof File) {
+        const formData = new FormData()
+        formData.append('file', value)
+        formData.append('upload_preset', 'Care4Gender')
+        formData.append('folder', 'care4gender/images')
+
+        const task = axios
+          .post(`https://api.cloudinary.com/v1_1/dyo6tjmky/image/upload`, formData)
+          .then((response) => ({
+            fieldName: field,
+            url: response.data.secure_url
+          }))
+        uploadTasks.push(task)
+      } else {
+        // If it's a string, it's an existing URL. Keep it.
+        finalPayload[field] = value
+      }
+    }
+
+    try {
+      // Wait for all uploads to complete
+      const uploadedImages = await Promise.all(uploadTasks)
+
+      // Add the new Cloudinary URLs to payload
+      uploadedImages.forEach((img) => {
+        finalPayload[img.fieldName] = img.url
       })
+
+      if (isUpdateMode && initialData) {
+        updateBlog.mutate({ blogId: initialData.id, payload: finalPayload as UpdateBlogPayload }, { onSuccess })
+      } else {
+        createBlog.mutate(finalPayload as CreateBlogPayload, { onSuccess })
+      }
+    } catch (error) {
+      console.error('One or more image uploads failed', error)
+      setError('root', { message: 'Failed to upload an image. Please try again.' })
     }
   }
+
+  const watchedValues = watch()
+  const placeholderImg = '/images/placeholder-image.svg'
+
+  const mainImagePreview = previewUrls.main_image || watchedValues.main_image || placeholderImg
+  const subImagePreview = previewUrls.sub_image || watchedValues.sub_image || placeholderImg
+
+  const currentDate = new Date()
+
+  useEffect(() => {
+    return () => {
+      Object.values(previewUrls).forEach(URL.revokeObjectURL)
+    }
+  }, [previewUrls])
 
   return (
     <div className='grid w-full grid-cols-1 gap-6 lg:grid-cols-2'>
@@ -220,28 +303,34 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
             <h3 className='flex items-center gap-3 text-xl font-medium text-slate-800 dark:text-slate-200'>
               <ImageIcon className='h-6 w-6 text-slate-400' /> Article Images
             </h3>
-            <div className='space-y-4 rounded-lg border bg-slate-50 p-6 dark:bg-slate-900'>
-              <div className='space-y-2'>
-                <Label htmlFor='coverImage' className='text-base'>
-                  Main Image URL (in-article)
-                </Label>
-                <Input id='coverImage' {...register('cover_image')} disabled={createBlog.isPending} />
-                {errors.cover_image && <p className='mt-1 text-sm text-red-500'>{errors.cover_image.message}</p>}
-              </div>
-              <div className='space-y-2'>
-                <Label htmlFor='subImage' className='text-base'>
-                  Sub-image URL (in-article)
-                </Label>
-                <Input id='subImage' {...register('sub_image')} disabled={createBlog.isPending} />
-                {errors.sub_image && <p className='mt-1 text-sm text-red-500'>{errors.sub_image.message}</p>}
-              </div>
-              <div className='space-y-2'>
-                <Label htmlFor='mainImage' className='text-base'>
-                  Cover Image URL (for list page)
-                </Label>
-                <Input id='mainImage' {...register('main_image')} disabled={createBlog.isPending} />
-                {errors.main_image && <p className='mt-1 text-sm text-red-500'>{errors.main_image.message}</p>}
-              </div>
+            {errors.root && <p className='text-sm font-semibold text-red-500'>{errors.root.message}</p>}
+            <div className='space-y-6 rounded-lg border bg-slate-50 p-6 dark:bg-slate-900'>
+              <CloudinaryImageInput
+                id='main_image'
+                label='Main Image'
+                value={watchedValues.main_image}
+                errorMessage={errors.main_image?.message as string}
+                isFormDisabled={isSubmitting}
+                onFileSelect={(file) => handleFileSelect(file, 'main_image')}
+              />
+
+              <CloudinaryImageInput
+                id='sub_image'
+                label='Sub image'
+                value={watchedValues.sub_image}
+                errorMessage={errors.sub_image?.message as string}
+                isFormDisabled={isSubmitting}
+                onFileSelect={(file) => handleFileSelect(file, 'sub_image')}
+              />
+
+              <CloudinaryImageInput
+                id='cover_image'
+                label='Cover Image'
+                value={watchedValues.cover_image}
+                errorMessage={errors.cover_image?.message as string}
+                isFormDisabled={isSubmitting}
+                onFileSelect={(file) => handleFileSelect(file, 'cover_image')}
+              />
             </div>
           </div>
 
@@ -250,7 +339,7 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
               Cancel
             </Button>
             <Button type='submit' disabled={isSubmitting} className='min-w-[120px]'>
-              {createBlog.isPending ? <Loader2 className='animate-spin' /> : 'Save Article'}
+              {isSubmitting ? <Loader2 className='animate-spin' /> : isUpdateMode ? 'Update Article' : 'Save Article'}
             </Button>
           </div>
         </form>
@@ -261,8 +350,9 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
         <div className='h-full w-full overflow-y-auto'>
           <div className='mb-8 h-[350px] w-full'>
             <img
-              src={coverImagePreview}
-              alt={watchedValues.title || 'Cover Image'}
+              key={mainImagePreview}
+              src={mainImagePreview}
+              alt={watchedValues.title || 'Main Image'}
               className='h-full w-full rounded-lg bg-slate-200 object-cover dark:bg-slate-800'
               onError={(e) => {
                 e.currentTarget.src = placeholderImg
@@ -311,6 +401,7 @@ export const CreateBlogDialogContent: React.FC<CreateBlogDialogContentProps> = (
                 {subImagePreview && (
                   <div className='my-8'>
                     <img
+                      key={subImagePreview}
                       src={subImagePreview}
                       alt='Sub-image'
                       className='w-full rounded-xl bg-slate-200 shadow-md dark:bg-slate-800'
