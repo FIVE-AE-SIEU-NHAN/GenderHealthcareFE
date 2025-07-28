@@ -70,7 +70,7 @@ const BlogPage: React.FC = () => {
   // State cho tìm kiếm
   const [searchInput, setSearchInput] = useState('')
   const [committedSearchTerm, setCommittedSearchTerm] = useState('')
-  const LIMIT = 10
+  const LIMIT = 9
 
   // Hook lấy danh sách blogllll
   const {
