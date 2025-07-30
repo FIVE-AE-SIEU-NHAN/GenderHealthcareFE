@@ -9,6 +9,7 @@ import BlogDetails from '@/pages/Content/Blog/BlogDetails'
 import ConsultantAppointmentPage from '@/pages/Content/Consultation/ConsultationBookingPage'
 import ServiceBookingPage from '@/pages/Content/Services/ServiceBookingPage'
 import VideoChatRoomPage from '@/components/Chats/VideoChatPage'
+import CreateCyclePage from '@/pages/Customer/Cycle/CreateCyclePage'
 
 export const PrivateRoutes = (
   <Route element={<ProtectedRoute allowedRoles={['Admin', 'Consultant', 'Manager', 'Customer']}></ProtectedRoute>}>
@@ -17,6 +18,7 @@ export const PrivateRoutes = (
       <Route path='/blogs/:id' element={<BlogDetails />} />
       <Route path='/book-service' element={<ServiceBookingPage />} />
       <Route path='/book-consultant' element={<ConsultantAppointmentPage />} />
+      <Route path='/cycle-form' element={<CreateCyclePage />} />
     </Route>
     <Route path='/call/:roomId' element={<VideoChatRoomPage />} />
   </Route>

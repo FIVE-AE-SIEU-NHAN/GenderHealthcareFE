@@ -6,6 +6,7 @@ import { customerSidebarItems } from '@/Application/constants/customer/customerS
 import AppointmentHistory from '@/pages/Customer/Appointment/AppointmentHistory'
 import QuestionListDashboard from '@/pages/Customer/Question/QuestionList'
 import CustomerProfilePage from '@/pages/Customer/Profile/Profile'
+import CycleTrackingPage from '@/pages/Customer/Cycle/CycleTracking'
 
 export const CustomerRoutes = (
   <Route path='/user' element={<DashboardLayout sidebarItems={customerSidebarItems} />}>
@@ -14,6 +15,7 @@ export const CustomerRoutes = (
       <Route path='appointments' element={<AppointmentHistory />} />
       <Route path='questions' element={<QuestionListDashboard />} />
       <Route path='profile' element={<CustomerProfilePage />} />
+      <Route path='cycle-tracking' element={<CycleTrackingPage />} />
     </Route>
   </Route>
 )

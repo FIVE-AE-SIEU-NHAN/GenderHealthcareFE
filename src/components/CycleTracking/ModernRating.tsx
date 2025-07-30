@@ -78,9 +78,9 @@ export default function ModernRating({ value, onChange, type, disabled = false, 
 
       {/* Modern Progress Bar Style Rating */}
       <div className='space-y-3'>
-        <div className='relative h-3 overflow-hidden rounded-full bg-slate-100'>
+        <div className='relative h-3 rounded-full bg-slate-200'>
           <div
-            className={`h-full bg-gradient-to-r ${config.gradient} rounded-full transition-all duration-500 ease-out`}
+            className={`h-full bg-gradient-to-r ${config.gradient} rounded-full transition-all duration-500 ease-out ${disabled && 'opacity-40'}`}
             style={{ width: `${(value / 5) * 100}%` }}
           />
           <div className='absolute inset-0 flex items-center justify-between px-1'>
@@ -90,7 +90,9 @@ export default function ModernRating({ value, onChange, type, disabled = false, 
                 type='button'
                 disabled={disabled}
                 onClick={() => !disabled && onChange(rating)}
-                className={`flex h-6 w-6 items-center justify-center rounded-full border-2 border-white shadow-sm transition-all duration-200 ${value >= rating ? 'scale-110 bg-white' : 'bg-slate-200 hover:bg-slate-300'} ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:scale-110'} relative z-10`}
+                className={`flex h-6 w-6 items-center justify-center rounded-full border-1 border-slate-400 shadow-md/10 transition-all duration-200 ${
+                  value >= rating ? 'scale-110 bg-white' : 'bg-slate-200 hover:bg-slate-300'
+                } ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:scale-110'} relative z-10`}
               >
                 <div className={`h-2 w-2 rounded-full ${value >= rating ? 'bg-slate-600' : 'bg-slate-400'}`} />
               </button>
@@ -106,22 +108,12 @@ export default function ModernRating({ value, onChange, type, disabled = false, 
               type='button'
               disabled={disabled}
               onClick={() => !disabled && onChange(rating)}
-              className={`flex min-w-[60px] flex-col items-center gap-2 rounded-xl p-3 transition-all duration-200 ${value === rating ? config.colors[rating - 1] + ' scale-105 shadow-md' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'} ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:scale-105'} `}
+              className={`flex min-w-[54px] flex-col items-center gap-2 rounded-xl p-3 transition-all duration-200 ${value === rating ? config.colors[rating - 1] + ' scale-105 shadow-md' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'} ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:scale-105'} `}
             >
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 ${value === rating ? 'bg-white/30' : 'bg-slate-200'} `}
               >
                 <span className='text-sm font-bold'>{rating}</span>
-              </div>
-              <div className='flex gap-1'>
-                {Array.from({ length: rating }, (_, i) => (
-                  <div
-                    key={i}
-                    className={`h-1.5 w-1.5 rounded-full transition-all duration-200 ${
-                      value === rating ? 'bg-current' : 'bg-slate-300'
-                    }`}
-                  />
-                ))}
               </div>
             </button>
           ))}
@@ -130,7 +122,7 @@ export default function ModernRating({ value, onChange, type, disabled = false, 
         {/* Value Display */}
         <div className='text-center'>
           <div
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 transition-all duration-300 ${config.colors[value - 1]}`}
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 transition-all duration-300 ${config.colors[value - 1]} ${disabled && 'opacity-70'}`}
           >
             <Icon className='h-4 w-4' />
             <span className='font-medium'>

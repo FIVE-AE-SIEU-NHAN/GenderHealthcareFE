@@ -9,11 +9,7 @@ import {
   UpdateProfilePayload,
   UpdateProfileResponse
 } from '@/types/customer/profileTypes'
-
-interface ApiErrorResponse {
-  message: string
-  errors?: { [key: string]: string }
-}
+import { ApiErrorResponse } from '@/types/errorsResponse'
 
 /**
  * A custom hook that centralizes all mutations related to the user profile.

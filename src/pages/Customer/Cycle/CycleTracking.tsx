@@ -1,132 +1,130 @@
-import React, { useState } from 'react'
-import { format } from 'date-fns'
-import { RotateCcw, Heart, Flower2 } from 'lucide-react'
-import { CycleData, DailyRating, CycleFormData } from '@/types/cycle'
-import CycleForm from '@/components/CycleTracking/CycleForm'
+import { useState, useMemo, useEffect } from 'react'
+import { Link, useNavigate, useOutletContext } from 'react-router-dom'
+import { Loader2, Frown, PlusCircle, Bell, XCircle } from 'lucide-react'
 import CycleCalendar from '@/components/CycleTracking/CycleCalendar'
 import CycleSummary from '@/components/CycleTracking/CycleSummary'
 import { Button } from '@/components/ui/button'
+import { useActiveCycleCheck, useAllPredictions, useCycle } from '@/hooks/cycle/useCycle'
+import { useCycleMutations } from '@/hooks/cycle/useCycleMutations'
+import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
 
 export default function CycleTrackingPage() {
-  const [cycleData, setCycleData] = useState<CycleData | null>(null)
-  const [ratings, setRatings] = useState<Map<string, DailyRating>>(new Map())
+  const navigate = useNavigate()
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
 
-  const handleFormSubmit = (formData: CycleFormData) => {
-    const newCycleData: CycleData = {
-      firstPeriodDate: new Date(formData.firstPeriodDate),
-      cycleLength: formData.cycleLength,
-      periodDuration: formData.periodDuration,
-      initialRating: {
-        mood: formData.mood,
-        libido: formData.libido,
-        stress: formData.stress,
-        sleep: formData.sleep,
-        energy: formData.energy
-      }
-    }
+  const [currentMonth, setCurrentMonth] = useState(new Date())
 
-    setCycleData(newCycleData)
+  const { hasActiveCycle, isLoading: isLoadingCheck, isError: isErrorCheck, error: checkError } = useActiveCycleCheck()
 
-    // Set initial rating for the first period date
-    const firstDateKey = format(newCycleData.firstPeriodDate, 'yyyy-MM-dd')
-    setRatings(new Map([[firstDateKey, newCycleData.initialRating]]))
-  }
+  const { predictions: monthPredictions, isLoading: isLoadingPredictions } = useCycle(currentMonth)
+  const { allPredictions } = useAllPredictions()
 
-  const handleUpdateRating = (dateKey: string, rating: DailyRating) => {
-    setRatings((prev) => new Map(prev.set(dateKey, rating)))
-  }
+  const activePredictionForSummary = useMemo(() => allPredictions.find((p) => p.status === 'ACTIVE'), [allPredictions])
 
-  const handleReset = () => {
-    setCycleData(null)
-    setRatings(new Map())
-  }
+  const cancelCycleMutation = useCycleMutations().cancelCycle
+  const { mutate: cancelCycle, isPending: isCancelling } = cancelCycleMutation
 
-  if (!cycleData) {
+  useEffect(() => {
+    setBreadcrumb({
+      title: 'Your Cycle',
+      parent: 'Dashboard',
+      parentHref: '/user'
+    })
+  }, [setBreadcrumb])
+
+  if (isLoadingCheck) {
     return (
-      <div className='min-h-[calc(100vh-72px)] bg-gradient-to-br from-violet-50 via-pink-50 to-rose-50'>
-        {/* Floating decorative elements */}
-        <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-          <div className='absolute top-20 left-10 h-20 w-20 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 opacity-10' />
-          <div className='absolute top-40 right-20 h-16 w-16 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 opacity-10' />
-          <div className='absolute bottom-32 left-20 h-24 w-24 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 opacity-10' />
-          <div className='absolute right-10 bottom-20 h-12 w-12 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 opacity-10' />
-        </div>
+      <div className='flex min-h-[calc(100vh-72px)] items-center justify-center bg-slate-50'>
+        <Loader2 className='h-12 w-12 animate-spin text-pink-500' />
+      </div>
+    )
+  }
 
-        <div className='relative z-10 container mx-auto px-4 py-12'>
-          <div className='mx-auto max-w-5xl space-y-12'>
-            {/* Hero Section */}
-            <div className='space-y-6 text-center'>
-              <div className='inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/80 px-6 py-3 shadow-lg backdrop-blur-sm'>
-                <Flower2 className='h-6 w-6 text-pink-500' />
-                <span className='text-lg font-semibold text-slate-700'>Welcome to</span>
-              </div>
-
-              <h1 className='text-5xl leading-tight font-extrabold text-slate-800 md:text-7xl'>
-                Cycle Tracking
-                <br />
-                <span className='text-4xl md:text-6xl'>System</span>
-              </h1>
-
-              <p className='mx-auto max-w-3xl text-xl leading-relaxed text-slate-600 md:text-2xl'>
-                Smart system to help you track your menstrual cycle,
-                <br className='hidden md:block' />
-                predict ovulation and manage reproductive health
-              </p>
-
-              <div className='flex flex-wrap justify-center gap-6 text-sm text-slate-500'>
-                <div className='flex items-center gap-2'>
-                  <div className='h-3 w-3 rounded-full bg-gradient-to-r from-pink-400 to-rose-500' />
-                  <span>Accurate predictions</span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <div className='h-3 w-3 rounded-full bg-gradient-to-r from-purple-400 to-indigo-500' />
-                  <span>Track your status</span>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <div className='h-3 w-3 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500' />
-                  <span>Absolute privacy</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Form */}
-            <CycleForm onSubmit={handleFormSubmit} />
-          </div>
+  if (isErrorCheck) {
+    return (
+      <div className='flex min-h-[calc(100vh-72px)] items-center justify-center bg-red-50 p-4 text-center'>
+        <div>
+          <Frown className='mx-auto h-12 w-12 text-red-600' />
+          <h2 className='mt-4 text-2xl font-bold text-red-800'>Could not load cycle data</h2>
+          <p className='mt-2 text-slate-600'>{checkError?.message}</p>
+          <Button onClick={() => navigate(0)} className='mt-6'>
+            Try Again
+          </Button>
         </div>
       </div>
     )
   }
 
+  // --- MAIN CALENDAR VIEW ---
   return (
-    <div className='min-h-[calc(100vh-72px)] bg-slate-100'>
+    <div className='max-h-[calc(84vh)] overflow-y-auto'>
       <div className='relative z-10 container mx-auto px-4 py-8'>
         <div className='space-y-8'>
-          {/* Stunning Header */}
+          {/* Header */}
           <div className='space-y-6 text-center'>
-            <div className='inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/80 px-6 py-3 shadow-lg backdrop-blur-sm'>
+            {/* <div className='inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/80 px-6 py-3 shadow-lg backdrop-blur-sm'>
               <Heart className='h-5 w-5 animate-pulse text-pink-500' />
               <span className='text-sm font-medium text-slate-600'>Your reproductive health</span>
-            </div>
-
+            </div> */}
             <h1 className='text-4xl font-extrabold text-slate-800 md:text-5xl'>Your Cycle Calendar</h1>
-
-            <div className='flex justify-center'>
-              <Button
-                onClick={handleReset}
-                variant='outline'
-                className='group rounded-full border-white/20 bg-white/80 px-6 py-3 shadow-lg backdrop-blur-sm hover:bg-white/90'
-              >
-                <RotateCcw className='mr-2 h-4 w-4 transition-transform duration-500 group-hover:rotate-180' />
-                Reset cycle setup
-              </Button>
-            </div>
+            {hasActiveCycle && (
+              <div className='flex justify-center'>
+                <Button
+                  onClick={() => {
+                    if (activePredictionForSummary?.cycle_id) {
+                      cancelCycle({ cycleId: activePredictionForSummary.cycle_id })
+                    }
+                  }}
+                  variant='outline'
+                  className='group rounded-full border-white/20 bg-red-500/90 px-6 py-3 text-white shadow-lg backdrop-blur-sm transition-colors duration-300 hover:bg-red-600 hover:text-white'
+                  disabled={isCancelling}
+                >
+                  {isCancelling ? (
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                  ) : (
+                    <XCircle className='mr-2 h-4 w-4' />
+                  )}
+                  Cancel Current Cycle
+                </Button>
+              </div>
+            )}
           </div>
 
-          {/* Cycle Summary */}
-          <CycleSummary cycleData={cycleData} />
+          {hasActiveCycle ? (
+            <CycleSummary activePrediction={activePredictionForSummary} />
+          ) : (
+            <div className='mx-auto max-w-4xl rounded-2xl border border-blue-200 bg-gradient-to-tr from-blue-50 to-indigo-100 p-6 text-center shadow-lg'>
+              <div className='flex flex-col items-center gap-4 md:flex-row md:text-left'>
+                <div className='flex-shrink-0'>
+                  <div className='flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-md'>
+                    <Bell className='h-6 w-6' />
+                  </div>
+                </div>
+                <div className='flex-grow'>
+                  <h3 className='text-xl font-bold text-slate-800'>Welcome to Your Cycle Calendar!</h3>
+                  <p className='mt-1 text-slate-600'>
+                    You don't have an active cycle yet. Create one to unlock personalized predictions and start tracking
+                    your health.
+                  </p>
+                </div>
+                <div className='mt-4 w-full flex-shrink-0 md:mt-0 md:w-auto'>
+                  <Button size='lg' asChild className='w-full md:w-auto'>
+                    <Link to='/cycle-form'>
+                      <PlusCircle className='mr-2 h-5 w-5' />
+                      Start New Cycle
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
 
-          {/* Calendar */}
-          <CycleCalendar cycleData={cycleData} ratings={ratings} onUpdateRating={handleUpdateRating} />
+          <CycleCalendar
+            currentMonth={currentMonth}
+            onMonthChange={setCurrentMonth}
+            predictions={monthPredictions}
+            isLoading={isLoadingPredictions}
+          />
         </div>
       </div>
     </div>

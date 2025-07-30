@@ -1,15 +1,17 @@
-import React, { useState, useMemo } from 'react'
-import { format, addMonths, subMonths, isAfter, startOfDay } from 'date-fns'
-import { ChevronLeft, ChevronRight, Sparkles, Calendar, Heart, Droplet, Flower2 } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { format, addMonths, subMonths, isSameDay } from 'date-fns'
+import { ChevronLeft, ChevronRight, Sparkles, Calendar, Heart, Droplet, Flower2, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { CycleData, DailyRating, CalendarDay } from '@/types/cycle'
+import { CalendarDay, Prediction } from '@/types/cycle'
 import { generateCalendarDays } from '@/utils/cycleCalculations'
 import DayRatingModal from './DayRatingModal'
+import MissedDayModal from './MissedDay'
 
 interface CycleCalendarProps {
-  cycleData: CycleData
-  ratings: Map<string, DailyRating>
-  onUpdateRating: (date: string, rating: DailyRating) => void
+  currentMonth: Date
+  onMonthChange: (newMonth: Date) => void
+  predictions: Prediction[]
+  isLoading?: boolean
 }
 
 const dayTypeStyles = {
@@ -43,51 +45,47 @@ const dayTypeLegendStyles = {
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const weekDaysShort = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
-export default function CycleCalendar({ cycleData, ratings, onUpdateRating }: CycleCalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(new Date())
+export default function CycleCalendar({ currentMonth, onMonthChange, predictions, isLoading }: CycleCalendarProps) {
   const [selectedDay, setSelectedDay] = useState<CalendarDay | null>(null)
-  const [showRatingModal, setShowRatingModal] = useState(false)
+  const [showMissedDayModal, setShowMissedDayModal] = useState(false)
 
   const calendarDays = useMemo(() => {
-    return generateCalendarDays(currentMonth, cycleData, ratings)
-  }, [currentMonth, cycleData, ratings])
+    return generateCalendarDays(currentMonth, predictions)
+  }, [currentMonth, predictions])
 
   const handlePreviousMonth = () => {
-    setCurrentMonth((prev) => subMonths(prev, 1))
+    onMonthChange(subMonths(currentMonth, 1))
   }
 
   const handleNextMonth = () => {
-    setCurrentMonth((prev) => addMonths(prev, 1))
+    onMonthChange(addMonths(currentMonth, 1))
   }
 
   const handleDayClick = (day: CalendarDay) => {
-    if (!day.isCurrentMonth) return
-
-    // Only allow rating for special days (period, fertile, ovulation)
-    if (day.dayType !== 'normal') {
+    // Only 'RATED' days can be clicked, regardless of cycle status.
+    if (day.dayStatus === 'RATED') {
       setSelectedDay(day)
-      setShowRatingModal(true)
+      return
+    }
+
+    // The other actions are only relevant for an ACTIVE cycle.
+    if (day.cycleStatus === 'ACTIVE') {
+      if (day.dayStatus === 'PENDING') {
+        setSelectedDay(day)
+      } else if (day.dayStatus === 'MISSED') {
+        setShowMissedDayModal(true)
+      }
     }
   }
 
-  const handleRatingSubmit = (rating: DailyRating) => {
-    if (selectedDay) {
-      const dateKey = format(selectedDay.date, 'yyyy-MM-dd')
-      onUpdateRating(dateKey, rating)
-      setShowRatingModal(false)
-      setSelectedDay(null)
-    }
-  }
-
+  // This render function is also correct from the previous step.
   const renderDay = (day: CalendarDay) => {
-    const isClickable = day.isCurrentMonth && day.dayType !== 'normal'
+    const isClickable =
+      day.dayStatus === 'RATED' ||
+      (day.cycleStatus === 'ACTIVE' && (day.dayStatus === 'PENDING' || day.dayStatus === 'MISSED'))
+
     const Icon = dayTypeIcons[day.dayType]
-    const today = new Date()
-    const isToday =
-      day.isCurrentMonth &&
-      day.date.getDate() === today.getDate() &&
-      day.date.getMonth() === today.getMonth() &&
-      day.date.getFullYear() === today.getFullYear()
+    const isToday = isSameDay(day.date, new Date())
 
     const baseClasses = `
       relative min-h-[60px] md:min-h-[80px] rounded-2xl text-sm font-medium
@@ -96,45 +94,31 @@ export default function CycleCalendar({ cycleData, ratings, onUpdateRating }: Cy
       ${day.isCurrentMonth ? (isClickable ? 'cursor-pointer' : 'cursor-default') : 'opacity-30 cursor-default'}
       ${dayTypeStyles[day.dayType]}
       ${isToday ? 'ring-2 ring-blue-400 ring-offset-2' : ''}
+      ${day.cycleStatus === 'COMPLETED' ? 'opacity-45' : ''}
     `
 
     return (
       <div key={format(day.date, 'yyyy-MM-dd')} className={baseClasses} onClick={() => handleDayClick(day)}>
         <div className='flex h-full w-full flex-col items-center justify-center p-2'>
           <span className={`text-lg font-bold ${isToday ? 'text-blue-600' : ''}`}>{day.dayNumber}</span>
-
           {Icon && day.isCurrentMonth && <Icon className='mt-1 h-3 w-3 opacity-80' />}
 
-          {/* Show indicators based on date and rating status */}
-          {(() => {
-            const today = startOfDay(new Date())
-            const dayDate = startOfDay(day.date)
-            const isFutureDate = isAfter(dayDate, today)
-
-            if (isClickable && !day.hasRating && !isFutureDate) {
-              // Show sparkle for current and past special days without rating
-              return (
-                <div className='absolute -top-1 -right-1'>
-                  <Sparkles className='h-4 w-4 text-amber-500' />
-                </div>
-              )
-            } else if (day.hasRating) {
-              // Show dot for days with rating
-              return (
-                <div className='absolute -top-1 -right-1'>
-                  <div className='h-3 w-3 rounded-full border-2 border-white bg-green-500 shadow-sm' />
-                </div>
-              )
-            } else if (isClickable && isFutureDate) {
-              // Show lock icon for future special dates
-              return (
-                <div className='absolute -top-1 -right-1'>
+          <div className='absolute -top-1 -right-1'>
+            {day.dayStatus === 'RATED' && (
+              <div className='h-3 w-3 rounded-full border-2 border-white bg-green-500 shadow-sm' />
+            )}
+            {day.dayStatus === 'MISSED' && (
+              <div className='h-3 w-3 rounded-full border-2 border-white bg-red-400 shadow-sm' />
+            )}
+            {day.cycleStatus === 'ACTIVE' && (
+              <>
+                {day.dayStatus === 'PENDING' && <Sparkles className='h-4 w-4 text-amber-500' />}
+                {day.dayStatus === 'FUTURE' && (
                   <div className='h-3 w-3 rounded-full border border-white bg-slate-400 opacity-50' />
-                </div>
-              )
-            }
-            return null
-          })()}
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     )
@@ -183,7 +167,14 @@ export default function CycleCalendar({ cycleData, ratings, onUpdateRating }: Cy
             </div>
           </div>
 
-          <div className='space-y-8 p-6'>
+          <div className='relative space-y-8 p-6'>
+            {/* Loading Overlay */}
+            {isLoading && (
+              <div className='absolute inset-0 z-10 flex items-center justify-center rounded-b-2xl bg-white/70 backdrop-blur-sm'>
+                <Loader2 className='h-8 w-8 animate-spin text-pink-500' />
+              </div>
+            )}
+
             {/* Beautiful Legend */}
             <div className='flex flex-wrap justify-center gap-6'>
               {Object.entries(dayTypeNames).map(([type, name]) => {
@@ -224,16 +215,19 @@ export default function CycleCalendar({ cycleData, ratings, onUpdateRating }: Cy
                   <Sparkles className='h-5 w-5 text-slate-600' />
                   User Guide
                 </h3>
-                <p className='text-slate-600'>Click on special dates to rate your health status</p>
-
-                <div className='flex items-center justify-center gap-8 text-sm'>
+                <p className='text-slate-600'>Click on special dates to track your health status</p>
+                <div className='flex flex-wrap items-center justify-center gap-6 text-sm md:gap-8'>
                   <div className='flex items-center gap-2'>
                     <Sparkles className='h-4 w-4 text-amber-500' />
-                    <span className='text-slate-600'>Can be rated</span>
+                    <span className='text-slate-600'>Rate Now</span>
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='h-3 w-3 rounded-full bg-green-500' />
                     <span className='text-slate-600'>Rated</span>
+                  </div>
+                  <div className='flex items-center gap-2'>
+                    <div className='h-3 w-3 rounded-full bg-red-500' />
+                    <span className='text-slate-600'>Missed</span>
                   </div>
                   <div className='flex items-center gap-2'>
                     <div className='h-3 w-3 rounded-full bg-slate-400 opacity-50' />
@@ -246,20 +240,17 @@ export default function CycleCalendar({ cycleData, ratings, onUpdateRating }: Cy
         </div>
       </div>
 
-      {/* Rating Modal */}
-      {selectedDay && (
+      {selectedDay && selectedDay.cycleId && (
         <DayRatingModal
-          isOpen={showRatingModal}
-          onClose={() => {
-            setShowRatingModal(false)
-            setSelectedDay(null)
-          }}
-          onSubmit={handleRatingSubmit}
+          isOpen={!!selectedDay}
+          onClose={() => setSelectedDay(null)}
           date={selectedDay.date}
           dayType={selectedDay.dayType}
-          initialRating={selectedDay.rating}
+          cycleId={selectedDay.cycleId}
         />
       )}
+
+      <MissedDayModal isOpen={showMissedDayModal} onClose={() => setShowMissedDayModal(false)} />
     </>
   )
 }

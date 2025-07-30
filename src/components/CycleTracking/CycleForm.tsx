@@ -1,94 +1,51 @@
 import { useForm } from 'react-hook-form'
 import { format } from 'date-fns'
-import { Calendar, CalendarCheck, Clock, Sparkles, Flower2 } from 'lucide-react'
+import { Calendar, CalendarCheck, Clock, Sparkles, Flower2, FileText, Heart, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { CycleFormData } from '@/types/cycle'
-import ModernRating from './ModernRating'
-import SleepHoursInput from './SleepHoursInput'
+import { Textarea } from '@/components/ui/textarea'
+import { CreateCyclePayload, CycleFormData } from '@/types/cycle'
+import { useCycleMutations } from '@/hooks/cycle/useCycleMutations'
 
 interface CycleFormProps {
-  onSubmit: (data: CycleFormData) => void
+  onSuccess: () => void
 }
 
-const ratingNames = {
-  mood: 'Mood',
-  libido: 'Libido',
-  stress: 'Stress Level',
-  energy: 'Energy'
-}
+export default function CycleForm({ onSuccess }: CycleFormProps) {
+  const { createCycle } = useCycleMutations()
 
-export default function CycleForm({ onSubmit }: CycleFormProps) {
   const form = useForm<CycleFormData>({
     defaultValues: {
       firstPeriodDate: format(new Date(), 'yyyy-MM-dd'),
       cycleLength: 28,
       periodDuration: 5,
-      mood: 3,
-      libido: 3,
-      stress: 3,
-      sleep: 8,
-      energy: 3
+      notes: ''
     }
   })
 
-  const handleSubmit = (data: CycleFormData) => {
-    onSubmit(data)
-  }
+  const handleSubmit = async (data: CycleFormData) => {
+    const payload: CreateCyclePayload = {
+      start_period_date: data.firstPeriodDate,
+      cycle_length: data.cycleLength,
+      period_length: data.periodDuration,
+      note: data.notes
+    }
 
-  const renderRatingField = (field: 'mood' | 'libido' | 'stress' | 'energy') => {
-    const name = ratingNames[field]
-
-    return (
-      <FormField
-        control={form.control}
-        name={field}
-        render={({ field: formField }) => (
-          <FormItem>
-            <FormControl>
-              <ModernRating value={formField.value} onChange={formField.onChange} type={field} label={name} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    )
-  }
-
-  const renderSleepField = () => {
-    return (
-      <FormField
-        control={form.control}
-        name='sleep'
-        rules={{
-          required: 'Please enter the number of hours slept',
-          min: { value: 1, message: 'The minimum sleep duration is 1 hour' },
-          max: { value: 18, message: 'Sleep duration cannot exceed 18 hours' }
-        }}
-        render={({ field: formField, fieldState }) => (
-          <FormItem>
-            <FormControl>
-              <SleepHoursInput
-                value={formField.value}
-                onChange={formField.onChange}
-                label='Sleep Hours'
-                error={fieldState.error?.message}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    )
+    try {
+      await createCycle.mutateAsync(payload)
+      onSuccess()
+    } catch (error) {
+      console.error('Failed to create cycle:', error)
+    }
   }
 
   return (
-    <div className='mx-auto max-w-4xl md:max-w-2xl lg:max-w-4xl xl:min-w-6xl xl:-translate-x-10'>
-      <div className='overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-2xl shadow-slate-200/50'>
-        {/* Stunning Header */}
+    <div className='mx-auto max-w-6xl px-4 py-8'>
+      <div className='overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl'>
+        {/* Header */}
         <div className='bg-slate-800 p-8 text-white'>
-          <div className='flex items-center gap-4'>
+          <div className='flex items-center gap-6'>
             <div className='rounded-xl bg-white/10 p-4'>
               <Flower2 className='h-8 w-8' />
             </div>
@@ -101,32 +58,38 @@ export default function CycleForm({ onSubmit }: CycleFormProps) {
 
         <div className='p-8'>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-8'>
-              {/* Basic Cycle Information */}
-              <div className='space-y-6'>
-                <div className='mb-6 flex items-center gap-3'>
-                  <div className='rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-600 p-3 text-white'>
-                    <Calendar className='h-6 w-6' />
+            <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-10'>
+              {/* Basic Cycle Information section */}
+              <div className='space-y-8'>
+                <div className='mb-8 flex items-center gap-4'>
+                  <div className='rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 p-4 text-white shadow-lg'>
+                    <Calendar className='h-7 w-7' />
                   </div>
-                  <h3 className='text-2xl font-bold text-slate-800'>Cycle Information</h3>
+                  <div>
+                    <h3 className='text-3xl font-bold text-slate-800'>Cycle Information</h3>
+                    <p className='text-slate-600'>Set up your basic cycle details</p>
+                  </div>
                 </div>
 
-                <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
+                <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
+                  {/* Form fields */}
                   <FormField
                     control={form.control}
                     name='firstPeriodDate'
                     rules={{ required: 'Please select the first day of menstruation' }}
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='flex items-center gap-2 text-lg font-semibold text-slate-700'>
-                          <CalendarCheck className='h-5 w-5' />
+                      <FormItem className='space-y-3'>
+                        <FormLabel className='flex items-center gap-3 text-lg font-semibold text-slate-700'>
+                          <div className='rounded-lg bg-blue-100 p-2'>
+                            <CalendarCheck className='h-5 w-5 text-blue-600' />
+                          </div>
                           First day of menstruation
                         </FormLabel>
                         <FormControl>
                           <Input
                             type='date'
                             {...field}
-                            className='h-12 rounded-xl border-2 border-slate-200 text-lg focus:border-blue-500 focus:ring-blue-500/20'
+                            className='h-14 rounded-xl border-2 border-slate-200 text-lg transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20'
                           />
                         </FormControl>
                         <FormMessage />
@@ -139,24 +102,29 @@ export default function CycleForm({ onSubmit }: CycleFormProps) {
                     name='cycleLength'
                     rules={{
                       required: 'Please enter the cycle length',
-                      min: { value: 21, message: 'The minimum cycle length is 21 days' },
-                      max: { value: 30, message: 'The cycle length cannot exceed 30 days' }
+                      min: { value: 20, message: 'The minimum cycle length is 20 days' },
+                      max: { value: 31, message: 'The cycle length cannot exceed 31 days' }
                     }}
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='text-lg font-semibold text-slate-700'>Menstrual Cycle</FormLabel>
+                      <FormItem className='space-y-3'>
+                        <FormLabel className='flex items-center gap-3 text-lg font-semibold text-slate-700'>
+                          <div className='rounded-lg bg-green-100 p-2'>
+                            <Heart className='h-5 w-5 text-green-600' />
+                          </div>
+                          Menstrual Cycle Length
+                        </FormLabel>
                         <FormControl>
                           <div className='relative'>
                             <Input
                               type='number'
                               {...field}
-                              onChange={(e) => field.onChange(parseInt(e.target.value))}
-                              min={21}
-                              max={30}
-                              className='h-12 rounded-xl border-2 border-slate-200 pr-16 text-lg focus:border-green-500 focus:ring-green-500/20'
+                              onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                              min={20}
+                              max={31}
+                              className='h-14 rounded-xl border-2 border-slate-200 pr-16 text-lg transition-all focus:border-green-500 focus:ring-4 focus:ring-green-500/20'
                             />
                             <span className='absolute top-1/2 right-4 -translate-y-1/2 transform font-medium text-slate-500'>
-                              ngày
+                              days
                             </span>
                           </div>
                         </FormControl>
@@ -170,13 +138,15 @@ export default function CycleForm({ onSubmit }: CycleFormProps) {
                     name='periodDuration'
                     rules={{
                       required: 'Please enter the menstruation duration',
-                      min: { value: 3, message: 'The minimum menstruation duration is 3 days' },
-                      max: { value: 7, message: 'The menstruation duration cannot exceed 7 days' }
+                      min: { value: 1, message: 'The minimum menstruation duration is 1 day' },
+                      max: { value: 10, message: 'The menstruation duration cannot exceed 10 days' }
                     }}
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='flex items-center gap-2 text-lg font-semibold text-slate-700'>
-                          <Clock className='h-5 w-5' />
+                      <FormItem className='space-y-3'>
+                        <FormLabel className='flex items-center gap-3 text-lg font-semibold text-slate-700'>
+                          <div className='rounded-lg bg-red-100 p-2'>
+                            <Clock className='h-5 w-5 text-red-600' />
+                          </div>
                           Menstruation Duration
                         </FormLabel>
                         <FormControl>
@@ -184,10 +154,10 @@ export default function CycleForm({ onSubmit }: CycleFormProps) {
                             <Input
                               type='number'
                               {...field}
-                              onChange={(e) => field.onChange(parseInt(e.target.value))}
-                              min={3}
-                              max={7}
-                              className='h-12 rounded-xl border-2 border-slate-200 pr-16 text-lg focus:border-red-500 focus:ring-red-500/20'
+                              onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                              min={1}
+                              max={10}
+                              className='h-14 rounded-xl border-2 border-slate-200 pr-16 text-lg transition-all focus:border-red-500 focus:ring-4 focus:ring-red-500/20'
                             />
                             <span className='absolute top-1/2 right-4 -translate-y-1/2 transform font-medium text-slate-500'>
                               days
@@ -201,36 +171,55 @@ export default function CycleForm({ onSubmit }: CycleFormProps) {
                 </div>
               </div>
 
-              {/* Self-Rating Section */}
+              {/* Notes Section */}
               <div className='space-y-6'>
-                <div className='mb-6 flex items-center gap-3'>
-                  <div className='rounded-xl bg-violet-500 p-3 text-white'>
-                    <Sparkles className='h-6 w-6' />
+                <div className='mb-6 flex items-center gap-4'>
+                  <div className='rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 p-4 text-white shadow-lg'>
+                    <FileText className='h-7 w-7' />
                   </div>
-                  <h3 className='text-2xl font-bold text-slate-800'>Rate Current Status</h3>
+                  <div>
+                    <h3 className='text-3xl font-bold text-slate-800'>Additional Notes</h3>
+                    <p className='text-slate-600'>Add any important details about your cycle</p>
+                  </div>
                 </div>
 
-                <div className='space-y-8'>
-                  <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
-                    {renderRatingField('mood')}
-                    {renderRatingField('libido')}
-                    {renderRatingField('stress')}
-                    {renderRatingField('energy')}
-                  </div>
-
-                  {/* Sleep field takes full width */}
-                  <div className='mx-auto max-w-2xl'>{renderSleepField()}</div>
-                </div>
+                <FormField
+                  control={form.control}
+                  name='notes'
+                  render={({ field }) => (
+                    <FormItem className='space-y-3'>
+                      <FormLabel className='flex items-center gap-3 text-lg font-semibold text-slate-700'>
+                        <div className='rounded-lg bg-amber-100 p-2'>
+                          <FileText className='h-5 w-5 text-amber-600' />
+                        </div>
+                        Personal Notes (Optional)
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          placeholder='Add any notes about your cycle, symptoms, or other observations...'
+                          className='min-h-[120px] rounded-xl border-2 border-slate-200 text-lg transition-all focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20'
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               {/* Submit Button */}
-              <div className='pt-6'>
+              <div className='pt-8'>
                 <Button
                   type='submit'
-                  className='h-14 w-full rounded-xl bg-slate-800 text-xl font-bold shadow-md transition-all duration-300 hover:bg-slate-700'
+                  disabled={createCycle.isPending}
+                  className='h-14 w-full rounded-xl bg-slate-800 text-xl font-bold shadow-md transition-all duration-300 hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50'
                 >
-                  <Sparkles className='mr-3 h-6 w-6' />
-                  Create Your Cycle Tracking Calendar
+                  {createCycle.isPending ? (
+                    <Loader2 className='mr-3 h-6 w-6 animate-spin' />
+                  ) : (
+                    <Sparkles className='mr-3 h-6 w-6' />
+                  )}
+                  {createCycle.isPending ? 'Creating Calendar...' : 'Create Your Cycle Tracking Calendar'}
                 </Button>
               </div>
             </form>
