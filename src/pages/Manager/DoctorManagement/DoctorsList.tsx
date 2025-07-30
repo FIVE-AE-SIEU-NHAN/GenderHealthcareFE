@@ -135,12 +135,8 @@ export default function DoctorListDashboard() {
         label: 'Specialization',
         sortable: true,
         render: (doctor: DoctorProfile) => {
-          const specialization = TOPIC_OPTIONS.find((opt) => opt.value === doctor.specialization)
-          return (
-            <Badge className={cn('text-xs font-medium', specialization?.style)}>
-              {specialization?.label ?? doctor.specialization}
-            </Badge>
-          )
+          const spec = doctor.specialization
+          return <Badge className='border-l-slate-500 bg-[#ebf3fe] text-slate-700'>{spec}</Badge>
         }
       },
       {

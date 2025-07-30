@@ -1,12 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Loader2, MoreHorizontal, ShieldBan, ShieldCheck, UserPlus2, XCircle } from 'lucide-react'
 
@@ -111,11 +105,12 @@ export default function UserListDashboard() {
       {
         key: 'gender',
         label: 'Gender',
-        render: (user: User) => <p className='capitalize'>{user.gender}</p>
+        render: (user: User) => <p className='capitalize'>{user.gender || 'N/A'}</p>
       },
       {
         key: 'date_of_birth',
         label: 'Date of Birth',
+        sortable: false,
         render: (user: User) => formatDate(user.date_of_birth)
       },
       { key: 'email', label: 'Email', sortable: false },
@@ -252,8 +247,8 @@ export default function UserListDashboard() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => alert(`Viewing profile for ${user.name}`)}>View Profile</DropdownMenuItem>
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuItem onClick={() => alert(`Viewing profile for ${user.name}`)}>View Profile</DropdownMenuItem>
+            <DropdownMenuSeparator /> */}
 
             {statusString === 'Banned' && (
               <DropdownMenuItem
@@ -353,7 +348,7 @@ export default function UserListDashboard() {
 
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent
-          className='data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out flex w-[95vw] flex-col p-0 sm:max-w-none md:w-[60vw] lg:w-[50vw] xl:w-[40vw]'
+          className='data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out flex flex-col p-0 sm:min-w-2xl md:min-w-3xl lg:min-w-5xl xl:w-2xl'
           onInteractOutside={(e) => {
             // Prevent closing when clicking outside if the mutation is running
             if (editUserStatusMutation.isPending) {

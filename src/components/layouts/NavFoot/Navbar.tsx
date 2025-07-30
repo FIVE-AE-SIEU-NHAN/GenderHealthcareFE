@@ -37,6 +37,12 @@ const dashboardConfig: Record<number, { path: string; label: string }> = {
   4: { path: '/doctor', label: 'Doctor Dashboard' }
 }
 
+const profileConfig: Record<number, { path: string; label: string }> = {
+  1: { path: '/consultant/profile', label: 'Consultant Profile' },
+  3: { path: '/user/profile', label: 'Your Profile' },
+  4: { path: '/doctor/profile', label: 'Doctor Profile' }
+}
+
 const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/services', label: 'Services' },
@@ -112,6 +118,7 @@ interface UserAvatarDropdownProps {
 
 const UserAvatarDropdown = memo(({ user, onLogout }: UserAvatarDropdownProps) => {
   const userDashboard = dashboardConfig[user.role]
+  const userProfile = profileConfig[user.role]
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className='focus:outline-none'>
@@ -123,11 +130,13 @@ const UserAvatarDropdown = memo(({ user, onLogout }: UserAvatarDropdownProps) =>
       <DropdownMenuContent className='mt-2 w-56'>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link to='/user/profile' className='flex cursor-pointer items-center gap-2'>
-            <UserIcon className='h-4 w-4' /> Profile
-          </Link>
-        </DropdownMenuItem>
+        {userProfile && (
+          <DropdownMenuItem asChild>
+            <Link to={userProfile.path} className='flex cursor-pointer items-center gap-2'>
+              <UserIcon className='h-4 w-4' /> {userProfile.label}
+            </Link>
+          </DropdownMenuItem>
+        )}
         {userDashboard && (
           <DropdownMenuItem asChild>
             <Link to={userDashboard.path} className='flex cursor-pointer items-center gap-2'>

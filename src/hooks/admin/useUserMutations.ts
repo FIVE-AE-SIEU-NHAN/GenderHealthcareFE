@@ -5,7 +5,9 @@ import {
   EditUserStatusPayload,
   EditUserStatusResponse
 } from '@/types/admin/userTypes'
+import { ApiErrorResponse } from '@/types/errorsResponse'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
 /**
@@ -16,19 +18,19 @@ export const useUserMutations = () => {
   const queryClient = useQueryClient()
 
   // =============== USER STATUS EDITING ===============
-  const editStatusMutation = useMutation<EditUserStatusResponse, Error, EditUserStatusPayload>({
+  const editStatusMutation = useMutation<EditUserStatusResponse, AxiosError<ApiErrorResponse>, EditUserStatusPayload>({
     mutationFn: editUserStatusAPI,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['users'] })
       toast.success(data.message || 'User status updated successfully!')
     },
     onError: (error) => {
-      toast.error(error.message || 'Failed to update status.')
+      toast.error(error.response?.data?.message || 'Failed to update status.')
     }
   })
 
   // =============== USER CREATION ===============
-  const createUserMutation = useMutation<CreateUserResponse, Error, CreateUserPayload>({
+  const createUserMutation = useMutation<CreateUserResponse, AxiosError<ApiErrorResponse>, CreateUserPayload>({
     mutationFn: createUserAPI,
     onSuccess: (data) => {
       // invalidate the 'users' query to refetch the list
@@ -37,7 +39,7 @@ export const useUserMutations = () => {
     },
     onError: (error) => {
       // Display the error message from the backend or a generic message
-      toast.error(error.message || 'Failed to create user.')
+      toast.error(error.response?.data?.message || 'Failed to create user.')
     }
   })
 

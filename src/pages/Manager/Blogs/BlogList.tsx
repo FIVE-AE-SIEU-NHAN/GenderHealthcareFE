@@ -22,6 +22,8 @@ import { formatDate } from '@/utils/formatDate'
 import { BLOG_STATUS, statusActionMap } from '@/Application/constants/manager/manager.blogConstants'
 import { useBlogs } from '@/hooks/manager/useBlogs'
 import { useBlogsMutations } from '@/hooks/manager/useBlogsMutations'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { BlogManagerView } from './BlogManagerView'
 
 // ========== FACET FILTERS ==========
 const blogFacetFilters: FacetFilter[] = [
@@ -59,6 +61,8 @@ export default function BlogListDashboard() {
 
   const [uiSearchConfig, setUiSearchConfig] = useState({ field: 'all', value: '' })
   const [apiSearchConfig, setApiSearchConfig] = useState({ field: 'all', value: '' })
+
+  const [viewingBlogId, setViewingBlogId] = useState<string | null>(null)
 
   // =============== COLUMNS FORMAT ===============
   const allBlogColumns = useMemo(
@@ -208,7 +212,7 @@ export default function BlogListDashboard() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => alert(`Editing blog: ${blog.title}`)}>
+            <DropdownMenuItem onClick={() => setViewingBlogId(blog.id)}>
               <Eye className='mr-2 h-4 w-4' />
               View Blog Details
             </DropdownMenuItem>
@@ -291,6 +295,12 @@ export default function BlogListDashboard() {
           renderActions={renderBlogActions}
         />
       )}
+
+      <Dialog open={!!viewingBlogId} onOpenChange={(isOpen) => !isOpen && setViewingBlogId(null)}>
+        <DialogContent className='min-w-6xl'>
+          <BlogManagerView blogId={viewingBlogId} />
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

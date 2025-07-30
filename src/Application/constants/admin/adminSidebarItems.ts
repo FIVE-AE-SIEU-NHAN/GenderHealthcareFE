@@ -11,12 +11,12 @@ export const adminSidebarItems: NavMainProps['items'] = [
     icon: Users
   },
   {
-    title: 'AI Assistant',
+    title: '\u00A0\u00A0AI Assistant',
     url: '/dashboard/assistant',
     icon: wrapReactIcon(BsRobot)
   },
   {
-    title: 'Menstrual Predictor AI',
+    title: '\u00A0\u00A0Menstrual Predictor AI',
     url: '/dashboard/menstrual-predictor',
     icon: wrapReactIcon(RiRobot3Line)
   }
