@@ -1,46 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { CalendarClock, Clock, History, AlertCircle } from 'lucide-react'
 import AppointmentIllustration1 from '@/assets/images/appointment1.svg'
 import AppointmentIllustration2 from '@/assets/images/appointment2.svg'
 import { useOutletContext } from 'react-router-dom'
 import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
 import { ConsultantBookingCard } from './ConsultantBookingHistoryCard'
-import VideoChatRoom from '@/components/Chats/VideoChatRoom'
 import { useCombinedCustomerAppointments } from '@/hooks/customer/useAppointments'
-import { ServiceBookingHistoryCard } from './ServiceHistory'
+import { ServiceBookingHistoryCard } from './ServiceBookingHistoryCard'
 import { CombinedAppointment } from '@/types/customer/appointmentTypes'
 
 export default function AppointmentHistory() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
 
-  const [activeCallRoomId, setActiveCallRoomId] = useState<string | null>(null)
-
   useEffect(() => {
-    if (activeCallRoomId) {
-      setBreadcrumb({
-        title: 'Live Consultation',
-        parent: 'Appointments History',
-        parentHref: '/user/appointments'
-      })
-    } else {
-      setBreadcrumb({
-        title: 'Apointments History',
-        parent: 'Dashboard',
-        parentHref: '/user'
-      })
-    }
-  }, [setBreadcrumb, activeCallRoomId])
+    setBreadcrumb({
+      title: 'Appointments History',
+      parent: 'Dashboard',
+      parentHref: '/user'
+    })
+  }, [setBreadcrumb])
 
   // ================ USE APPOINTMENTS HISTORY HOOK ===============
   const { data: bookingHistory, isLoading, isError } = useCombinedCustomerAppointments()
-
-  const handleJoinCall = (roomId: string) => {
-    setActiveCallRoomId(roomId)
-  }
-
-  const handleLeaveCall = () => {
-    setActiveCallRoomId(null)
-  }
 
   const renderContent = () => {
     if (isLoading) {
@@ -70,14 +51,7 @@ export default function AppointmentHistory() {
       <div className='relative max-h-[80vh] space-y-6 overflow-y-auto border-l-2 border-blue-200 pb-6 pl-6'>
         {bookingHistory.map((booking: CombinedAppointment, index) => {
           if (booking.type === 'CONSULTATION') {
-            return (
-              <ConsultantBookingCard
-                key={`consult-${index}`}
-                booking={booking}
-                isHighlighted={index === 0}
-                onJoin={handleJoinCall}
-              />
-            )
+            return <ConsultantBookingCard key={`consult-${index}`} booking={booking} isHighlighted={index === 0} />
           } else if (booking.type === 'SERVICE') {
             return <ServiceBookingHistoryCard key={`service-${index}`} booking={booking} isHighlighted={index === 0} />
           }
@@ -85,10 +59,6 @@ export default function AppointmentHistory() {
         })}
       </div>
     )
-  }
-
-  if (activeCallRoomId) {
-    return <VideoChatRoom chat_room_id={activeCallRoomId} onLeave={handleLeaveCall} />
   }
 
   return (

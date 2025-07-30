@@ -20,18 +20,17 @@ interface ConsultantBookingCardProps {
   booking: CustomerAppointment
   className?: string
   isHighlighted?: boolean
-  onJoin: (roomId: string) => void
 }
 
-export function ConsultantBookingCard({
-  booking,
-  className,
-  isHighlighted = false,
-  onJoin
-}: ConsultantBookingCardProps) {
+export function ConsultantBookingCard({ booking, className, isHighlighted = false }: ConsultantBookingCardProps) {
   const topicLabel = TOPIC_STYLES_MAP.get(booking.topic)?.label || booking.topic.replace(/_/g, ' ')
   const formattedDate = formatDate(booking.booking_date, 'MMMM d, yyyy')
   const formattedTime = formatTimeSlot(booking.time_slot)
+
+  const handleJoinCall = (roomId: string) => {
+    const callUrl = `/call/${roomId}`
+    window.open(callUrl, '_blank', 'noopener,noreferrer')
+  }
 
   return (
     <Card
@@ -99,7 +98,7 @@ export function ConsultantBookingCard({
                 variant='default'
                 size='sm'
                 className='w-full cursor-pointer p-2'
-                onClick={() => onJoin(booking.chat_room_id)}
+                onClick={() => handleJoinCall(booking.chat_room_id)}
               >
                 Join
               </Button>
