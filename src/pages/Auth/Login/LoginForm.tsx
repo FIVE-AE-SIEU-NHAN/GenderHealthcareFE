@@ -13,6 +13,9 @@ import { authApi } from '@/apis/authApi'
 import { useAuth } from '@/contexts/AuthContext'
 import GoogleLoginButton from '../GoogleLogin'
 import logo from '@/assets/images/logo1.png'
+import { jwtDecode } from 'jwt-decode'
+import { User } from '@/types'
+import { dashboardConfig } from '@/components/layouts/NavFoot/Navbar'
 
 type FormData = {
   email: string
@@ -49,10 +52,19 @@ export default function LoginForm() {
 
       if (accessToken) {
         loginContext(accessToken)
+
+        const decodedUser = jwtDecode<User>(accessToken)
+        const rolesToRedirectToDashboard = [0, 1, 2, 4]
+
         toast.success('Login Successful', {
           description: 'Welcome back!'
         })
-        navigate('/')
+        if (rolesToRedirectToDashboard.includes(decodedUser.role)) {
+          const destinationPath = dashboardConfig[decodedUser.role]?.path
+          navigate(destinationPath || '/')
+        } else {
+          navigate('/')
+        }
       } else {
         toast.error('Login Failed', { description: 'Could not retrieve login credentials.' })
       }

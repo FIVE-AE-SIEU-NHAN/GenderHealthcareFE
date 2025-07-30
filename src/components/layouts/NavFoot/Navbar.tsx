@@ -29,7 +29,7 @@ interface User {
 }
 
 // --- Configurations ---
-const dashboardConfig: Record<number, { path: string; label: string }> = {
+export const dashboardConfig: Record<number, { path: string; label: string }> = {
   0: { path: '/dashboard', label: 'Admin Dashboard' },
   1: { path: '/consultant', label: 'Consultant Dashboard' },
   2: { path: '/manager', label: 'Manager Dashboard' },
