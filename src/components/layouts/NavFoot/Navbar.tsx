@@ -281,7 +281,7 @@ export default function Navbar({ variant = 'public' }: NavbarProps) {
                   </Link>
                 </Button>
               )}
-              {[1, 3].includes(user.role) && <NotificationIcon />}
+              {[1, 3, 4].includes(user.role) && <NotificationIcon />}
               <UserAvatarDropdown user={user} onLogout={handleLogout} />
             </>
           ) : (
