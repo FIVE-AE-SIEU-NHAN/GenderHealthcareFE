@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { format } from 'date-fns'
-import { Calendar, Loader2 } from 'lucide-react'
+import { Calendar, Check, Loader2 } from 'lucide-react'
 import { FaHeartbeat } from 'react-icons/fa'
 
 import { Button } from '@/components/ui/button'
@@ -90,22 +90,10 @@ export const formSchema = z.object({
   note: z
     .string()
     .max(MAX_NOTE_LENGTH, { message: `Note cannot exceed ${MAX_NOTE_LENGTH} characters.` })
-    .refine(
-      (value) => {
-        if (!value || value.trim() === '') return true
-        return value.trim().length >= MIN_NOTE_LENGTH
-      },
-      {
-        message: `If provided, the note must be at least ${MIN_NOTE_LENGTH} characters.`
-      }
-    )
     .optional()
     .or(z.literal('')),
   agreed: z.boolean().refine((val) => val === true, {
     message: 'You must agree to the terms of use.'
-  }),
-  selected_services: z.array(z.string()).min(1, {
-    message: 'Please select at least one service.'
   })
 })
 
@@ -131,11 +119,19 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
   const getSelectedPackage = () => STIS_TESTING_PACKAGES.find((p) => p.value === selectedTopicValue)
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find((t) => t.value === selectedTimeSlotValue)?.label
 
-  React.useEffect(() => {
-    if (selectedTopicValue) {
-      form.setValue('selected_services', [])
+  const handleManualSubmit = (values: z.infer<typeof formSchema>) => {
+    const noteValue = values.note?.trim() ?? ''
+
+    if (noteValue.length > 0 && noteValue.length < MIN_NOTE_LENGTH) {
+      form.setError('note', {
+        type: 'manual',
+        message: `If provided, the note must be at least ${MIN_NOTE_LENGTH} characters.`
+      })
+      return
     }
-  }, [selectedTopicValue, form])
+
+    onSubmit(values)
+  }
 
   return (
     <div className='relative z-10 flex w-full justify-center py-16'>
@@ -158,7 +154,7 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
             Complete this form to schedule your STIS testing with us!
           </p>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='grid grid-cols-1 gap-4'>
+            <form onSubmit={form.handleSubmit(handleManualSubmit)} className='grid grid-cols-1 gap-4'>
               <FormField
                 control={form.control}
                 name='topic'
@@ -189,45 +185,22 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                   getSelectedPackage() ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
                 )}
               >
-                <FormField
-                  control={form.control}
-                  name='selected_services'
-                  render={() => (
-                    <FormItem className='rounded-lg border border-blue-200 bg-blue-50/50 p-4'>
-                      <div className='mb-4'>
-                        <FormLabel className='text-base font-semibold text-[#1A3973]'>Services Included</FormLabel>
-                        <p className='text-sm text-gray-600'>Please select the services you wish to have.</p>
+                <div className='mt-2 rounded-lg border border-blue-200 bg-blue-50/50 p-4'>
+                  <div className='mb-4'>
+                    <FormLabel className='text-base font-semibold text-[#1A3973]'>
+                      Services Included in Your Package
+                    </FormLabel>
+                    <p className='text-sm text-gray-600'>All services below are included automatically.</p>
+                  </div>
+                  <div className='grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2'>
+                    {getSelectedPackage()?.services.map((service) => (
+                      <div key={service.id} className='flex items-center space-x-3'>
+                        <Check className='h-5 w-5 text-green-500' />
+                        <span className='font-normal text-gray-800'>{service.label}</span>
                       </div>
-                      <div className='grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2'>
-                        {getSelectedPackage()?.services.map((service) => (
-                          <FormField
-                            key={service.id}
-                            control={form.control}
-                            name='selected_services'
-                            render={({ field }) => (
-                              <FormItem className='flex flex-row items-center space-y-0 space-x-3'>
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(service.id)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([...(field.value || []), service.id])
-                                        : field.onChange(field.value?.filter((value) => value !== service.id))
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className='cursor-pointer font-normal text-gray-800'>
-                                  {service.label}
-                                </FormLabel>
-                              </FormItem>
-                            )}
-                          />
-                        ))}
-                      </div>
-                      <FormMessage className='mt-3' />
-                    </FormItem>
-                  )}
-                />
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div className='grid grid-cols-2 gap-2'>
@@ -290,7 +263,6 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                 />
               </div>
 
-              {/* === KHỐI GHI CHÚ ĐÃ ĐƯỢC SỬA LẠI === */}
               <FormField
                 control={form.control}
                 name='note'
@@ -310,7 +282,7 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                       <FormMessage />
                       <p
                         className={cn(
-                          'ml-auto text-sm', // Đã thêm ml-auto để đẩy sang phải
+                          'ml-auto text-sm',
                           (watchedNote?.length || 0) > MAX_NOTE_LENGTH ? 'font-bold text-red-500' : 'text-slate-400'
                         )}
                       >
@@ -320,7 +292,6 @@ export const ServicesBookingForm: React.FC<ServicesBookingFormProps> = ({ onSubm
                   </FormItem>
                 )}
               />
-              {/* === KẾT THÚC KHỐI CHỈNH SỬA === */}
 
               {getSelectedPackage() && (
                 <div className='mt-4 rounded-md bg-blue-50 p-4'>
