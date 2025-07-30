@@ -35,7 +35,7 @@ export default function MenstrualPredictorConfigPage() {
     setBreadcrumb({
       title: 'Menstrual Predictor AI',
       parent: 'Admin',
-      parentHref: '/admin/dashboard'
+      parentHref: '/dashboard'
     })
   }, [setBreadcrumb])
 

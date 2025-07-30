@@ -35,7 +35,7 @@ export default function AiAssistantConfigPage() {
     setBreadcrumb({
       title: 'AI Assistant',
       parent: 'Admin',
-      parentHref: '/admin/dashboard'
+      parentHref: '/dashboard'
     })
   }, [setBreadcrumb])
 

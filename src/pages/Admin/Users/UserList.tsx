@@ -182,7 +182,7 @@ export default function UserListDashboard() {
     setBreadcrumb({
       title: 'User Management',
       parent: 'Admin',
-      parentHref: '/admin/dashboard'
+      parentHref: '/dashboard'
     })
   }, [setBreadcrumb])
 
