@@ -1,4 +1,4 @@
-import { FileText, FileQuestion, User, MessageCircle, Flower2 } from 'lucide-react'
+import { FileText, FileQuestion, User, Flower2 } from 'lucide-react'
 import type { NavMainProps } from '@/components/layouts/Dashboard/nav-main'
 
 export const customerSidebarItems: NavMainProps['items'] = [
@@ -17,11 +17,11 @@ export const customerSidebarItems: NavMainProps['items'] = [
     url: '/user/questions',
     icon: FileQuestion
   },
-  {
-    title: 'Chat',
-    url: '/user/chat',
-    icon: MessageCircle
-  },
+  // {
+  //   title: 'Chat',
+  //   url: '/user/chat',
+  //   icon: MessageCircle
+  // },
   {
     title: 'Your Profile',
     url: '/user/profile',

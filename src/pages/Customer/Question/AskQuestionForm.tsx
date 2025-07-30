@@ -71,7 +71,7 @@ export default function AskQuestion() {
       topic: '',
       question: ''
     },
-    mode: 'onChange'
+    mode: 'onSubmit'
   })
 
   const questionValue = form.watch('question') || ''

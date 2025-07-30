@@ -1,4 +1,4 @@
-import { CalendarCheck, FileText, MessageCircle, User } from 'lucide-react'
+import { CalendarCheck, FileText, User } from 'lucide-react'
 import type { NavMainProps } from '@/components/layouts/Dashboard/nav-main'
 
 export const consultantSidebarItems: NavMainProps['items'] = [
@@ -7,11 +7,11 @@ export const consultantSidebarItems: NavMainProps['items'] = [
     url: '/consultant/questions',
     icon: FileText
   },
-  {
-    title: 'Chat',
-    url: '/consultant/chat',
-    icon: MessageCircle
-  },
+  // {
+  //   title: 'Chat',
+  //   url: '/consultant/chat',
+  //   icon: MessageCircle
+  // },
   {
     title: 'Appointments',
     url: '/consultant/appointments',

@@ -172,10 +172,13 @@ export function BookingInfoPage() {
                   </p>
                   <Link
                     to='/book-consultant'
-                    className='inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-xl font-bold text-[#1A3973] transition-colors hover:bg-gray-200'
+                    className='group relative flex w-auto cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] px-8 py-3 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-[#15305f] hover:to-[#3a6ad0] hover:shadow-xl'
                   >
-                    <FaHeartbeat />
-                    <span>Book Consultant</span>
+                    <span className='absolute inset-0 h-full w-full -translate-x-full -skew-x-12 bg-white/10 transition-transform duration-700 group-hover:translate-x-full'></span>
+                    <div className='relative flex items-center justify-center'>
+                      <FaHeartbeat className='mr-2' />
+                      <span>Book Consultant</span>
+                    </div>
                   </Link>
                 </div>
               </div>
@@ -224,6 +227,23 @@ export function BookingInfoPage() {
                     <h4 className='font-semibold text-gray-800'>What do I need to prepare?</h4>
                     <p className='text-gray-500'>Just bring your ID and any relevant medical history you may have.</p>
                   </div>
+                  <div>
+                    <h4 className='font-semibold text-gray-800'>Do I need a doctor's referral?</h4>
+                    <p className='text-gray-500'>No, a referral is not required to book a service with us.</p>
+                  </div>
+                </div>
+                <div className='mt-8 text-center'>
+                  {/* THAY ĐỔI: Áp dụng style mới cho nút View All Services */}
+                  <Link
+                    to='/services'
+                    className='group relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-[#1A3973] to-[#4F80E1] py-3 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-[#15305f] hover:to-[#3a6ad0] hover:shadow-xl'
+                  >
+                    <span className='absolute inset-0 h-full w-full -translate-x-full -skew-x-12 bg-white/10 transition-transform duration-700 group-hover:translate-x-full'></span>
+                    <div className='relative flex items-center justify-center'>
+                      <Users className='mr-2 h-5 w-5' />
+                      <span>View All Services</span>
+                    </div>
+                  </Link>
                 </div>
               </div>
 
@@ -233,28 +253,23 @@ export function BookingInfoPage() {
                   <p className='text-blue-200/90'>Booking is simple, secure, and the first step to proactive care.</p>
                 </div>
                 <div className='flex w-full flex-shrink-0 flex-col items-center gap-4 sm:w-auto sm:flex-row'>
+                  {/* THAY ĐỔI: Áp dụng style mới cho nút Book Service */}
                   <Link
                     to='/book-service'
-                    className='flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-lg font-bold text-[#1A3973] transition-colors hover:bg-gray-200 sm:w-auto'
+                    className='group relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-white/90 to-white px-6 py-3 text-lg font-semibold text-[#1A3973] shadow-lg transition-all duration-300 hover:from-white hover:to-white hover:shadow-xl sm:w-auto'
                   >
-                    <>
-                      <FaHeartbeat />
+                    <span className='absolute inset-0 h-full w-full -translate-x-full -skew-x-12 bg-black/10 transition-transform duration-700 group-hover:translate-x-full'></span>
+                    <div className='relative flex items-center justify-center'>
+                      <FaHeartbeat className='mr-2' />
                       <span>Book Service</span>
-                    </>
+                    </div>
                   </Link>
-
-                  <Link
-                    to='/services'
-                    className='flex w-full items-center justify-center gap-3 rounded-full border-2 border-white/60 bg-transparent px-6 py-3 text-lg font-bold transition-colors hover:bg-white/10 sm:w-auto'
-                  >
-                    <Users size={18} /> View All
-                  </Link>
-
                   <Link
                     to='/cycles'
-                    className='flex w-full items-center justify-center gap-3 rounded-full bg-white/10 px-6 py-3 text-lg font-bold text-white transition-colors hover:bg-white/20 sm:w-auto'
+                    className='flex w-full items-center justify-center gap-3 rounded-full border-2 border-white/60 px-6 py-3 text-lg font-bold text-white transition-colors hover:bg-white/10 sm:w-auto'
                   >
-                    <ClipboardList size={18} /> Diagnosis
+                    <ClipboardList className='h-[1.125rem] w-[1.125rem]' />
+                    <span>Diagnosis</span>
                   </Link>
                 </div>
               </div>

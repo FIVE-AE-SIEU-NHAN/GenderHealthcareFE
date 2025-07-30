@@ -28,11 +28,11 @@ export const formSchema = z.object({
     .refine(
       (value) => {
         if (!value) return true
-        const wordCount = value.split(/\s+/).filter((word) => word.length > 0).length
-        return wordCount >= 8 && wordCount <= 50
+        const charCount = value.length
+        return charCount >= 8 && charCount <= 50
       },
       {
-        message: 'The note must be between 8 and 50 words.'
+        message: 'The note must be between 8 and 50 characters.'
       }
     ),
   agreed: z.boolean().refine((val) => val === true, {
@@ -56,6 +56,9 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
   const selectedTopicValue = form.watch('topic')
   const selectedDateValue = form.watch('booking_date')
   const selectedTimeSlotValue = form.watch('time_slot')
+
+  const noteValue = form.watch('note') || ''
+  const charCount = noteValue.length
 
   const getSelectedTopic = () => TOPIC_OPTIONS.find((t) => t.value === selectedTopicValue)
   const getSelectedTimeSlotLabel = () => timeSlotOptions.find((t) => t.value === selectedTimeSlotValue)?.label
@@ -177,13 +180,19 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, isPe
                     <FormLabel>Note for the Consultant (Optional)</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder='Please describe your current condition or specific questions for the consultant... (8-50 words)'
+                        placeholder='Please describe your current condition or specific questions for the consultant...'
                         className='h-30 resize-none' // Prevents users from resizing the textarea
                         disabled={isPending}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <div className='mt-1 flex items-center justify-between'>
+                      <FormMessage />
+                      <p className='ml-auto text-sm text-gray-500'>
+                        {/* Hiển thị số ký tự */}
+                        {charCount}/50
+                      </p>
+                    </div>
                   </FormItem>
                 )}
               />

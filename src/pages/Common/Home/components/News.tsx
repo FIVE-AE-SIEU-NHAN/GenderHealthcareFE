@@ -3,57 +3,56 @@ import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/com
 import { Card } from '@/components/ui/card'
 import { FaCalendarAlt, FaHeartbeat } from 'react-icons/fa'
 import Autoplay from 'embla-carousel-autoplay'
-import news from '@/assets/images/new1.jpg'
 import { Link } from 'react-router-dom'
 
 const newsPosts = [
   {
-    date: 'Mar 20, 2021',
-    title: 'Get the Home care and nursing service',
-    excerpt: 'Debitis aut rerum nec sitatoe bus saereve eveniet...',
-    image: news
+    date: 'Jan 5, 2024',
+    title: 'Home Care Services Now in Your City',
+    excerpt: 'Discover how our certified nurses bring hospital-grade care to the comfort of your home.',
+    image: 'https://res.cloudinary.com/dyo6tjmky/image/upload/v1753718375/care4gender/images/c7d5cxtkbcu8yccwf43q.avif'
   },
   {
-    date: 'Mar 20, 2021',
-    title: 'Get the Home care and nursing service',
-    excerpt: 'Debitis aut rerum nec sitatoe bus saereve eveniet...',
-    image: news
+    date: 'Feb 12, 2024',
+    title: 'New Telehealth Features Launched',
+    excerpt: 'We’ve expanded our platform to offer seamless video consultations with specialists.',
+    image: 'https://res.cloudinary.com/dyo6tjmky/image/upload/v1753718915/care4gender/images/dbxqlp19h8zp4txxnqpy.avif'
   },
   {
-    date: 'Mar 20, 2021',
-    title: 'Get the Home care and nursing service',
-    excerpt: 'Debitis aut rerum nec sitatoe bus saereve eveniet...',
-    image: news
+    date: 'Mar 8, 2024',
+    title: 'Caring for Seniors with Dignity',
+    excerpt: 'Explore how we provide compassionate and personalized elderly care plans.',
+    image: 'https://res.cloudinary.com/dyo6tjmky/image/upload/v1753719093/care4gender/images/n7yo8vektfimc2waxllu.avif'
   },
   {
-    date: 'Mar 20, 2021',
-    title: 'Get the Home care and nursing service',
-    excerpt: 'Debitis aut rerum nec sitatoe bus saereve eveniet...',
-    image: news
+    date: 'Apr 22, 2024',
+    title: 'Emergency Support Services Expanded',
+    excerpt: 'Our team is now equipped to respond to urgent in-home care requests 24/7.',
+    image: 'https://res.cloudinary.com/dyo6tjmky/image/upload/v1753719248/care4gender/images/duaus7h8nw8mls8uupv5.avif'
   },
   {
-    date: 'Mar 20, 2021',
-    title: 'Get the Home care and nursing service',
-    excerpt: 'Debitis aut rerum nec sitatoe bus saereve eveniet...',
-    image: news
+    date: 'May 15, 2024',
+    title: 'Pediatric Home Visits Now Available',
+    excerpt: 'Introducing child-focused care with our specialized pediatric nursing team.',
+    image: 'https://res.cloudinary.com/dyo6tjmky/image/upload/v1753719341/care4gender/images/zfcbyk5yev8cccdhd2vr.avif'
   },
   {
-    date: 'Mar 20, 2021',
-    title: 'Get the Home care and nursing service',
-    excerpt: 'Debitis aut rerum nec sitatoe bus saereve eveniet...',
-    image: news
+    date: 'Jun 10, 2024',
+    title: 'Mental Health Support at Home',
+    excerpt: 'New in-home counseling and therapy services tailored to your mental wellness.',
+    image: 'https://res.cloudinary.com/dyo6tjmky/image/upload/v1753719467/care4gender/images/ofn10twkbzud6xnqewen.webp'
   },
   {
-    date: 'Mar 20, 2021',
-    title: 'Get the Home care and nursing service',
-    excerpt: 'Debitis aut rerum nec sitatoe bus saereve eveniet...',
-    image: news
+    date: 'Jul 1, 2024',
+    title: 'Nutrition and Wellness Coaching',
+    excerpt: 'Holistic care now includes dietary planning and lifestyle coaching sessions.',
+    image: 'https://res.cloudinary.com/dyo6tjmky/image/upload/v1753719587/care4gender/images/msumfvnnfdvo80chk6w2.webp'
   },
   {
-    date: 'Mar 20, 2021',
-    title: 'Get the Home care and nursing service',
-    excerpt: 'Debitis aut rerum nec sitatoe bus saereve eveniet...',
-    image: news
+    date: 'Jul 28, 2024',
+    title: 'Free Health Screening Week Announced',
+    excerpt: 'Join our community initiative for free basic check-ups and consultations at home.',
+    image: 'https://res.cloudinary.com/dyo6tjmky/image/upload/v1753719664/care4gender/images/xkimqu5om4jhcintaogt.jpg'
   }
 ]
 
