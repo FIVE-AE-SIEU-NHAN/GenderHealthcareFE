@@ -3,7 +3,8 @@ import type {
   BookAppointmentPayload,
   BookAppointmentResponse,
   BookServicesPayload,
-  CustomerAppointment
+  CustomerAppointment,
+  CustomerServiceAppointment
 } from '@/types/customer/appointmentTypes'
 
 // =============== CREATE (BOOK) A NEW APPOINTMENT ===============
@@ -29,7 +30,7 @@ export const bookServicesAPI = async (payload: BookServicesPayload): Promise<Boo
   return response.data
 }
 
-// ============== GET APPOINTMENT HISTORY ===============
+// ============== GET CONSULTATION APPOINTMENT HISTORY ===============
 /**
  * Fetches the appointment history for the currently logged-in customer.
  * Corresponds to the "Connect with a consultant" type of booking.
@@ -37,6 +38,21 @@ export const bookServicesAPI = async (payload: BookServicesPayload): Promise<Boo
  */
 export const fetchCustomerAppointments = async (): Promise<CustomerAppointment[]> => {
   const response = await api.get('/appointment/customer')
+  return (response.data.result || []).map((appt: Omit<CustomerAppointment, 'type'>) => ({
+    ...appt,
+    type: 'CONSULTATION'
+  }))
+}
 
-  return response.data.result || []
+// ============== GET SERVICE APPOINTMENT HISTORY ===============
+/**
+ * Fetches the service appointment history for the currently logged-in customer.
+ * @returns A promise that resolves to an array of service appointments.
+ */
+export const fetchCustomerServiceAppointments = async (): Promise<CustomerServiceAppointment[]> => {
+  const response = await api.get('/test-service/customer')
+  return (response.data.result || []).map((appt: Omit<CustomerServiceAppointment, 'type'>) => ({
+    ...appt,
+    type: 'SERVICE'
+  }))
 }

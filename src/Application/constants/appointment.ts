@@ -1,3 +1,5 @@
+import { ServiceAppointmentStatus } from '@/types/doctor/serviceAppointmentTypes'
+
 const TOPIC_DETAILS = {
   WOMENS_REPRODUCTIVE_HEALTH: {
     label: "Women's Reproductive Health",
@@ -74,7 +76,10 @@ export type AppointmentStatus = 'PENDING' | 'ONGOING' | 'COMPLETED' | 'CANCELLED
 
 export const APPOINTMENT_STATUS_OPTIONS = ['PENDING', 'ONGOING', 'COMPLETED', 'CANCELLED'] as const
 
-export const STATUS_STYLES = {
+export const STATUS_STYLES: {
+  [key in AppointmentStatus | ServiceAppointmentStatus]: { label: string; className: string; dotColor: string }
+} = {
+  // Common statuses
   PENDING: {
     label: 'Pending',
     className: 'bg-amber-50 text-amber-700 border-amber-300',
@@ -94,6 +99,18 @@ export const STATUS_STYLES = {
     label: 'Cancelled',
     className: 'bg-red-50 text-red-700 border-red-300',
     dotColor: 'bg-red-400'
+  },
+
+  // Service-specific statuses
+  CHECKIN: {
+    label: 'Checked In',
+    className: 'bg-teal-50 text-teal-700 border-teal-300',
+    dotColor: 'bg-teal-400'
+  },
+  INPUT_RESULTS: {
+    label: 'Awaiting Results',
+    className: 'bg-indigo-50 text-indigo-700 border-indigo-300',
+    dotColor: 'bg-indigo-400'
   }
 }
 

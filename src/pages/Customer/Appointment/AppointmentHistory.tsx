@@ -4,9 +4,11 @@ import AppointmentIllustration1 from '@/assets/images/appointment1.svg'
 import AppointmentIllustration2 from '@/assets/images/appointment2.svg'
 import { useOutletContext } from 'react-router-dom'
 import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
-import { useCustomerAppointments } from '@/hooks/customer/useAppointments'
 import { ConsultantBookingCard } from './ConsultantBookingHistoryCard'
 import VideoChatRoom from '@/components/Chats/VideoChatRoom'
+import { useCombinedCustomerAppointments } from '@/hooks/customer/useAppointments'
+import { ServiceBookingHistoryCard } from './ServiceHistory'
+import { CombinedAppointment } from '@/types/customer/appointmentTypes'
 
 export default function AppointmentHistory() {
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
@@ -30,7 +32,7 @@ export default function AppointmentHistory() {
   }, [setBreadcrumb, activeCallRoomId])
 
   // ================ USE APPOINTMENTS HISTORY HOOK ===============
-  const { data: bookingHistory, isLoading, isError } = useCustomerAppointments()
+  const { data: bookingHistory, isLoading, isError } = useCombinedCustomerAppointments()
 
   const handleJoinCall = (roomId: string) => {
     setActiveCallRoomId(roomId)
@@ -45,7 +47,7 @@ export default function AppointmentHistory() {
       return (
         <div className='relative max-h-[80vh] space-y-6 overflow-y-auto border-l-2 border-transparent pl-6'>
           <ConsultantBookingCard.Skeleton />
-          <ConsultantBookingCard.Skeleton />
+          <ServiceBookingHistoryCard.Skeleton />
           <ConsultantBookingCard.Skeleton />
         </div>
       )
@@ -63,12 +65,24 @@ export default function AppointmentHistory() {
     if (!bookingHistory || bookingHistory.length === 0) {
       return <p className='mt-8 text-center text-gray-500'>No booking history available.</p>
     }
+
     return (
       <div className='relative max-h-[80vh] space-y-6 overflow-y-auto border-l-2 border-blue-200 pb-6 pl-6'>
-        {bookingHistory &&
-          bookingHistory.map((booking, index) => (
-            <ConsultantBookingCard key={index} booking={booking} isHighlighted={index === 0} onJoin={handleJoinCall} />
-          ))}
+        {bookingHistory.map((booking: CombinedAppointment, index) => {
+          if (booking.type === 'CONSULTATION') {
+            return (
+              <ConsultantBookingCard
+                key={`consult-${index}`}
+                booking={booking}
+                isHighlighted={index === 0}
+                onJoin={handleJoinCall}
+              />
+            )
+          } else if (booking.type === 'SERVICE') {
+            return <ServiceBookingHistoryCard key={`service-${index}`} booking={booking} isHighlighted={index === 0} />
+          }
+          return null
+        })}
       </div>
     )
   }

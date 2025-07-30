@@ -2,6 +2,7 @@
 
 import { AppointmentStatus, TimeSlot, Topic } from '@/Application/constants/appointment'
 import { PayOSResponse } from '../payment'
+import { ServiceAppointmentStatus } from '../doctor/serviceAppointmentTypes'
 
 /**
  * The payload required when a customer books a new appointment.
@@ -43,6 +44,7 @@ export interface BookAppointmentError {
 // =================== APPOINTMENT HISTORY ===================
 // Type for a single appointment item returned by the API
 export interface CustomerAppointment {
+  type: 'CONSULTATION'
   topic: Topic
   booking_date: string
   time_slot: TimeSlot
@@ -51,8 +53,19 @@ export interface CustomerAppointment {
   chat_room_id: string
 }
 
+export interface CustomerServiceAppointment {
+  type: 'SERVICE'
+  package_id: string
+  booking_date: string
+  time_slot: TimeSlot
+  note: string
+  status: ServiceAppointmentStatus
+}
+
+export type CombinedAppointment = CustomerAppointment | CustomerServiceAppointment
+
 // Type for the full API response structure
 export interface BackendCustomerAppointmentsResponse {
   message: string
-  result: CustomerAppointment[]
+  result: (CustomerAppointment | CustomerServiceAppointment)[]
 }

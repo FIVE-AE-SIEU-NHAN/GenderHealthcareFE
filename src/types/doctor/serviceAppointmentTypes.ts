@@ -6,6 +6,13 @@ import { TimeSlot } from '@/Application/constants/appointment'
  */
 export type ServiceAppointmentStatus = 'PENDING' | 'CHECKIN' | 'ONGOING' | 'INPUT_RESULTS' | 'COMPLETED' | 'CANCELLED'
 
+export const SERVICE_PACKAGE_NAMES: { [key: string]: string } = {
+  '83cf0d76-637e-11f0-bfde-0242ac110002': 'Basic for men',
+  '83cf134d-637e-11f0-bfde-0242ac110002': 'Advanced for men',
+  '83cf1469-637e-11f0-bfde-0242ac110002': 'Basic for women',
+  '83cf14e0-637e-11f0-bfde-0242ac110002': 'Advanced for women'
+}
+
 /**
  * Represents a single service appointment object, based on the
  * backend API response.
