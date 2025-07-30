@@ -4,7 +4,8 @@ import type {
   BookAppointmentResponse,
   BookServicesPayload,
   CustomerAppointment,
-  CustomerServiceAppointment
+  CustomerServiceAppointment,
+  TestResultItem
 } from '@/types/customer/appointmentTypes'
 
 // =============== CREATE (BOOK) A NEW APPOINTMENT ===============
@@ -55,4 +56,16 @@ export const fetchCustomerServiceAppointments = async (): Promise<CustomerServic
     ...appt,
     type: 'SERVICE'
   }))
+}
+
+// ============== GET TEST SERVICE RESULT ===============
+/**
+ * Fetches the test results for a specific service appointment.
+ * Corresponds to: GET /test-service/result/:id
+ * @param appointmentId - The ID of the service appointment.
+ * @returns A promise that resolves to an array of test result items.
+ */
+export const fetchTestResult = async (appointmentId: string): Promise<TestResultItem[]> => {
+  const response = await api.get(`/test-service/result/${appointmentId}`)
+  return response.data.result || []
 }

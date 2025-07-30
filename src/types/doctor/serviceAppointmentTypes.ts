@@ -13,6 +13,19 @@ export const SERVICE_PACKAGE_NAMES: { [key: string]: string } = {
   '83cf14e0-637e-11f0-bfde-0242ac110002': 'Advanced for women'
 }
 
+export const TEST_SERVICE_NAMES: { [key: string]: string } = {
+  '646252d8-637e-11f0-bfde-0242ac110002': 'HIV Test',
+  '646255da-637e-11f0-bfde-0242ac110002': 'Syphilis Test',
+  '6462641c-637e-11f0-bfde-0242ac110002': 'Gonorrhea Test',
+  '646264d0-637e-11f0-bfde-0242ac110002': 'Chlamydia Test',
+  '6462653b-637e-11f0-bfde-0242ac110002': 'HPV Test',
+  '64626599-637e-11f0-bfde-0242ac110002': 'Herpes Test',
+  '646265f1-637e-11f0-bfde-0242ac110002': 'Hepatitis B Test',
+  '64626673-637e-11f0-bfde-0242ac110002': 'Hepatitis C Test',
+  '6462677f-637e-11f0-bfde-0242ac110002': 'Trichomonas Test',
+  '64626839-637e-11f0-bfde-0242ac110002': 'Mycoplasma Test'
+}
+
 /**
  * Represents a single service appointment object, based on the
  * backend API response.

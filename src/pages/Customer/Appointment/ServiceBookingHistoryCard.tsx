@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { formatDate } from '@/utils/formatDate'
 import { CustomerServiceAppointment } from '@/types/customer/appointmentTypes'
 import { SERVICE_PACKAGE_NAMES } from '@/types/doctor/serviceAppointmentTypes'
+import { Button } from '@/components/ui/button'
 
 const formatTimeSlot = (slot: string) => {
   if (!slot) return 'N/A'
@@ -19,9 +20,15 @@ interface ServiceBookingCardProps {
   booking: CustomerServiceAppointment
   className?: string
   isHighlighted?: boolean
+  onViewResults: (appointmentId: string) => void
 }
 
-export function ServiceBookingHistoryCard({ booking, className, isHighlighted = false }: ServiceBookingCardProps) {
+export function ServiceBookingHistoryCard({
+  booking,
+  className,
+  isHighlighted = false,
+  onViewResults
+}: ServiceBookingCardProps) {
   const formattedDate = formatDate(booking.booking_date, 'MMMM d, yyyy')
   const formattedTime = formatTimeSlot(booking.time_slot)
 
@@ -78,8 +85,19 @@ export function ServiceBookingHistoryCard({ booking, className, isHighlighted = 
             </span>
           </span>
         </p>
-        <div className='flex items-center gap-2'>
-          <StatusBadge status={booking.status} styles={STATUS_STYLES} />
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <StatusBadge status={booking.status} styles={STATUS_STYLES} />
+          </div>
+          {booking.status === 'COMPLETED' && (
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => onViewResults(booking.id)} // Pass the appointment ID
+            >
+              View Results
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -55,6 +55,7 @@ export interface CustomerAppointment {
 
 export interface CustomerServiceAppointment {
   type: 'SERVICE'
+  id: string
   package_id: string
   booking_date: string
   time_slot: TimeSlot
@@ -68,4 +69,14 @@ export type CombinedAppointment = CustomerAppointment | CustomerServiceAppointme
 export interface BackendCustomerAppointmentsResponse {
   message: string
   result: (CustomerAppointment | CustomerServiceAppointment)[]
+}
+
+export interface TestResultItem {
+  id: string
+  test_service_appointment_id: string
+  test_service_id: string
+  result: string
+  unit: string | null
+  test_date: string
+  note: string | null
 }
