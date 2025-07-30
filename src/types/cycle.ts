@@ -70,6 +70,7 @@ export interface CycleFormData {
   cycleLength: number
   periodDuration: number
   notes?: string
+  isContraceptivePillReminder: boolean
 }
 
 /** Shape of the data for the "Day Rating" form in the modal. */
@@ -89,6 +90,7 @@ export interface CreateCyclePayload {
   cycle_length: number
   period_length: number
   note?: string
+  is_contraceptive_pill_reminder: boolean
 }
 
 /** Payload for the POST /cycle/:id/status-logs request. */

@@ -1,12 +1,13 @@
 import { useForm } from 'react-hook-form'
 import { format } from 'date-fns'
-import { Calendar, CalendarCheck, Clock, Sparkles, Flower2, FileText, Heart, Loader2 } from 'lucide-react'
+import { Calendar, CalendarCheck, Clock, Sparkles, Flower2, FileText, Heart, Loader2, Bell } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { CreateCyclePayload, CycleFormData } from '@/types/cycle'
 import { useCycleMutations } from '@/hooks/cycle/useCycleMutations'
+import { Checkbox } from '../ui/checkbox'
 
 interface CycleFormProps {
   onSuccess: () => void
@@ -20,7 +21,8 @@ export default function CycleForm({ onSuccess }: CycleFormProps) {
       firstPeriodDate: format(new Date(), 'yyyy-MM-dd'),
       cycleLength: 28,
       periodDuration: 5,
-      notes: ''
+      notes: '',
+      isContraceptivePillReminder: false
     }
   })
 
@@ -29,7 +31,8 @@ export default function CycleForm({ onSuccess }: CycleFormProps) {
       start_period_date: data.firstPeriodDate,
       cycle_length: data.cycleLength,
       period_length: data.periodDuration,
-      note: data.notes
+      note: data.notes,
+      is_contraceptive_pill_reminder: data.isContraceptivePillReminder
     }
 
     try {
@@ -202,6 +205,37 @@ export default function CycleForm({ onSuccess }: CycleFormProps) {
                         />
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Reminders Section */}
+              <div className='space-y-6'>
+                <div className='mb-6 flex items-center gap-4'>
+                  <div className='rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-600 p-4 text-white shadow-lg'>
+                    <Bell className='h-7 w-7' />
+                  </div>
+                  <div>
+                    <h3 className='text-3xl font-bold text-slate-800'>Reminders</h3>
+                    <p className='text-slate-600'>Set up notifications for your cycle.</p>
+                  </div>
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name='isContraceptivePillReminder'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-row items-start space-y-0 space-x-3 rounded-lg border p-4'>
+                      <FormControl>
+                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                      <div className='space-y-1 leading-none'>
+                        <FormLabel className='text-lg font-semibold text-slate-700'>
+                          Birth Control Pill Reminder
+                        </FormLabel>
+                        <p className='text-slate-600'>Receive a notification to take your birth control pill.</p>
+                      </div>
                     </FormItem>
                   )}
                 />

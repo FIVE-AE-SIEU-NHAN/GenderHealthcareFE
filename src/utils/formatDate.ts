@@ -54,6 +54,11 @@ export function formatDate(
       const year = dateObject.getUTCFullYear()
 
       return `${month} ${day}, ${year}`
+    } else if (displayFormat === 'MMM d, yyyy') {
+      const month = dateObject.toLocaleString('default', { month: 'short' })
+      const day = String(dateObject.getUTCDate()).padStart(2, '0')
+      const year = dateObject.getUTCFullYear()
+      return `${month} ${day}, ${year}`
     }
 
     throw new Error(`Unsupported date format: ${displayFormat}`)

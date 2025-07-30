@@ -80,24 +80,10 @@ export default function CycleTrackingPage() {
               <div className='flex justify-center gap-3'>
                 <Button
                   onClick={() => setIsCancelModalOpen(true)} // This now opens the modal
-                  variant='destructive'
-                  className='group rounded-full px-6 py-3 shadow-lg'
+                  className='group rounded-lg border-white/20 bg-red-500/90 px-6 py-3 text-white shadow-lg backdrop-blur-sm transition-colors duration-300 hover:bg-red-600 hover:text-white'
                 >
                   <XCircle className='mr-2 h-4 w-4' />
                   Cancel Current Cycle
-                </Button>
-                <Button
-                  onClick={() => {}}
-                  variant='outline'
-                  className='group rounded-lg border-white/20 bg-blue-500/90 px-6 py-3 text-white shadow-lg backdrop-blur-sm transition-colors duration-300 hover:bg-blue-600 hover:text-white'
-                  disabled={isCancelling}
-                >
-                  {isCancelling ? (
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                  ) : (
-                    <XCircle className='mr-2 h-4 w-4' />
-                  )}
-                  Demo Button
                 </Button>
               </div>
             )}
