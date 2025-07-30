@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Webcam from 'react-webcam'
-import { Mic, MicOff, Video, VideoOff, PhoneOff, Send, UserCircle2, Settings } from 'lucide-react'
+import { Mic, MicOff, Video, VideoOff, PhoneOff, Send, UserCircle2 } from 'lucide-react'
 
 // --- Import your custom hooks ---
 import { useSocket } from '@/contexts/SocketContext'
 import { useAuth } from '@/contexts/AuthContext'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { Label } from '../ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 // --- CONFIGURATION FOR WEBRTC ---
 // Public STUN servers are used to help clients discover their public IP addresses.
@@ -60,13 +57,6 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
   const [isMuted, setIsMuted] = useState(false)
   const [isCameraOff, setIsCameraOff] = useState(false)
 
-  const [mics, setMics] = useState<MediaDeviceInfo[]>([])
-  const [cams, setCams] = useState<MediaDeviceInfo[]>([])
-  const [selectedMicId, setSelectedMicId] = useState<string>('')
-  const [selectedCamId, setSelectedCamId] = useState<string>('')
-
-  // const [isLocalStreamReady, setIsLocalStreamReady] = useState(false)
-
   const [typingUsers, setTypingUsers] = useState<string[]>([])
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -84,27 +74,6 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
   // ====================================================================
 
   const hasJoinedCallRoomRef = useRef(false)
-
-  const getDevices = useCallback(async () => {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices()
-      const audioInputDevices = devices.filter((device) => device.kind === 'audioinput')
-      const videoInputDevices = devices.filter((device) => device.kind === 'videoinput')
-
-      setMics(audioInputDevices)
-      setCams(videoInputDevices)
-
-      // Set default devices if not already set
-      if (audioInputDevices.length > 0 && !selectedMicId) {
-        setSelectedMicId(audioInputDevices[0].deviceId)
-      }
-      if (videoInputDevices.length > 0 && !selectedCamId) {
-        setSelectedCamId(videoInputDevices[0].deviceId)
-      }
-    } catch (err) {
-      console.error('Error enumerating devices:', err)
-    }
-  }, [selectedMicId, selectedCamId])
 
   const createPeerConnection = useCallback(() => {
     // Clean up any existing connection before creating a new one.
@@ -227,46 +196,16 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
     }
   }, [messages])
 
-  useEffect(() => {
-    if (localVideoRef.current?.stream) {
-      const audioTracks = (localVideoRef.current.stream as MediaStream).getAudioTracks()
-      if (audioTracks.length > 0) audioTracks[0].enabled = !isMuted
-    }
-  }, [isMuted])
-
   // Effect to handle turning the camera on/off
   useEffect(() => {
-    if (localVideoRef.current?.stream) {
-      const videoTracks = (localVideoRef.current.stream as MediaStream).getVideoTracks()
-      if (videoTracks.length > 0) videoTracks[0].enabled = !isCameraOff
+    if (localVideoRef.current && localVideoRef.current.stream) {
+      const stream = localVideoRef.current.stream as MediaStream
+      const videoTracks = stream.getVideoTracks()
+      if (videoTracks.length > 0) {
+        videoTracks[0].enabled = !isCameraOff
+      }
     }
   }, [isCameraOff])
-
-  useEffect(() => {
-    const replaceVideoTrack = async () => {
-      if (peerConnectionRef.current && localVideoRef.current?.stream) {
-        const videoTrack = (localVideoRef.current.stream as MediaStream).getVideoTracks()[0]
-        const sender = peerConnectionRef.current.getSenders().find((s) => s.track?.kind === 'video')
-        if (sender && videoTrack) {
-          await sender.replaceTrack(videoTrack)
-        }
-      }
-    }
-    replaceVideoTrack()
-  }, [selectedCamId])
-
-  useEffect(() => {
-    const replaceAudioTrack = async () => {
-      if (peerConnectionRef.current && localVideoRef.current?.stream) {
-        const audioTrack = (localVideoRef.current.stream as MediaStream).getAudioTracks()[0]
-        const sender = peerConnectionRef.current.getSenders().find((s) => s.track?.kind === 'audio')
-        if (sender && audioTrack) {
-          await sender.replaceTrack(audioTrack)
-        }
-      }
-    }
-    replaceAudioTrack()
-  }, [selectedMicId])
 
   // Main effect for handling all socket event listeners
   useEffect(() => {
@@ -304,6 +243,7 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
 
       socket.emit('chat:leaveRoom', chat_room_id)
       socket.emit('call:leaveRoom', chat_room_id)
+      // Clean up the peer connection and other refs
       if (peerConnectionRef.current) {
         peerConnectionRef.current.close()
         peerConnectionRef.current = null
@@ -313,8 +253,8 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
   }, [socket, user, chat_room_id, handleUserJoined, handleOffer, handleAnswer, handleNewICECandidate, handleUserLeft])
 
   const handleUserMedia = () => {
-    getDevices()
-
+    // This function is called ONLY when the webcam stream is ready.
+    // We use a ref to ensure we only emit the join event once.
     if (socket && !hasJoinedCallRoomRef.current) {
       console.log('Local camera is ready. Joining call room now.')
       socket.emit('call:joinRoom', chat_room_id)
@@ -353,7 +293,7 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
   return (
     <>
       <style>{styles}</style>
-      <div className='flex h-screen flex-col bg-gray-900 font-sans text-white'>
+      <div className='flex min-h-screen flex-col bg-gray-900 font-sans text-white'>
         <div className='flex flex-1 overflow-hidden'>
           {/* Main Content Area: Video Streams */}
           <div className='relative flex flex-1 flex-col gap-4 p-4'>
@@ -376,18 +316,12 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
                 className={`absolute top-0 left-0 h-full w-full transition-opacity duration-300 ${isCameraOff ? 'opacity-0' : 'opacity-100'}`}
               >
                 <Webcam
-                  audio={true}
+                  audio={!isMuted}
                   ref={localVideoRef}
                   mirrored={false}
                   className='h-full w-full object-cover'
                   onUserMedia={handleUserMedia}
                   onUserMediaError={(err) => console.error('Webcam Error:', err)}
-                  audioConstraints={{ deviceId: selectedMicId ? { exact: selectedMicId } : undefined }}
-                  videoConstraints={{
-                    deviceId: selectedCamId ? { exact: selectedCamId } : undefined,
-                    width: 1280,
-                    height: 720
-                  }}
                 />
               </div>
               <div className='bg-opacity-50 absolute bottom-1 left-1 rounded bg-black px-2 py-0.5 text-xs font-semibold'>
@@ -462,70 +396,6 @@ const VideoChatRoom: React.FC<VideoChatRoomProps> = ({ chat_room_id, onLeave }) 
           >
             {isCameraOff ? <VideoOff size={24} /> : <Video size={24} />}
           </button>
-
-          <Popover>
-            <PopoverTrigger asChild>
-              <button className='cursor-pointer rounded-full bg-gray-600 p-3 transition-colors hover:bg-gray-500'>
-                <Settings size={24} />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className='w-auto border-gray-600 bg-gray-800 text-white'>
-              <div className='grid gap-4'>
-                <div className='space-y-2'>
-                  <h4 className='leading-none font-medium'>Settings</h4>
-                  <p className='text-sm text-gray-400'>Configure your audio and video devices.</p>
-                </div>
-                <div className='grid gap-2'>
-                  <div className='grid grid-cols-2 items-center gap-4'>
-                    <Label htmlFor='camera-select' className='text-right'>
-                      Camera
-                    </Label>
-                    <Select value={selectedCamId} onValueChange={setSelectedCamId}>
-                      <SelectTrigger
-                        id='camera-select'
-                        className='col-span-2 cursor-pointer border-gray-500 bg-gray-700'
-                      >
-                        <SelectValue placeholder='Select Camera' />
-                      </SelectTrigger>
-                      <SelectContent className='border-gray-600 bg-gray-800 text-white'>
-                        {cams.map((cam) => (
-                          <SelectItem
-                            key={cam.deviceId}
-                            value={cam.deviceId}
-                            className='cursor-pointer hover:bg-gray-700! hover:text-white!'
-                          >
-                            {cam.label || `Camera ${cams.indexOf(cam) + 1}`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className='grid grid-cols-2 items-center gap-4'>
-                    <Label htmlFor='mic-select' className='text-right'>
-                      Microphone
-                    </Label>
-                    <Select value={selectedMicId} onValueChange={setSelectedMicId}>
-                      <SelectTrigger id='mic-select' className='col-span-2 cursor-pointer border-gray-500 bg-gray-700'>
-                        <SelectValue placeholder='Select Microphone' />
-                      </SelectTrigger>
-                      <SelectContent className='border-gray-600 bg-gray-800 text-white'>
-                        {mics.map((mic) => (
-                          <SelectItem
-                            key={mic.deviceId}
-                            value={mic.deviceId}
-                            className='cursor-pointer hover:bg-gray-700! hover:text-white!'
-                          >
-                            {mic.label || `Microphone ${mics.indexOf(mic) + 1}`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-
           <button onClick={onLeave} className='rounded-full bg-red-600 p-3 transition-colors hover:bg-red-700'>
             <PhoneOff size={24} />
           </button>
