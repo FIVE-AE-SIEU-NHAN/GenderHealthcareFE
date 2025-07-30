@@ -7,12 +7,15 @@ import { Button } from '@/components/ui/button'
 import { useActiveCycleCheck, useAllPredictions, useCycle } from '@/hooks/cycle/useCycle'
 import { useCycleMutations } from '@/hooks/cycle/useCycleMutations'
 import { DashboardLayoutContext } from '@/components/layouts/Dashboard/DashboardLayout'
+import CancelCycleModal from '@/components/CycleTracking/CancelCycleModal'
 
 export default function CycleTrackingPage() {
   const navigate = useNavigate()
   const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
 
   const [currentMonth, setCurrentMonth] = useState(new Date())
+
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false)
 
   const { hasActiveCycle, isLoading: isLoadingCheck, isError: isErrorCheck, error: checkError } = useActiveCycleCheck()
 
@@ -38,6 +41,12 @@ export default function CycleTrackingPage() {
         <Loader2 className='h-12 w-12 animate-spin text-pink-500' />
       </div>
     )
+  }
+
+  const handleConfirmCancel = () => {
+    if (activePredictionForSummary?.cycle_id) {
+      cancelCycle({ cycleId: activePredictionForSummary.cycle_id })
+    }
   }
 
   if (isErrorCheck) {
@@ -68,15 +77,19 @@ export default function CycleTrackingPage() {
             </div> */}
             <h1 className='text-4xl font-extrabold text-slate-800 md:text-5xl'>Your Cycle Calendar</h1>
             {hasActiveCycle && (
-              <div className='flex justify-center'>
+              <div className='flex justify-center gap-3'>
                 <Button
-                  onClick={() => {
-                    if (activePredictionForSummary?.cycle_id) {
-                      cancelCycle({ cycleId: activePredictionForSummary.cycle_id })
-                    }
-                  }}
+                  onClick={() => setIsCancelModalOpen(true)} // This now opens the modal
+                  variant='destructive'
+                  className='group rounded-full px-6 py-3 shadow-lg'
+                >
+                  <XCircle className='mr-2 h-4 w-4' />
+                  Cancel Current Cycle
+                </Button>
+                <Button
+                  onClick={() => {}}
                   variant='outline'
-                  className='group rounded-full border-white/20 bg-red-500/90 px-6 py-3 text-white shadow-lg backdrop-blur-sm transition-colors duration-300 hover:bg-red-600 hover:text-white'
+                  className='group rounded-lg border-white/20 bg-blue-500/90 px-6 py-3 text-white shadow-lg backdrop-blur-sm transition-colors duration-300 hover:bg-blue-600 hover:text-white'
                   disabled={isCancelling}
                 >
                   {isCancelling ? (
@@ -84,7 +97,7 @@ export default function CycleTrackingPage() {
                   ) : (
                     <XCircle className='mr-2 h-4 w-4' />
                   )}
-                  Cancel Current Cycle
+                  Demo Button
                 </Button>
               </div>
             )}
@@ -124,6 +137,13 @@ export default function CycleTrackingPage() {
             onMonthChange={setCurrentMonth}
             predictions={monthPredictions}
             isLoading={isLoadingPredictions}
+          />
+
+          <CancelCycleModal
+            isOpen={isCancelModalOpen}
+            onClose={() => setIsCancelModalOpen(false)}
+            onConfirm={handleConfirmCancel}
+            isPending={isCancelling}
           />
         </div>
       </div>
