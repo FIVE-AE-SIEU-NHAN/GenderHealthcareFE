@@ -92,7 +92,7 @@ export function ConsultantBookingCard({ booking, className, isHighlighted = fals
           <code className='rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs font-bold'>
             {booking.chat_room_id || 'N/A'}
           </code>
-          {['PENDING', 'ONGOING'].includes(booking.status) && booking.chat_room_id && (
+          {['ONGOING'].includes(booking.status) && booking.chat_room_id && (
             <span>
               <Button
                 variant='default'

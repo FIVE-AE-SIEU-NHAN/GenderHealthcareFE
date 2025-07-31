@@ -125,7 +125,10 @@ export function AppointmentCard<T extends AnyAppointment>({
             <code className='w-full truncate rounded border border-gray-400 bg-gray-100 px-1.5 py-0.5 text-center font-mono text-xs font-bold'>
               {appointment.chat_room_id || 'N/A'}
             </code>
-            {onJoin && ['PENDING', 'ONGOING'].includes(status) && appointment.chat_room_id && (
+            <p className='font-bold'>
+              Consultant: <span className='font-normal'>{appointment.consultantProfile?.name}</span>
+            </p>
+            {onJoin && ['ONGOING'].includes(status) && appointment.chat_room_id && (
               <div>
                 <Button
                   variant='outline'
@@ -170,6 +173,9 @@ export function AppointmentCard<T extends AnyAppointment>({
             )}
           </div>
 
+          <p className='text-xs font-bold'>
+            Doctor: <span className='font-normal'>{appointment.staffProfile?.name}</span>
+          </p>
           {/* Note */}
           <div className='flex flex-col gap-2 text-xs text-gray-700'>
             <p className='text-gray-500 italic'>

@@ -1,5 +1,11 @@
 import { AppointmentStatus, TimeSlot, Topic } from '@/Application/constants/appointment'
 
+export interface consultantProfile {
+  id: string
+  email: string
+  name: string
+}
+
 /**
  * Appointment interface matching server API
  */
@@ -13,6 +19,7 @@ export interface Appointment {
   created_at?: string
   status: AppointmentStatus
   chat_room_id: string
+  consultantProfile?: consultantProfile
 }
 
 // This type matches the API's `result` object for a list of appointments

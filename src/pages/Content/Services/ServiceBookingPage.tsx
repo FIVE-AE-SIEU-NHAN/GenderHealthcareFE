@@ -111,7 +111,7 @@ const ServiceBookingPage = () => {
 
     bookService.mutate(payload, {
       onSuccess: (data: BookAppointmentResponse) => {
-        const newDeadline = Date.now() + 1 * 30 * 1000 // 10 minutes
+        const newDeadline = Date.now() + 1 * 60 * 1000
         sessionStorage.setItem(PAYMENT_DATA_KEY, JSON.stringify(data.result))
         sessionStorage.setItem(PAYMENT_DEADLINE_KEY, newDeadline.toString())
 

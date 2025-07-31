@@ -26,6 +26,11 @@ export const TEST_SERVICE_NAMES: { [key: string]: string } = {
   '64626839-637e-11f0-bfde-0242ac110002': 'Mycoplasma Test'
 }
 
+export interface staffProfile {
+  id: string
+  email: string
+  name: string
+}
 /**
  * Represents a single service appointment object, based on the
  * backend API response.
@@ -40,6 +45,7 @@ export interface ServiceAppointment {
   time_slot: TimeSlot
   created_at: string
   status: ServiceAppointmentStatus
+  staffProfile?: staffProfile
 }
 
 /**
