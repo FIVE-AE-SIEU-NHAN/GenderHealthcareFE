@@ -172,10 +172,7 @@ export function News() {
                   <p className='mb-4 line-clamp-2 overflow-hidden text-left text-sm text-ellipsis text-gray-600'>
                     {post.excerpt}
                   </p>
-                  <a
-                    href='#'
-                    className='group text-light-blue relative inline-block text-sm font-bold transition-all duration-300'
-                  >
+                  <p className='group text-light-blue relative inline-block text-sm font-bold transition-all duration-300'>
                     <Link to='/blogs' onClick={ToTop}>
                       <span className='transition-all duration-300 group-hover:px-2'>Read More</span>
                     </Link>
@@ -185,7 +182,7 @@ export function News() {
                     <span className='absolute left-full ml-1 -translate-x-24 opacity-0 transition-all duration-300 group-hover:left-[calc(100%+0.5rem)] group-hover:opacity-100'>
                       --&gt;
                     </span>
-                  </a>
+                  </p>
                 </div>
               </Card>
             </CarouselItem>
