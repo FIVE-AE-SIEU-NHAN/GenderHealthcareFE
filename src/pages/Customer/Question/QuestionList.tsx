@@ -90,7 +90,7 @@ const dateFilterOptions = [{ value: 'created_at', label: 'Date Asked' }]
 const searchableFields = [{ value: 'question', label: 'Question' }]
 
 export default function QuestionListDashboard() {
-  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()
+  const { setBreadcrumb } = useOutletContext<DashboardLayoutContext>()  //import context from DashboardLayout
 
   const navigate = useNavigate()
 
@@ -130,7 +130,7 @@ export default function QuestionListDashboard() {
       parent: 'Dashboard',
       parentHref: '/user'
     })
-  }, [setBreadcrumb])
+  }, [setBreadcrumb]) //Dùng để cập nhật breadcrumb hiển thị ở header
 
   // API filter logic is generic and reusable
   const apiFilters = useMemo(() => {
@@ -163,18 +163,18 @@ export default function QuestionListDashboard() {
   // ========== COLUMNS SETUP (Generic) ==========
   const columns = useMemo(() => {
     return allQuestionColumns.map((col) => ({
-      key: col.key as keyof Question,
-      label: col.label,
+      key: col.key as keyof Question, // 'topic', 'question', 'status', 'created_at'
+      label: col.label, // Tiêu đề cột
       visible: visibleColumns.includes(col.key),
       sortable: col.sortable,
       cellClassName: col.cellClassName,
-      render: col.render
+      render: col.render // Custom hiển thị (Badge, format date, etc.)
     }))
   }, [visibleColumns])
 
-  const handleViewDetailsClick = (question: Question) => {
-    setSelectedQuestion(question)
-    setIsViewDialogOpen(true)
+  const handleViewDetailsClick = (question: Question) => { //object chứa data của câu hỏi được click
+    setSelectedQuestion(question) //lưu câu hỏi được chọn
+    setIsViewDialogOpen(true) //mở popup câu trả lời
   }
 
   // ========== QUESTION ACTIONS ==========

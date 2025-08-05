@@ -52,21 +52,22 @@ const faqs: FAQ[] = [
   }
 ]
 
-const formSchema = z.object({
+const formSchema = z.object({ //zod type and validate 
   topic: z.string({ required_error: 'Please select a topic.' }).min(1, { message: 'Please select a topic.' }),
   question: z.string().min(20, { message: 'Your question must be at least 20 characters long.' })
 })
 
 export default function AskQuestion() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0)
-  const [formSubmitted, setFormSubmitted] = useState(false)
+  //useState là một hook trong React dùng để quản lý state (trạng thái) trong function component.
+  const [openIndex, setOpenIndex] = useState<number | null>(0) //Quản lý FAQ nào đang mở
+  const [formSubmitted, setFormSubmitted] = useState(false) //thay đổi giá trị ban đầu của formSubmitted thành false
   const [faqContainerStyle, setFaqContainerStyle] = useState<React.CSSProperties>({})
   const formRef = useRef<HTMLDivElement>(null)
 
-  const { askQuestion } = useQuestionMutations()
+  const { askQuestion } = useQuestionMutations() // sử dụng hook để lấy hàm askQuestion
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof formSchema>>({  // dùng zod để làm Schema cho form để validate
+    resolver: zodResolver(formSchema), // để kết nối react hook form với zod
     defaultValues: {
       topic: '',
       question: ''
@@ -74,9 +75,8 @@ export default function AskQuestion() {
     mode: 'onSubmit'
   })
 
-  const questionValue = form.watch('question') || ''
-
-  useEffect(() => {
+  const questionValue = form.watch('question') || '' // theo dõi giá trị của trường 'question' trong form
+  useEffect(() => { // hook để cập nhật chiều cao của FAQ container khi form được submit
     const updateHeight = () => {
       if (formRef.current) {
         const formHeight = formRef.current.clientHeight
@@ -84,13 +84,13 @@ export default function AskQuestion() {
           minHeight: `${formHeight}px`,
           height: 'auto',
           alignSelf: 'flex-start'
-        })
+        }) 
       }
     }
     updateHeight()
     window.addEventListener('resize', updateHeight)
     return () => window.removeEventListener('resize', updateHeight)
-  }, [formSubmitted])
+  }, [formSubmitted]) //thay đổi đầu tiên khi bấm submit
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     askQuestion.mutate(values, {

@@ -16,7 +16,7 @@ interface ViewAnswerDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
-export function ViewAnswerDialog({ question, open, onOpenChange }: ViewAnswerDialogProps) {
+export function ViewAnswerDialog({ question, open, onOpenChange  }: ViewAnswerDialogProps) { //truyền para theo dạng object = kỹ thuật destructuring
   if (!question) return null
 
   return (
